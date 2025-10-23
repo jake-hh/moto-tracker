@@ -11,33 +11,33 @@ import java.util.List;
 
 @Entity
 public class Company extends AbstractEntity {
-    @NotBlank
-    private String name;
+	@NotBlank
+	private String name;
 
-    @OneToMany(mappedBy = "company")
-    @Nullable
-    private List<Contact> employees = new LinkedList<>();
+	@OneToMany(mappedBy = "company")
+	@Nullable
+	private List<Contact> employees = new LinkedList<>();
 
-    @Formula("(select count(c.id) from Contact c where c.company_id = id)")
-    private int employeeCount;
+	@Formula("(select count(c.id) from Contact c where c.company_id = id)")
+	private int employeeCount;
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public List<Contact> getEmployees() {
-        return employees;
-    }
+	public List<Contact> getEmployees() {
+		return employees;
+	}
 
-    public void setEmployees(List<Contact> employees) {
-        this.employees = employees;
-    }
+	public void setEmployees(List<Contact> employees) {
+		this.employees = employees;
+	}
 
-    public int getEmployeeCount(){
-        return employeeCount;
-    }
+	public int getEmployeeCount(){
+		return employeeCount;
+	}
 }

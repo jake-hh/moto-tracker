@@ -13,20 +13,20 @@ import java.util.concurrent.TimeUnit;
 @Attribute(name = "class", contains = "login-view")
 public class LoginViewElement extends VerticalLayoutElement {
 
-    public boolean login(String username, String password) {
-        LoginFormElement form = $(LoginFormElement.class).first();
-        form.getUsernameField().setValue(username);
-        form.getPasswordField().setValue(password);
-        form.getSubmitButton().click();
+	public boolean login(String username, String password) {
+		LoginFormElement form = $(LoginFormElement.class).first();
+		form.getUsernameField().setValue(username);
+		form.getPasswordField().setValue(password);
+		form.getSubmitButton().click();
 
-        // Return true if we end up on another page
-        try {
-            getDriver().manage().timeouts().implicitlyWait(Duration.of(1, ChronoUnit.SECONDS));
-            getDriver().findElement(By.tagName("vaadin-app-layout"));
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+		// Return true if we end up on another page
+		try {
+			getDriver().manage().timeouts().implicitlyWait(Duration.of(1, ChronoUnit.SECONDS));
+			getDriver().findElement(By.tagName("vaadin-app-layout"));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 
 }

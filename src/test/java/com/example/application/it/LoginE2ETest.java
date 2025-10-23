@@ -17,30 +17,30 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginE2ETest extends BrowserTestBase {
 
-    @Autowired
-    Environment environment;
+	@Autowired
+	Environment environment;
 
-    static {
-        // Prevent Vaadin Development mode to launch browser window
-        System.setProperty("vaadin.launch-browser", "false");
-    }
+	static {
+		// Prevent Vaadin Development mode to launch browser window
+		System.setProperty("vaadin.launch-browser", "false");
+	}
 
-    @BeforeEach
-    void openBrowser() {
-        getDriver().get("http://" + IPAddress.findSiteLocalAddress() + ":"
-                + environment.getProperty("local.server.port") + "/");
-    }
+	@BeforeEach
+	void openBrowser() {
+		getDriver().get("http://" + IPAddress.findSiteLocalAddress() + ":"
+				+ environment.getProperty("local.server.port") + "/");
+	}
 
-    @BrowserTest
-    public void loginAsValidUserSucceeds() {
-        LoginViewElement loginView = $(LoginViewElement.class).onPage().first();
-        assertTrue(loginView.login("user", "password"));
-    }
+	@BrowserTest
+	public void loginAsValidUserSucceeds() {
+		LoginViewElement loginView = $(LoginViewElement.class).onPage().first();
+		assertTrue(loginView.login("user", "password"));
+	}
 
-    @BrowserTest
-    public void loginAsInvalidUserFails() {
-        LoginViewElement loginView = $(LoginViewElement.class).onPage().first();
-        assertFalse(loginView.login("user", "invalid"));
-    }
+	@BrowserTest
+	public void loginAsInvalidUserFails() {
+		LoginViewElement loginView = $(LoginViewElement.class).onPage().first();
+		assertFalse(loginView.login("user", "invalid"));
+	}
 
 }

@@ -17,31 +17,31 @@ import jakarta.annotation.security.PermitAll;
 @Route(value = "dashboard", layout = MainLayout.class) // <1>
 @PageTitle("Dashboard | Vaadin CRM")
 public class DashboardView extends VerticalLayout {
-    private final CrmService service;
+	private final CrmService service;
 
-    public DashboardView(CrmService service) { // <2>
-        this.service = service;
-        addClassName("dashboard-view");
-        setDefaultHorizontalComponentAlignment(Alignment.CENTER); // <3>
+	public DashboardView(CrmService service) { // <2>
+		this.service = service;
+		addClassName("dashboard-view");
+		setDefaultHorizontalComponentAlignment(Alignment.CENTER); // <3>
 
-        add(getContactStats(), getCompaniesChart());
-    }
+		add(getContactStats(), getCompaniesChart());
+	}
 
-    private Component getContactStats() {
-        Span stats = new Span(service.countContacts() + " contacts"); // <4>
-        stats.addClassNames(
-            LumoUtility.FontSize.XLARGE,
-            LumoUtility.Margin.Top.MEDIUM);
-        return stats;
-    }
+	private Component getContactStats() {
+		Span stats = new Span(service.countContacts() + " contacts"); // <4>
+		stats.addClassNames(
+			LumoUtility.FontSize.XLARGE,
+			LumoUtility.Margin.Top.MEDIUM);
+		return stats;
+	}
 
-    private Chart getCompaniesChart() {
-        Chart chart = new Chart(ChartType.PIE);
+	private Chart getCompaniesChart() {
+		Chart chart = new Chart(ChartType.PIE);
 
-        DataSeries dataSeries = new DataSeries();
-        service.findAllCompanies().forEach(company ->
-            dataSeries.add(new DataSeriesItem(company.getName(), company.getEmployeeCount()))); // <5>
-        chart.getConfiguration().setSeries(dataSeries);
-        return chart;
-    }
+		DataSeries dataSeries = new DataSeries();
+		service.findAllCompanies().forEach(company ->
+			dataSeries.add(new DataSeriesItem(company.getName(), company.getEmployeeCount()))); // <5>
+		chart.getConfiguration().setSeries(dataSeries);
+		return chart;
+	}
 }

@@ -16,15 +16,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @Theme(value = "moto-tracker")
 @PWA(
-        name = "Moto Tracker",
-        shortName = "MST",
-        offlinePath="offline.html",
-        offlineResources = { "images/offline.png" }
+		name = "Moto Tracker",
+		shortName = "MST",
+		offlinePath="offline.html",
+		offlineResources = { "images/offline.png" }
 )
 public class Application implements AppShellConfigurator {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
 }
