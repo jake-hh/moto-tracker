@@ -14,10 +14,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
-@Theme(value = "flowcrmtutorial")
+@Theme(value = "moto-tracker")
 @PWA(
-        name = "Vaadin CRM",
-        shortName = "CRM",
+        name = "Moto Tracker",
+        shortName = "MST",
         offlinePath="offline.html",
         offlineResources = { "images/offline.png" }
 )
