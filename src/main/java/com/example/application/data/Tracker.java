@@ -36,7 +36,7 @@ public class Tracker extends AbstractEntity {
 		this.name = name;
 	}
 
-	public void setInterval(String name) {
+	public void setInterval(String interval) {
 		this.interval = interval;
 	}
 
