@@ -11,12 +11,17 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
 @SpringComponent
@@ -77,9 +82,9 @@ public class TrackerView extends VerticalLayout {
 		grid.addClassNames("tracker-grid");
 		grid.setSizeFull();
 		grid.setColumns("name", "interval", "range");
-		// grid.addColumn(tracker -> tracker.getName()).setHeader("Tracker");
-		// grid.addColumn(tracker -> tracker.getInterval()).setHeader("Interval");
-		// grid.addColumn(tracker -> tracker.getRange()).setHeader("Range");
+
+		grid.addColumn(tracker -> "").setHeader("Last mileage").setKey("lastMileage");
+
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
 		grid.asSingleSelect().addValueChangeListener(event ->
@@ -122,6 +127,20 @@ public class TrackerView extends VerticalLayout {
 	}
 
 	private void updateList() {
-		grid.setItems(service.findAllTrackers(filterText.getValue()));
+		List<Tracker> trackers = service.findAllTrackers(filterText.getValue());
+		Map<Long, Integer> lastMileageMap = service.findLastMileagesForTrackers(trackers);
+
+		grid.setItems(trackers);
+
+		// Replace column renderer dynamically
+		grid.getColumnByKey("lastMileage").setRenderer(new TextRenderer<>(t ->
+				Optional.ofNullable(lastMileageMap.get(t.getId()))
+						.map(Object::toString)
+						.orElse("-")
+		));
 	}
+
+	// private void updateList() {
+	// 	grid.setItems(service.findAllTrackers(filterText.getValue()));
+	// }
 }

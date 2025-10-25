@@ -8,7 +8,10 @@ import com.example.application.data.OperationRepository;
 import com.example.application.data.EventRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -30,11 +33,11 @@ public class MainService {
 		return operationRepository.findAll();
 	}
 
-	// public List<Operation> findAllOperations(String stringFilter) {
-	// 	if (stringFilter == null || stringFilter.isEmpty()) {
+	// public List<Operation> findAllOperations(String filter) {
+	// 	if (filter == null || filter.isEmpty()) {
 	// 		return operationRepository.findAll();
 	// 	} else {
-	// 		return operationRepository.search(stringFilter);
+	// 		return operationRepository.search(filter);
 	// 	}
 	// }
 
@@ -54,13 +57,29 @@ public class MainService {
 		operationRepository.save(operation);
 	}
 
-	public List<Tracker> findAllTrackers(String stringFilter) {
-		if (stringFilter == null || stringFilter.isEmpty()) {
+	public List<Tracker> findAllTrackers(String filter) {
+		if (filter == null || filter.isEmpty()) {
 			return findAllTrackers();
 		} else {
-			return trackerRepository.search(stringFilter);
+			return trackerRepository.search(filter);
 		}
 	}
+
+    public Map<Long, Integer> findLastMileagesForTrackers(List<Tracker> trackers) {
+        if (trackers.isEmpty()) {
+			return Collections.emptyMap();
+		}
+
+        List<Object[]> results = operationRepository.findLatestMileagesByTrackers(trackers);
+
+        return results
+			.stream()
+			.collect(
+				Collectors.toMap(
+					row -> (Long) row[0],
+					row -> (Integer) row[2]  // [0]=tracker.id, [1]=date, [2]=mileage
+		));
+    }
 
 	public void deleteTracker(Tracker tracker) {
 		trackerRepository.delete(tracker);
