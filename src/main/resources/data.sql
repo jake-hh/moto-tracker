@@ -62,3 +62,16 @@ INSERT INTO "CONTACT"  (ID, VERSION, EMAIL, FIRST_NAME, LAST_NAME, COMPANY_ID, S
 (58, 1, 'bryan.shaw@ha.ee', 'Bryan', 'Shaw', 9, 1),
 (59, 1, 'essie.adams@iliat.cw', 'Essie', 'Adams', 8, 5),
 (60, 1, 'gary.osborne@do.ga', 'Gary', 'Osborne', 7, 5);
+
+INSERT INTO "EVENT" (ID, VERSION, DATE_VALUE, MILEAGE) VALUES
+(61, 1, 'Monday', 51000),
+(62, 1, 'Tuesday', 52000),
+(63, 1, 'Wednesday', 55000);
+INSERT INTO "TRACKER" (ID, VERSION, NAME, INTERVAL_VALUE, RANGE) VALUES
+(71, 1, 'Oil change', '1 y', 15000),
+(72, 1, 'Brake fluid change', '3 y', 45000),
+(73, 1, 'Chain cleaning', '1 m', 700);
+INSERT INTO "OPERATION" (ID, VERSION, EVENT_ID, TRACKER_ID) VALUES
+(81, 1, 61, 71),
+(82, 1, 62, 72),
+(83, 1, 63, 73);

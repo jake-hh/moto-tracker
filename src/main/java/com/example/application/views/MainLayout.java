@@ -2,6 +2,8 @@ package com.example.application.views;
 
 import com.example.application.security.SecurityService;
 import com.example.application.views.list.ListView;
+import com.example.application.views.list.OplistView;
+
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -22,7 +24,7 @@ public class MainLayout extends AppLayout {
 	}
 
 	private void createHeader() {
-		H1 logo = new H1("Vaadin CRM");
+		H1 logo = new H1("Moto Tracker");
 		logo.addClassNames(
 			LumoUtility.FontSize.LARGE,
 			LumoUtility.Margin.MEDIUM);
@@ -46,7 +48,8 @@ public class MainLayout extends AppLayout {
 	private void createDrawer() {
 		addToDrawer(new VerticalLayout(
 				new RouterLink("List", ListView.class),
-				new RouterLink("Dashboard", DashboardView.class)
+				new RouterLink("Dashboard", DashboardView.class),
+				new RouterLink("Operations", OplistView.class)
 		));
 	}
 }

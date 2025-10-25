@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Scope;
 @Scope("prototype")
 @PermitAll
 @Route(value = "", layout = MainLayout.class)
-@PageTitle("Contacts | Vaadin CRM")
+@PageTitle("Contacts | Moto Tracker")
 public class ListView extends VerticalLayout {
 	Grid<Contact> grid = new Grid<>(Contact.class);
 	TextField filterText = new TextField();
@@ -114,7 +114,6 @@ public class ListView extends VerticalLayout {
 		grid.asSingleSelect().clear();
 		editContact(new Contact());
 	}
-
 
 	private void updateList() {
 		grid.setItems(service.findAllContacts(filterText.getValue()));
