@@ -1,7 +1,9 @@
 logging.level:
     root: "warn"
-    org.springframework.web: "info"
     # org.atmosphere: "warn"
+    org.springframework.web: "info"
+    com.vaadin.flow.server.communication.ReturnChannelHandler: "error"       # Disable warnings
+    org.springframework.beans.factory.support.DisposableBeanAdapter: "error" # Disable warnings
 
 vaadin:
     # Launch the default browser when starting the application in development mode
@@ -10,12 +12,15 @@ vaadin:
     # For more information https://vaadin.com/docs/flow/spring/tutorial-spring-configuration.html#special-configuration-parameters
     allowed-packages: "com.vaadin,org.vaadin,dev.hilla,com.example.application"
 
+    pushMode: "disabled" # Disable warnings
+
 spring:
     mustache:
         check-template-location: false
     jpa:
-        # Disable warnings
-        open-in-view: true
+        open-in-view: true # Disable warnings
         defer-datasource-initialization: true
+    # datasource:
+    #     url: "jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE"
 
 server.port: "${PORT:8080}"

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 public class MainService {
 
@@ -51,6 +52,26 @@ public class MainService {
 			return;
 		}
 		operationRepository.save(operation);
+	}
+
+	public List<Tracker> findAllTrackers(String stringFilter) {
+		if (stringFilter == null || stringFilter.isEmpty()) {
+			return findAllTrackers();
+		} else {
+			return trackerRepository.search(stringFilter);
+		}
+	}
+
+	public void deleteTracker(Tracker tracker) {
+		trackerRepository.delete(tracker);
+	}
+
+	public void saveTracker(Tracker tracker) {
+		if (tracker == null) {
+			System.err.println("Tracker is null. Are you sure you have connected your form to the application?");
+			return;
+		}
+		trackerRepository.save(tracker);
 	}
 
 	public List<Tracker> findAllTrackers() {

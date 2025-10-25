@@ -3,6 +3,7 @@ package com.example.application.views;
 import com.example.application.security.SecurityService;
 import com.example.application.views.list.ListView;
 import com.example.application.views.list.OplistView;
+import com.example.application.views.list.TrackerView;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -49,7 +50,8 @@ public class MainLayout extends AppLayout {
 		addToDrawer(new VerticalLayout(
 				new RouterLink("List", ListView.class),
 				new RouterLink("Dashboard", DashboardView.class),
-				new RouterLink("Operations", OplistView.class)
+				new RouterLink("Operations", OplistView.class),
+				new RouterLink("Trackers", TrackerView.class)
 		));
 	}
 }
