@@ -6,6 +6,8 @@ import com.example.application.data.Event;
 import com.example.application.data.TrackerRepository;
 import com.example.application.data.OperationRepository;
 import com.example.application.data.EventRepository;
+import com.example.application.data.Pair;
+
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -65,20 +67,24 @@ public class MainService {
 		}
 	}
 
-    public Map<Long, Integer> findLastMileagesForTrackers(List<Tracker> trackers) {
+    public Map<Long, Pair<String, Integer>> findLastEventDataForTrackers(List<Tracker> trackers) {
         if (trackers.isEmpty()) {
 			return Collections.emptyMap();
 		}
 
         List<Object[]> results = operationRepository.findLatestMileagesByTrackers(trackers);
 
-        return results
+		// System.out.println("Results: " + results);
+        // Map<Long, Pair<String, Integer>> map = results
+		return results
 			.stream()
 			.collect(
 				Collectors.toMap(
 					row -> (Long) row[0],
-					row -> (Integer) row[2]  // [0]=tracker.id, [1]=date, [2]=mileage
+					row -> new Pair<String, Integer>((String) row[1], (Integer) row[2])  // [0]=tracker.id, [1]=date, [2]=mileage
 		));
+		// System.out.println("Map: " + map);
+		// return map;
     }
 
 	public void deleteTracker(Tracker tracker) {

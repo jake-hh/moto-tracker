@@ -1,6 +1,7 @@
 package com.example.application.views.list;
 
 import com.example.application.data.Tracker;
+import com.example.application.data.Pair;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
 
@@ -83,6 +84,7 @@ public class TrackerView extends VerticalLayout {
 		grid.setSizeFull();
 		grid.setColumns("name", "interval", "range");
 
+		grid.addColumn(tracker -> "").setHeader("Last date").setKey("lastDate");
 		grid.addColumn(tracker -> "").setHeader("Last mileage").setKey("lastMileage");
 
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -128,19 +130,30 @@ public class TrackerView extends VerticalLayout {
 
 	private void updateList() {
 		List<Tracker> trackers = service.findAllTrackers(filterText.getValue());
-		Map<Long, Integer> lastMileageMap = service.findLastMileagesForTrackers(trackers);
+		Map<Long, Pair<String, Integer>> lastEventDataMap = service.findLastEventDataForTrackers(trackers);
 
 		grid.setItems(trackers);
 
 		// Replace column renderer dynamically
-		grid.getColumnByKey("lastMileage").setRenderer(new TextRenderer<>(t ->
-				Optional.ofNullable(lastMileageMap.get(t.getId()))
-						.map(Object::toString)
-						.orElse("-")
-		));
-	}
+		grid.getColumnByKey("lastDate").setRenderer(new TextRenderer<>(t -> {
 
-	// private void updateList() {
-	// 	grid.setItems(service.findAllTrackers(filterText.getValue()));
-	// }
+			Pair<String, Integer> pair = lastEventDataMap.get(t.getId());
+			// System.out.println("is null: " + (pair == null));
+
+			return Optional.ofNullable(pair)
+				.map(x -> x.first().toString())
+				.orElse("-");
+		}));
+
+		// Replace column renderer dynamically
+		grid.getColumnByKey("lastMileage").setRenderer(new TextRenderer<>(t -> {
+
+			Pair<String, Integer> pair = lastEventDataMap.get(t.getId());
+			// System.out.println("is null: " + (pair == null));
+
+			return Optional.ofNullable(pair)
+				.map(x -> x.second().toString())
+				.orElse("-");
+		}));
+	}
 }
