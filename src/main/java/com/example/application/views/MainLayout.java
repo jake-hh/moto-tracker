@@ -2,8 +2,8 @@ package com.example.application.views;
 
 import com.example.application.security.SecurityService;
 import com.example.application.views.list.ListView;
-import com.example.application.views.list.OplistView;
-import com.example.application.views.list.TrackerView;
+import com.example.application.views.oplist.OplistView;
+import com.example.application.views.tracker.TrackerView;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;

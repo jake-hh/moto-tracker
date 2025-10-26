@@ -19,7 +19,7 @@ public class Event extends AbstractEntity {
 
 
 	public String getDateStr() {
-		return date.toString();
+		return date;  //.toString();
 	}
 
 	public String getDate() {
@@ -37,5 +37,4 @@ public class Event extends AbstractEntity {
 	public void setMileage(Integer mileage) {
 		this.mileage = mileage;
 	}
-
 }

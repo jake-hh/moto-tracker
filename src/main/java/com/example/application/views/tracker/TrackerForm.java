@@ -1,8 +1,6 @@
-package com.example.application.views.list;
+package com.example.application.views.tracker;
 
 import com.example.application.data.Tracker;
-import com.example.application.data.Tracker;
-import com.example.application.data.Event;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -16,9 +14,6 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.shared.Registration;
-
-import java.util.List;
 
 
 public class TrackerForm extends FormLayout {
@@ -71,7 +66,7 @@ public class TrackerForm extends FormLayout {
 
   // Events
   public static abstract class TrackerFormEvent extends ComponentEvent<TrackerForm> {
-	private Tracker tracker;
+	private final Tracker tracker;
 
 	protected TrackerFormEvent(TrackerForm source, Tracker tracker) {
 	  super(source, false);
@@ -102,14 +97,15 @@ public class TrackerForm extends FormLayout {
 	}
   }
 
-  public Registration addDeleteListener(ComponentEventListener<DeleteEvent> listener) {
-	return addListener(DeleteEvent.class, listener);
+  public void addDeleteListener(ComponentEventListener<DeleteEvent> listener) {
+	  addListener(DeleteEvent.class, listener);
   }
 
-  public Registration addSaveListener(ComponentEventListener<SaveEvent> listener) {
-	return addListener(SaveEvent.class, listener);
+  public void addSaveListener(ComponentEventListener<SaveEvent> listener) {
+	  addListener(SaveEvent.class, listener);
   }
-  public Registration addCloseListener(ComponentEventListener<CloseEvent> listener) {
-	return addListener(CloseEvent.class, listener);
+
+  public void addCloseListener(ComponentEventListener<CloseEvent> listener) {
+	  addListener(CloseEvent.class, listener);
   }
 }

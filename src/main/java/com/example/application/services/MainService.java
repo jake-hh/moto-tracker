@@ -81,7 +81,7 @@ public class MainService {
 			.collect(
 				Collectors.toMap(
 					row -> (Long) row[0],
-					row -> new Pair<String, Integer>((String) row[1], (Integer) row[2])  // [0]=tracker.id, [1]=date, [2]=mileage
+					row -> new Pair<>((String) row[1], (Integer) row[2])  // [0]=tracker.id, [1]=date, [2]=mileage
 		));
 		// System.out.println("Map: " + map);
 		// return map;

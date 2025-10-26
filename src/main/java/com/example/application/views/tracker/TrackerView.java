@@ -1,4 +1,4 @@
-package com.example.application.views.list;
+package com.example.application.views.tracker;
 
 import com.example.application.data.Tracker;
 import com.example.application.data.Pair;
@@ -141,7 +141,7 @@ public class TrackerView extends VerticalLayout {
 			// System.out.println("is null: " + (pair == null));
 
 			return Optional.ofNullable(pair)
-				.map(x -> x.first().toString())
+				.map(x -> x.first())
 				.orElse("-");
 		}));
 

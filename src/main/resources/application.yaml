@@ -18,7 +18,7 @@ spring:
     mustache:
         check-template-location: false
     jpa:
-        open-in-view: true # Disable warnings
+        open-in-view: false # Disable warnings
         defer-datasource-initialization: true
     # datasource:
     #     url: "jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE"
