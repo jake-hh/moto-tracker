@@ -99,7 +99,7 @@ public class ServiceView extends VerticalLayout {
 			}
 
 			eventItem.add(dateField, mileageField, operationList);
-			add(eventItem);
+			eventList.add(eventItem);
 		}
 
 		eventList.addClassNames("service-event-item");
