@@ -11,7 +11,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-//import com.vaadin.flow.component.textfield.TextField;
 //import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -51,15 +50,16 @@ public class ServiceView extends VerticalLayout {
 		eventList.setSizeFull();
 		//eventList.removeAll();
 
-		List<Event> events = service.findAllEvents();
+		List<Event> events = service.findAllEvents().reversed();
 
 		for (Event event : events) {
 			var eventItem = new HorizontalLayout();
-			eventItem.setWidthFull();
-			eventItem.setAlignItems(Alignment.CENTER);
-			//setPadding(true);
-			//setSpacing(true);
-			//eventItem.getStyle().set("border", "1px solid var(--lumo-contrast-20pct)");
+			//eventItem.setWidthFull();
+			eventItem.setAlignItems(Alignment.START);
+			eventItem.setPadding(true);
+			eventItem.setSpacing(true);
+			eventItem.getStyle().set("border", "1px solid var(--lumo-contrast-20pct)");
+			eventItem.getStyle().set("border-radius", "8px");
 
 			// Event item fields
 			var mileageField = new IntegerField("Mileage");
