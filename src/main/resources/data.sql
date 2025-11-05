@@ -63,15 +63,33 @@ INSERT INTO "CONTACT"  (ID, VERSION, EMAIL, FIRST_NAME, LAST_NAME, COMPANY_ID, S
 (59, 1, 'essie.adams@iliat.cw', 'Essie', 'Adams', 8, 5),
 (60, 1, 'gary.osborne@do.ga', 'Gary', 'Osborne', 7, 5);
 
+
 INSERT INTO "EVENT" (ID, VERSION, DATE_VALUE, MILEAGE) VALUES
-(61, 1, 'Monday', 51000),
-(62, 1, 'Tuesday', 52000),
-(63, 1, 'Wednesday', 55000);
+(101, 1, '2023', 48000),
+(102, 1, '2024 Spring', 50000),
+(103, 1, '2024 Autumn', 50600),
+(104, 1, '2025 Summer', 51500);
+
 INSERT INTO "TRACKER" (ID, VERSION, NAME, INTERVAL_VALUE, RANGE) VALUES
-(71, 1, 'Oil change', '1 y', 15000),
-(72, 1, 'Brake fluid change', '3 y', 45000),
-(73, 1, 'Chain cleaning', '1 m', 700);
+(201, 1, 'Oil change', '1 y', 10000),
+(202, 1, 'Brake fluid change', '2 y', 20000),
+(203, 1, 'Coolant', '3y', 30000),
+(204, 1, 'Chain cleaning', '1 m', 700);
+INSERT INTO "TRACKER" (ID, VERSION, NAME) VALUES
+(205, 1, 'Brake pads'),
+(206, 1, 'Chain & sprockets'),
+(207, 1, 'Timing belt'),
+(208, 1, 'Spark plugs'),
+(209, 1, 'Air filter'),
+(210, 1, 'Tires'),
+(211, 1, 'Clutch'),
+(212, 1, 'Clutch cable');
+
 INSERT INTO "OPERATION" (ID, VERSION, EVENT_ID, TRACKER_ID) VALUES
-(81, 1, 61, 71),
-(82, 1, 62, 72),
-(83, 1, 63, 73);
+(301, 1, 101, 203),
+(302, 1, 102, 202),
+(303, 1, 103, 201),
+(304, 1, 103, 207),
+(305, 1, 104, 205),
+(306, 1, 104, 212),
+(307, 1, 104, 206);
