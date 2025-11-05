@@ -35,6 +35,9 @@ public class MainService {
 		return operationRepository.findAll();
 	}
 
+	public List<Operation> findAllOperations(Event event) {
+		return operationRepository.findByEvent(event);
+	}
 	// public List<Operation> findAllOperations(String filter) {
 	// 	if (filter == null || filter.isEmpty()) {
 	// 		return operationRepository.findAll();
@@ -67,7 +70,11 @@ public class MainService {
 		}
 	}
 
-    public Map<Long, Pair<String, Integer>> findLastEventDataForTrackers(List<Tracker> trackers) {
+	public List<Tracker> findAllTrackers() {
+		return trackerRepository.findAll();
+	}
+
+	public Map<Long, Pair<String, Integer>> findLastEventDataForTrackers(List<Tracker> trackers) {
         if (trackers.isEmpty()) {
 			return Collections.emptyMap();
 		}
@@ -99,11 +106,19 @@ public class MainService {
 		trackerRepository.save(tracker);
 	}
 
-	public List<Tracker> findAllTrackers() {
-		return trackerRepository.findAll();
-	}
-
 	public List<Event> findAllEvents(){
 		return eventRepository.findAll();
+	}
+
+	public void deleteEvent(Event event) {
+		eventRepository.delete(event);
+	}
+
+	public void saveEvent(Event event) {
+		if (event == null) {
+			System.err.println("Event is null. Are you sure you have connected your form to the application?");
+			return;
+		}
+		eventRepository.save(event);
 	}
 }

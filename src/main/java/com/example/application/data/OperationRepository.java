@@ -23,4 +23,6 @@ public interface OperationRepository extends JpaRepository<Operation, Long> {
         GROUP BY o.tracker.id
     """)
     List<Object[]> findLatestMileagesByTrackers(@Param("trackers") List<Tracker> trackers);
+
+	List<Operation> findByEvent(Event event);
 }
