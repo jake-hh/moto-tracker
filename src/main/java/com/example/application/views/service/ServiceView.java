@@ -44,66 +44,87 @@ public class ServiceView extends VerticalLayout {
 		//updateList();
 	}
 
+	private Component getToolbar() {
+		// filterText.setPlaceholder("Filter by name...");
+		// filterText.setClearButtonVisible(true);
+		// filterText.setValueChangeMode(ValueChangeMode.LAZY);
+		// filterText.addValueChangeListener(e -> updateList());
+
+		Button addEventButton = new Button("Add operation");
+		//addEventButton.addClickListener(click -> addEvent());
+
+		var toolbar = new HorizontalLayout(/*filterText, */addEventButton);
+		toolbar.addClassName("service-toolbar");
+		return toolbar;
+	}
+
 	private VerticalLayout getEventList() {
 		var eventList = new VerticalLayout();
 		eventList.addClassName("service-event-list");
 		eventList.setSizeFull();
 		//eventList.removeAll();
 
+		List<Tracker> trackers = service.findAllTrackers();
 		List<Event> events = service.findAllEvents().reversed();
 
 		for (Event event : events) {
-			var eventItem = new HorizontalLayout();
-			//eventItem.setWidthFull();
-			eventItem.setAlignItems(Alignment.START);
-			eventItem.setPadding(true);
-			eventItem.setSpacing(true);
-			eventItem.getStyle().set("border", "1px solid var(--lumo-contrast-20pct)");
-			eventItem.getStyle().set("border-radius", "8px");
-
-			// Event item fields
-			var mileageField = new IntegerField("Mileage");
-			mileageField.setValue(event.getMileage());
-			mileageField.addValueChangeListener(e -> {
-				event.setMileage(e.getValue());
-				service.saveEvent(event);
-			});
-
-			var dateField = new TextField("Date");
-			dateField.setValue(event.getDate());
-			dateField.addValueChangeListener(e -> {
-				event.setDate(e.getValue());
-				service.saveEvent(event);
-			});
-
-			// Operations list
-			VerticalLayout operationList = new VerticalLayout();
-			operationList.setPadding(false);
-			operationList.setSpacing(false);
-
-			List<Operation> operations = service.findAllOperations(event);
-			List<Tracker> trackers = service.findAllTrackers();
-
-			for (Operation operation : operations) {
-				ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
-				trackerBox.setItems(trackers);
-				trackerBox.setItemLabelGenerator(Tracker::getName);
-				trackerBox.setValue(operation.getTracker());
-
-				trackerBox.addValueChangeListener(ev -> {
-					operation.setTracker(ev.getValue());
-					service.saveOperation(operation);
-				});
-
-				operationList.add(trackerBox);
-			}
-
-			eventItem.add(dateField, mileageField, operationList);
-			eventList.add(eventItem);
+			eventList.add(getEventItem(event, trackers));
 		}
 
 		eventList.addClassNames("service-event-item");
 		return eventList;
+	}
+
+	private HorizontalLayout getEventItem(Event event, List<Tracker> trackers) {
+		var eventItem = new HorizontalLayout();
+		//eventItem.setWidthFull();
+		eventItem.setAlignItems(Alignment.START);
+		eventItem.setPadding(true);
+		eventItem.setSpacing(true);
+		eventItem.getStyle().set("border", "1px solid var(--lumo-contrast-20pct)");
+		eventItem.getStyle().set("border-radius", "8px");
+
+		// Event item fields
+		var mileageField = new IntegerField("Mileage");
+		mileageField.setValue(event.getMileage());
+		mileageField.addValueChangeListener(e -> {
+			event.setMileage(e.getValue());
+			service.saveEvent(event);
+		});
+
+		var dateField = new TextField("Date");
+		dateField.setValue(event.getDate());
+		dateField.addValueChangeListener(e -> {
+			event.setDate(e.getValue());
+			service.saveEvent(event);
+		});
+
+		// Operations list
+		VerticalLayout operationList = new VerticalLayout();
+		operationList.setPadding(false);
+		operationList.setSpacing(false);
+
+		List<Operation> operations = service.findAllOperations(event);
+
+		for (Operation operation : operations) {
+			operationList.add(getOperationItem(operation, trackers));
+		}
+
+		eventItem.add(dateField, mileageField, operationList);
+		return eventItem;
+	}
+
+	private ComboBox<Tracker> getOperationItem(Operation operation, List<Tracker> trackers) {
+		ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
+		trackerBox.setItems(trackers);
+		trackerBox.setItemLabelGenerator(Tracker::getName);
+		trackerBox.setValue(operation.getTracker());
+
+		trackerBox.addValueChangeListener(ev -> {
+			operation.setTracker(ev.getValue());
+			service.saveOperation(operation);
+		});
+		return trackerBox;
 	}
 
 	/*
@@ -132,23 +153,8 @@ public class ServiceView extends VerticalLayout {
 
 		grid.asSingleSelect().addValueChangeListener(event ->
 				editOperation(event.getValue()));
-	}*/
-
-	private Component getToolbar() {
-		// filterText.setPlaceholder("Filter by name...");
-		// filterText.setClearButtonVisible(true);
-		// filterText.setValueChangeMode(ValueChangeMode.LAZY);
-		// filterText.addValueChangeListener(e -> updateList());
-
-		Button addEventButton = new Button("Add operation");
-		//addEventButton.addClickListener(click -> addEvent());
-
-		var toolbar = new HorizontalLayout(/*filterText, */addEventButton);
-		toolbar.addClassName("service-toolbar");
-		return toolbar;
 	}
 
-	/*
 	private void addEvent() {
 		//grid.asSingleSelect().clear();
 		//editOperation(new Operation());
