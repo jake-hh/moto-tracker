@@ -73,9 +73,7 @@ public class ServiceView extends VerticalLayout {
 		eventList.setSizeFull();
 		//eventList.removeAll();
 
-		List<Event> events = service.findAllEvents().reversed();
-
-		for (Event event : events) {
+		for (Event event : service.findAllEvents().reversed()) {
 			eventList.add(getEventItem(event));
 		}
 
@@ -106,22 +104,23 @@ public class ServiceView extends VerticalLayout {
 			service.saveEvent(event);
 		});
 
-		// Operations list
-		VerticalLayout operationList = new VerticalLayout();
-		operationList.setPadding(false);
-		operationList.setSpacing(false);
-
-		List<Operation> operations = service.findAllOperations(event);
-
-		for (Operation operation : operations) {
-			operationList.add(getOperationItem(operation, operationList, event));
-		}
-
-		eventItem.add(dateField, mileageField, operationList);
+		eventItem.add(dateField, mileageField, getOperationList(event));
 		return eventItem;
 	}
 
-	private HorizontalLayout getOperationItem(Operation operation, VerticalLayout operationList, Event event) {
+	private VerticalLayout getOperationList(Event event) {
+		var operationList = new VerticalLayout();
+		operationList.setPadding(false);
+		operationList.setSpacing(false);
+
+		for (Operation operation : service.findAllOperations(event)) {
+			operationList.add(getOperationItem(operationList, operation, event));
+		}
+
+		return operationList;
+	}
+
+	private HorizontalLayout getOperationItem(VerticalLayout operationList, Operation operation, Event event) {
 		var operationItem = new HorizontalLayout();
 		operationItem.setAlignItems(Alignment.END);
 		operationItem.setSpacing(true);
@@ -150,7 +149,7 @@ public class ServiceView extends VerticalLayout {
 			// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
 			Operation newOperation = new Operation();
 			newOperation.setEvent(event);
-			operationList.add(getOperationItem(newOperation, operationList, event));
+			operationList.add(getOperationItem(operationList, newOperation, event));
 		});
 
 		var removeButton = new Button(new Icon(VaadinIcon.TRASH));
