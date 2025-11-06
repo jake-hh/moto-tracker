@@ -31,6 +31,7 @@ import java.util.List;
 @PageTitle("Services | Moto Tracker")
 public class ServiceView extends VerticalLayout {
 	// TextField filterText = new TextField();
+	List<Tracker> trackers;
 	MainService service;
 
 	public ServiceView(MainService service) {
@@ -39,9 +40,14 @@ public class ServiceView extends VerticalLayout {
 		//setPadding(true);
 		//setSpacing(true);
 		setSizeFull();
+		updateTrackers();
 
 		add(getToolbar(), getEventList());
 		//updateList();
+	}
+
+	private void updateTrackers() {
+		trackers = service.findAllTrackers();
 	}
 
 	private Component getToolbar() {
@@ -50,7 +56,7 @@ public class ServiceView extends VerticalLayout {
 		// filterText.setValueChangeMode(ValueChangeMode.LAZY);
 		// filterText.addValueChangeListener(e -> updateList());
 
-		Button addEventButton = new Button("Add operation");
+		Button addEventButton = new Button("Add event");
 		//addEventButton.addClickListener(click -> addEvent());
 
 		var toolbar = new HorizontalLayout(/*filterText, */addEventButton);
@@ -64,18 +70,17 @@ public class ServiceView extends VerticalLayout {
 		eventList.setSizeFull();
 		//eventList.removeAll();
 
-		List<Tracker> trackers = service.findAllTrackers();
 		List<Event> events = service.findAllEvents().reversed();
 
 		for (Event event : events) {
-			eventList.add(getEventItem(event, trackers));
+			eventList.add(getEventItem(event));
 		}
 
 		eventList.addClassNames("service-event-item");
 		return eventList;
 	}
 
-	private HorizontalLayout getEventItem(Event event, List<Tracker> trackers) {
+	private HorizontalLayout getEventItem(Event event) {
 		var eventItem = new HorizontalLayout();
 		//eventItem.setWidthFull();
 		eventItem.setAlignItems(Alignment.START);
@@ -107,14 +112,14 @@ public class ServiceView extends VerticalLayout {
 		List<Operation> operations = service.findAllOperations(event);
 
 		for (Operation operation : operations) {
-			operationList.add(getOperationItem(operation, trackers));
+			operationList.add(getOperationItem(operation));
 		}
 
 		eventItem.add(dateField, mileageField, operationList);
 		return eventItem;
 	}
 
-	private ComboBox<Tracker> getOperationItem(Operation operation, List<Tracker> trackers) {
+	private ComboBox<Tracker> getOperationItem(Operation operation) {
 		ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
 		trackerBox.setItems(trackers);
 		trackerBox.setItemLabelGenerator(Tracker::getName);
