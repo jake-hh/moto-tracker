@@ -137,11 +137,11 @@ public class ServiceView extends VerticalLayout {
 		trackerBox.setItemLabelGenerator(Tracker::getName);
 		trackerBox.setValue(operation.getTracker());
 
-		trackerBox.addValueChangeListener(ev -> {
+		trackerBox.addValueChangeListener(trackerEv -> {
 			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-			Operation op = service.findUpdatedOperation(operation);
-			op.setTracker(ev.getValue());
-			service.saveOperation(op);
+			Operation freshOp = service.findUpdatedOperation(operation);
+			freshOp.setTracker(trackerEv.getValue());
+			service.saveOperation(freshOp);
 		});
 
 		// --- Menubar buttons ---
@@ -165,13 +165,8 @@ public class ServiceView extends VerticalLayout {
 		});
 
 		removeButton.addClickListener(e -> {
-			assert(operationList.getComponentCount() <= 1);
-			assert(trackerBox.isEmpty());
-
 			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-			service.findOperationById(operation.getId())
-					.ifPresent(op -> service.deleteOperation(op));
-
+			service.deleteOperationById(operation.getId());
 			operationList.remove(operationItem);
 			updateRemoveButtonsState(operationList);
 		});

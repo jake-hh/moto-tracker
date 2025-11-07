@@ -73,6 +73,11 @@ public class MainService {
 		}
 	}
 
+	public void deleteOperationById(Long id) {
+		// Get operation with updated version
+		findOperationById(id).ifPresent(this::deleteOperation);
+	}
+
 	public void saveOperation(Operation operation) {
 		//Notify.info(operation.toString());
 
