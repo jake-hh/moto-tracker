@@ -11,6 +11,7 @@ import com.example.application.data.Pair;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Collections;
 import java.util.List;
@@ -51,8 +52,25 @@ public class MainService {
 	// 	return operationRepository.count();
 	// }
 
+	public Optional<Operation> findOperationById(Long id) {
+		if (id != null)
+			return operationRepository.findById(id);
+		else
+			return Optional.empty();
+	}
+
+	public Operation findUpdatedOperation(Operation operation) {
+		return findOperationById(operation.getId()).orElse(operation);
+	}
+
 	public void deleteOperation(Operation operation) {
-		operationRepository.delete(operation);
+		try {
+			operationRepository.delete(operation);
+			Notify.ok("Deleted operation");
+		} catch (Exception e) {
+			Notify.warn("Failed to delete operation: " + e.getMessage());
+			throw new RuntimeException("Could not delete operation", e);
+		}
 	}
 
 	public void saveOperation(Operation operation) {

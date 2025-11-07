@@ -1,6 +1,5 @@
 package com.example.application.views.service;
 
-import com.example.application.Notify;
 import com.example.application.data.Event;
 import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
@@ -139,8 +138,10 @@ public class ServiceView extends VerticalLayout {
 		trackerBox.setValue(operation.getTracker());
 
 		trackerBox.addValueChangeListener(ev -> {
-			operation.setTracker(ev.getValue());
-			service.saveOperation(operation);
+			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
+			Operation op = service.findUpdatedOperation(operation);
+			op.setTracker(ev.getValue());
+			service.saveOperation(op);
 		});
 
 		// --- Menubar buttons ---
@@ -167,11 +168,12 @@ public class ServiceView extends VerticalLayout {
 			assert(operationList.getComponentCount() <= 1);
 			assert(trackerBox.isEmpty());
 
-			service.deleteOperation(operation);
+			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
+			service.findOperationById(operation.getId())
+					.ifPresent(op -> service.deleteOperation(op));
+
 			operationList.remove(operationItem);
 			updateRemoveButtonsState(operationList);
-
-			Notify.ok("Deleted operation");
 		});
 
 		menuBar.add(addButton, removeButton);
