@@ -93,16 +93,18 @@ public class ServiceView extends VerticalLayout {
 		// Event item fields
 		var mileageField = new IntegerField("Mileage");
 		mileageField.setValue(event.getMileage());
-		mileageField.addValueChangeListener(e -> {
-			event.setMileage(e.getValue());
-			service.saveEvent(event);
+		mileageField.addValueChangeListener(mileageEv -> {
+			Event freshEvent = service.findUpdatedEvent(event);
+			freshEvent.setMileage(mileageEv.getValue());
+			service.saveEvent(freshEvent);
 		});
 
 		var dateField = new TextField("Date");
 		dateField.setValue(event.getDate());
-		dateField.addValueChangeListener(e -> {
-			event.setDate(e.getValue());
-			service.saveEvent(event);
+		dateField.addValueChangeListener(dateEv -> {
+			Event freshEvent = service.findUpdatedEvent(event);
+			freshEvent.setDate(dateEv.getValue());
+			service.saveEvent(freshEvent);
 		});
 
 		eventItem.add(dateField, mileageField, getOperationList(event));

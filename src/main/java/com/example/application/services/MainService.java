@@ -33,6 +33,10 @@ public class MainService {
 		this.eventRepository = eventRepository;
 	}
 
+	  ///////////////////////////////////////
+	 // ---- OPERATION -- REPOSITORY ---- //
+	///////////////////////////////////////
+
 	public List<Operation> findAllOperations() {
 		return operationRepository.findAll();
 	}
@@ -52,6 +56,7 @@ public class MainService {
 	// 	return operationRepository.count();
 	// }
 
+	// Get operation with updated version
 	public Optional<Operation> findOperationById(Long id) {
 		if (id != null)
 			return operationRepository.findById(id);
@@ -60,6 +65,7 @@ public class MainService {
 	}
 
 	public Operation findUpdatedOperation(Operation operation) {
+		// Get operation with updated version
 		return findOperationById(operation.getId()).orElse(operation);
 	}
 
@@ -97,6 +103,10 @@ public class MainService {
 			}
 		}
 	}
+
+	  /////////////////////////////////////
+	 // ---- TRACKER -- REPOSITORY ---- //
+	/////////////////////////////////////
 
 	public List<Tracker> findAllTrackers(String filter) {
 		if (filter == null || filter.isEmpty()) {
@@ -142,8 +152,25 @@ public class MainService {
 		trackerRepository.save(tracker);
 	}
 
+	  ///////////////////////////////////
+	 // ---- EVENT -- REPOSITORY ---- //
+	///////////////////////////////////
+
 	public List<Event> findAllEvents(){
 		return eventRepository.findAll();
+	}
+
+	// Get operation with updated version
+	public Optional<Event> findEventById(Long id) {
+		if (id != null)
+			return eventRepository.findById(id);
+		else
+			return Optional.empty();
+	}
+
+	public Event findUpdatedEvent(Event event) {
+		// Get operation with updated version
+		return findEventById(event.getId()).orElse(event);
 	}
 
 	public void deleteEvent(Event event) {
@@ -154,6 +181,11 @@ public class MainService {
 			Notify.warn("Failed to delete event: " + e.getMessage());
 			throw new RuntimeException("Could not delete event", e);
 		}
+	}
+
+	public void deleteEventById(Long id) {
+		// Get operation with updated version
+		findEventById(id).ifPresent(this::deleteEvent);
 	}
 
 	public void saveEvent(Event event) {
