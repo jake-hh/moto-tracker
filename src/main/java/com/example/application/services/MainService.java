@@ -85,7 +85,7 @@ public class MainService {
 			Notify.warn("Operation is null. Are you sure you have connected your form to the application?");
 		}
 		else if (operation.getEvent() == null) {
-			Notify.warn(operation + "must be linked to an Event before saving");
+			Notify.warn(operation + " must be linked to an Event before saving");
 		}
 		else if (operation.getTracker() != null) {
 			try {
@@ -147,14 +147,30 @@ public class MainService {
 	}
 
 	public void deleteEvent(Event event) {
-		eventRepository.delete(event);
+		try {
+			eventRepository.delete(event);
+			Notify.ok("Deleted event");
+		} catch (Exception e) {
+			Notify.warn("Failed to delete event: " + e.getMessage());
+			throw new RuntimeException("Could not delete event", e);
+		}
 	}
 
 	public void saveEvent(Event event) {
 		if (event == null) {
-			System.err.println("Event is null. Are you sure you have connected your form to the application?");
-			return;
+			Notify.warn("Event is null. Are you sure you have connected your form to the application?");
 		}
-		eventRepository.save(event);
+		else if (event.getDate().isEmpty()) {
+			Notify.warn(event + " needs a date before saving");
+		}
+		else {
+			try {
+				eventRepository.save(event);
+				Notify.ok("Saved event");
+			} catch (Exception e) {
+				Notify.warn("Failed to save event: " + e.getMessage());
+				throw new RuntimeException("Could not save event", e);
+			}
+		}
 	}
 }
