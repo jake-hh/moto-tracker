@@ -20,6 +20,11 @@ public class Tracker extends AbstractEntity {
 	private Integer range;
 
 
+	@Override
+	public String toString() {
+		return "Tracker " + getName();
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -43,5 +48,4 @@ public class Tracker extends AbstractEntity {
 	public void setRange(Integer range) {
 		this.range = range;
 	}
-
 }

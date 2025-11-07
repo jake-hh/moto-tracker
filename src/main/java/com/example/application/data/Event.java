@@ -18,6 +18,11 @@ public class Event extends AbstractEntity {
 	private Integer mileage;
 
 
+	@Override
+	public String toString() {
+		return "Event " + getDateStr() + " " + getMileage();
+	}
+
 	public String getDateStr() {
 		return date;  //.toString();
 	}

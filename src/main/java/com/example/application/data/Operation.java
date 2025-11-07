@@ -16,10 +16,11 @@ public class Operation extends AbstractEntity {
 	@ManyToOne
 	private Event event;
 
-	// @Override
-	// public String toString() {
-	// 	return firstName + " " + lastName;
-	// }
+
+	@Override
+	public String toString() {
+		return "Operation [ " + getEvent() + " <-> " + getTracker() + " ]";
+	}
 
 	public Tracker getTracker() {
 		return tracker;

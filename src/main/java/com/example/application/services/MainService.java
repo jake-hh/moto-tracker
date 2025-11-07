@@ -1,5 +1,6 @@
 package com.example.application.services;
 
+import com.example.application.Notify;
 import com.example.application.data.Tracker;
 import com.example.application.data.Operation;
 import com.example.application.data.Event;
@@ -55,11 +56,23 @@ public class MainService {
 	}
 
 	public void saveOperation(Operation operation) {
+		//Notify.info(operation.toString());
+
 		if (operation == null) {
-			System.err.println("Operation is null. Are you sure you have connected your form to the application?");
-			return;
+			Notify.warn("Operation is null. Are you sure you have connected your form to the application?");
 		}
-		operationRepository.save(operation);
+		else if (operation.getEvent() == null) {
+			Notify.warn(operation + "must be linked to an Event before saving");
+		}
+		else if (operation.getTracker() != null) {
+			try {
+				operationRepository.save(operation);
+				Notify.ok("Saved operation");
+			} catch (Exception e) {
+				Notify.warn("Failed to save operation: " + e.getMessage());
+				throw new RuntimeException("Could not save operation", e);
+			}
+		}
 	}
 
 	public List<Tracker> findAllTrackers(String filter) {
