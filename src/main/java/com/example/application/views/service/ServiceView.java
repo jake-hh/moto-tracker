@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 @PageTitle("Services | Moto Tracker")
 public class ServiceView extends VerticalLayout {
 	// TextField filterText = new TextField();
+	VerticalLayout eventList;
 	List<Tracker> trackers;
 	MainService service;
 
@@ -46,7 +47,8 @@ public class ServiceView extends VerticalLayout {
 		setSizeFull();
 		updateTrackers();
 
-		add(getToolbar(), getEventList());
+		eventList = getEventList();
+		add(getToolbar(), eventList);
 		//updateList();
 	}
 
@@ -91,6 +93,16 @@ public class ServiceView extends VerticalLayout {
 		eventItem.getStyle().set("border-radius", "8px");
 
 		// Event item fields
+		var deleteButton = new Button(new Icon(VaadinIcon.TRASH));
+		deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
+		deleteButton.getElement().setAttribute("title", "Remove this event");
+
+		deleteButton.addClickListener(e -> {
+			// Get event with updated version (event record has outdated version after saving changes in db)
+			service.deleteEventById(event.getId());
+			eventList.remove(eventItem);
+		});
+
 		var mileageField = new IntegerField("Mileage");
 		mileageField.setValue(event.getMileage());
 		mileageField.addValueChangeListener(mileageEv -> {
@@ -107,7 +119,7 @@ public class ServiceView extends VerticalLayout {
 			service.saveEvent(freshEvent);
 		});
 
-		eventItem.add(dateField, mileageField, getOperationList(event));
+		eventItem.add(deleteButton, dateField, mileageField, getOperationList(event));
 		return eventItem;
 	}
 
