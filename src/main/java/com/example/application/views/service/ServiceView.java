@@ -25,7 +25,6 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 
 @SpringComponent
@@ -132,10 +131,8 @@ public class ServiceView extends VerticalLayout {
 			operationList.add(getOperationItem(operationList, operation, event));
 		}
 
-		if (operationList.getComponentCount() == 0) {
-			createOperationItem(operationList, event);
-		}
-		updateRemoveButtonsState(operationList);
+		addDefaultOperationIfEmpty(operationList, event);
+		//updateRemoveButtonsState(operationList);
 
 		return operationList;
 	}
@@ -175,14 +172,15 @@ public class ServiceView extends VerticalLayout {
 		addButton.addClickListener(e -> {
 			// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
 			createOperationItem(operationList, event);
-			updateRemoveButtonsState(operationList);
+			//updateRemoveButtonsState(operationList);
 		});
 
 		removeButton.addClickListener(e -> {
 			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
 			service.deleteOperationById(operation.getId());
 			operationList.remove(operationItem);
-			updateRemoveButtonsState(operationList);
+			addDefaultOperationIfEmpty(operationList, event);
+			//updateRemoveButtonsState(operationList);
 		});
 
 		menuBar.add(addButton, removeButton);
@@ -191,12 +189,19 @@ public class ServiceView extends VerticalLayout {
 		return operationItem;
 	}
 
+	private void addDefaultOperationIfEmpty(VerticalLayout operationList, Event event) {
+		if (operationList.getComponentCount() == 0) {
+			createOperationItem(operationList, event);
+		}
+	}
+
 	private void createOperationItem(VerticalLayout operationList, Event event) {
 		var op = new Operation();
 		op.setEvent(event);
 		operationList.add(getOperationItem(operationList, op, event));
 	}
 
+	/*
 	private void updateRemoveButtonsState(VerticalLayout operationList) {
 		int count = operationList.getComponentCount();
 		//System.out.println("operationList size: " + count);
@@ -214,7 +219,6 @@ public class ServiceView extends VerticalLayout {
 		});
 	}
 
-	/*
 	private void saveOperation(ServiceForm.SaveEvent event) {
 		service.saveOperation(event.getOperation());
 		updateList();
