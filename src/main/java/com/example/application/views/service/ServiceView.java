@@ -24,6 +24,7 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 
 @SuppressWarnings("FieldMayBeFinal")
@@ -153,11 +154,14 @@ public class ServiceView extends VerticalLayout {
 		//setRemoveButtonsState(operationList, count > 1);
 	//}
 
-	private void setRemoveButtonsState(VerticalLayout operationList, boolean state) {
-		operationList.getChildren()
+	private Stream<OperationItem> getChildrenStream(VerticalLayout operationList) {
+		return operationList.getChildren()
 				.filter(OperationItem.class::isInstance)
-				.map(OperationItem.class::cast)
-				.forEach(item -> item.setRemoveButtonEnabled(state));
+				.map(OperationItem.class::cast);
+	}
+
+	private void setRemoveButtonsState(VerticalLayout operationList, boolean state) {
+		getChildrenStream(operationList).forEach(item -> item.setRemoveButtonEnabled(state));
 	}
 
 	class OperationItem extends HorizontalLayout {
@@ -207,10 +211,20 @@ public class ServiceView extends VerticalLayout {
 				service.deleteOperationById(operation.getId());
 				operationList.remove(this);
 				addDefaultOperationIfEmpty(operationList, event);
+
+				// If last remaining item is empty -> disable its remove button
+				var remainingItems = getChildrenStream(operationList).toList();
+				if (remainingItems.size() == 1)
+					remainingItems.getFirst().updateRemoveButtonState();
 			});
 
 			menuBar.add(addButton, removeButton);
 			this.add(trackerBox, menuBar);
+		}
+
+		private void updateRemoveButtonState() {
+			boolean isEmpty = trackerBox.getValue() == null;
+			setRemoveButtonEnabled(!isEmpty); // disable if empty
 		}
 
 		private void setRemoveButtonEnabled(boolean state) {
