@@ -11,11 +11,8 @@ import com.example.application.data.Pair;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -42,8 +39,12 @@ public class MainService {
 	}
 
 	public List<Operation> findAllOperations(Event event) {
-		return operationRepository.findByEvent(event);
+		if (event == null || event.getId() == null)
+			return new ArrayList<>();
+		else
+			return operationRepository.findByEvent(event);
 	}
+
 	// public List<Operation> findAllOperations(String filter) {
 	// 	if (filter == null || filter.isEmpty()) {
 	// 		return operationRepository.findAll();

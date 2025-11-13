@@ -23,7 +23,9 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 
@@ -57,7 +59,7 @@ public class ServiceView extends VerticalLayout {
 
 	private Component getToolbar() {
 		Button addEventButton = new Button("Add event");
-		//addEventButton.addClickListener(click -> addEvent());
+		addEventButton.addClickListener(click -> addEvent());
 
 		var toolbar = new HorizontalLayout(addEventButton);
 		toolbar.addClassName("service-toolbar");
@@ -106,7 +108,8 @@ public class ServiceView extends VerticalLayout {
 		});
 
 		var dateField = new TextField("Date");
-		dateField.setValue(event.getDate());
+		Optional.ofNullable(event.getDate())
+				.ifPresent(dateField::setValue);
 		dateField.addValueChangeListener(dateEv -> {
 			Event updatedEvent = service.findUpdatedEvent(event);
 			updatedEvent.setDate(dateEv.getValue());
@@ -162,6 +165,14 @@ public class ServiceView extends VerticalLayout {
 
 	private void setRemoveButtonsState(VerticalLayout operationList, boolean state) {
 		getChildrenStream(operationList).forEach(item -> item.setRemoveButtonEnabled(state));
+	}
+
+	private void addEvent() {
+		var event = new Event();
+		event.setDate(LocalDate.now().toString());
+
+		service.saveEvent(event);
+		eventList.addComponentAsFirst(getEventItem(event));
 	}
 
 	class OperationItem extends HorizontalLayout {
@@ -222,6 +233,7 @@ public class ServiceView extends VerticalLayout {
 			this.add(trackerBox, menuBar);
 		}
 
+		// Call only if it's the last item in list
 		private void updateRemoveButtonState() {
 			boolean isEmpty = trackerBox.getValue() == null;
 			setRemoveButtonEnabled(!isEmpty); // disable if empty
