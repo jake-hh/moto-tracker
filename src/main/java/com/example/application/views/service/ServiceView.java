@@ -14,7 +14,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-//import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
@@ -25,19 +24,18 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 
+@SuppressWarnings("FieldMayBeFinal")
 @SpringComponent
 @Scope("prototype")
 @PermitAll
 @Route(value = "services", layout = MainLayout.class)
 @PageTitle("Services | Moto Tracker")
 public class ServiceView extends VerticalLayout {
-	// TextField filterText = new TextField();
-	VerticalLayout eventList;
-	List<Tracker> trackers;
-	MainService service;
+	private VerticalLayout eventList;
+	private List<Tracker> trackers;
+	private MainService service;
 
 	public ServiceView(MainService service) {
 		this.service = service;
@@ -57,15 +55,10 @@ public class ServiceView extends VerticalLayout {
 	}
 
 	private Component getToolbar() {
-		// filterText.setPlaceholder("Filter by name...");
-		// filterText.setClearButtonVisible(true);
-		// filterText.setValueChangeMode(ValueChangeMode.LAZY);
-		// filterText.addValueChangeListener(e -> updateList());
-
 		Button addEventButton = new Button("Add event");
 		//addEventButton.addClickListener(click -> addEvent());
 
-		var toolbar = new HorizontalLayout(/*filterText, */addEventButton);
+		var toolbar = new HorizontalLayout(addEventButton);
 		toolbar.addClassName("service-toolbar");
 		return toolbar;
 	}
@@ -106,17 +99,17 @@ public class ServiceView extends VerticalLayout {
 		var mileageField = new IntegerField("Mileage");
 		mileageField.setValue(event.getMileage());
 		mileageField.addValueChangeListener(mileageEv -> {
-			Event freshEvent = service.findUpdatedEvent(event);
-			freshEvent.setMileage(mileageEv.getValue());
-			service.saveEvent(freshEvent);
+			Event updatedEvent = service.findUpdatedEvent(event);
+			updatedEvent.setMileage(mileageEv.getValue());
+			service.saveEvent(updatedEvent);
 		});
 
 		var dateField = new TextField("Date");
 		dateField.setValue(event.getDate());
 		dateField.addValueChangeListener(dateEv -> {
-			Event freshEvent = service.findUpdatedEvent(event);
-			freshEvent.setDate(dateEv.getValue());
-			service.saveEvent(freshEvent);
+			Event updatedEvent = service.findUpdatedEvent(event);
+			updatedEvent.setDate(dateEv.getValue());
+			service.saveEvent(updatedEvent);
 		});
 
 		eventItem.add(deleteButton, dateField, mileageField, getOperationList(event));
@@ -129,7 +122,7 @@ public class ServiceView extends VerticalLayout {
 		operationList.setSpacing(false);
 
 		for (Operation operation : service.findAllOperations(event)) {
-			operationList.add(getOperationItem(operationList, operation, event, true));
+			operationList.add(new OperationItem(operationList, operation, event));
 		}
 
 		addDefaultOperationIfEmpty(operationList, event);
@@ -138,129 +131,90 @@ public class ServiceView extends VerticalLayout {
 		return operationList;
 	}
 
-	private HorizontalLayout getOperationItem(VerticalLayout operationList, Operation operation, Event event, Boolean enableRemoveButton) {
-		var operationItem = new HorizontalLayout();
-		operationItem.setAlignItems(Alignment.END);
-		operationItem.setSpacing(true);
-
-		// --- Tracker ComboBox ---
-		var trackerBox = new ComboBox<Tracker>("Tracker");
-		trackerBox.setItems(trackers);
-		trackerBox.setItemLabelGenerator(Tracker::getName);
-		trackerBox.setValue(operation.getTracker());
-
-		// --- Menubar buttons ---
-		var menuBar = new HorizontalLayout();
-		menuBar.setSpacing(false);
-		menuBar.setPadding(false);
-
-		var addButton = new Button(new Icon(VaadinIcon.PLUS));
-		addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
-		addButton.getElement().setAttribute("title", "Add new operation");
-
-		var removeButton = new Button(new Icon(VaadinIcon.TRASH));
-		removeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
-		removeButton.getElement().setAttribute("title", "Remove this operation");
-		removeButton.setEnabled(enableRemoveButton);
-
-		trackerBox.addValueChangeListener(trackerEv -> {
-			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-			Operation freshOp = service.findUpdatedOperation(operation);
-			freshOp.setTracker(trackerEv.getValue());
-			service.saveOperation(freshOp);
-
-			removeButton.setEnabled(true);
-		});
-
-		// --- Button logic ---
-		addButton.addClickListener(e -> {
-			// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
-			createOperationItem(operationList, event, true);
-
-			setRemoveButtonsState(operationList, true);
-		});
-
-		removeButton.addClickListener(e -> {
-			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-			service.deleteOperationById(operation.getId());
-			operationList.remove(operationItem);
-			addDefaultOperationIfEmpty(operationList, event);
-		});
-
-		menuBar.add(addButton, removeButton);
-		operationItem.add(trackerBox, menuBar);
-
-		return operationItem;
-	}
-
 	private void addDefaultOperationIfEmpty(VerticalLayout operationList, Event event) {
-		if (operationList.getComponentCount() == 0) {
+		if (operationList.getComponentCount() == 0)
 			createOperationItem(operationList, event, false);
-		}
 	}
 
-	private void createOperationItem(VerticalLayout operationList, Event event, Boolean enableRemoveButton) {
+	private void createOperationItem(VerticalLayout operationList, Event event, boolean enableRemoveButton) {
 		var op = new Operation();
 		op.setEvent(event);
-		operationList.add(getOperationItem(operationList, op, event, enableRemoveButton));
+
+		var operationItem = new OperationItem(operationList, op, event);
+		operationItem.setRemoveButtonEnabled(enableRemoveButton);
+		operationList.add(operationItem);
 	}
 
 	//private void updateRemoveButtonsState(VerticalLayout operationList) {
 		//int count = operationList.getComponentCount();
 		////System.out.println("operationList size: " + count);
 
+		//// Disable remove button if only one item is in list
 		//setRemoveButtonsState(operationList, count > 1);
 	//}
 
-	private void setRemoveButtonsState(VerticalLayout operationList, Boolean state) {
-		// Disable remove button if only one item is in list
-		operationList.getChildren().forEach(component -> {
-			if (component instanceof HorizontalLayout hl) {
-				hl.getChildren()
-					.flatMap(c -> c instanceof HorizontalLayout hl2 ? hl2.getChildren() : Stream.of(c))
-					.filter(Button.class::isInstance)
-					.map(Button.class::cast)
-					.filter(btn -> btn.getElement().getAttribute("title").equals("Remove this operation"))
-					.forEach(btn -> btn.setEnabled(state));
-			}
-		});
+	private void setRemoveButtonsState(VerticalLayout operationList, boolean state) {
+		operationList.getChildren()
+				.filter(OperationItem.class::isInstance)
+				.map(OperationItem.class::cast)
+				.forEach(item -> item.setRemoveButtonEnabled(state));
 	}
 
-	/*
-	private void saveOperation(ServiceForm.SaveEvent event) {
-		service.saveOperation(event.getOperation());
-		updateList();
-		closeEditor();
-	}
+	class OperationItem extends HorizontalLayout {
+		private ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
+		private HorizontalLayout menuBar = new HorizontalLayout();
+		private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
+		private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
-	private void deleteOperation(ServiceForm.DeleteEvent event) {
-		service.deleteOperation(event.getOperation());
-		updateList();
-		closeEditor();
-	}
+		private OperationItem(VerticalLayout operationList, Operation operation, Event event) {
+			this.setAlignItems(Alignment.END);
+			this.setSpacing(true);
 
-	private void configureGrid() {
-		grid.addClassNames("service-grid");
-		grid.setSizeFull();
-		// grid.setColumns("firstName", "lastName", "email");
-		grid.addColumn(operation -> operation.getEvent().getDateStr()).setHeader("Date");
-		grid.addColumn(operation -> operation.getEvent().getMileage()).setHeader("Mileage");
-		grid.addColumn(operation -> operation.getTracker().getName()).setHeader("Tracker");
-		grid.addColumn(operation -> operation.getTracker().getInterval()).setHeader("Interval");
-		grid.addColumn(operation -> operation.getTracker().getRange()).setHeader("Range");
-		grid.getColumns().forEach(col -> col.setAutoWidth(true));
+			// --- Tracker ComboBox ---
+			trackerBox.setItems(trackers);
+			trackerBox.setItemLabelGenerator(Tracker::getName);
+			trackerBox.setValue(operation.getTracker());
 
-		grid.asSingleSelect().addValueChangeListener(event ->
-				editOperation(event.getValue()));
-	}
+			// --- Menubar buttons ---
+			menuBar.setSpacing(false);
+			menuBar.setPadding(false);
 
-	private void addEvent() {
-		//grid.asSingleSelect().clear();
-		//editOperation(new Operation());
-	}
+			addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
+			addButton.getElement().setAttribute("title", "Add new operation");
 
-	private void updateList() {
-		grid.setItems(service.findAllOperations(/*filterText.getValue()*));
+			removeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
+			removeButton.getElement().setAttribute("title", "Remove this operation");
+
+			// --- Listeners ---
+			trackerBox.addValueChangeListener(trackerEv -> {
+				// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
+				Operation updatedOperation = service.findUpdatedOperation(operation);
+				updatedOperation.setTracker(trackerEv.getValue());
+				service.saveOperation(updatedOperation);
+
+				removeButton.setEnabled(true);
+			});
+
+			addButton.addClickListener(e -> {
+				// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
+				createOperationItem(operationList, event, true);
+
+				setRemoveButtonsState(operationList, true);
+			});
+
+			removeButton.addClickListener(e -> {
+				// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
+				service.deleteOperationById(operation.getId());
+				operationList.remove(this);
+				addDefaultOperationIfEmpty(operationList, event);
+			});
+
+			menuBar.add(addButton, removeButton);
+			this.add(trackerBox, menuBar);
+		}
+
+		private void setRemoveButtonEnabled(boolean state) {
+			removeButton.setEnabled(state);
+		}
 	}
-	*/
 }
