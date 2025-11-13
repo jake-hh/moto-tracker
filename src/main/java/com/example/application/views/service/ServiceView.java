@@ -25,6 +25,7 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 
 @SpringComponent
@@ -128,7 +129,7 @@ public class ServiceView extends VerticalLayout {
 		operationList.setSpacing(false);
 
 		for (Operation operation : service.findAllOperations(event)) {
-			operationList.add(getOperationItem(operationList, operation, event));
+			operationList.add(getOperationItem(operationList, operation, event, true));
 		}
 
 		addDefaultOperationIfEmpty(operationList, event);
@@ -137,7 +138,7 @@ public class ServiceView extends VerticalLayout {
 		return operationList;
 	}
 
-	private HorizontalLayout getOperationItem(VerticalLayout operationList, Operation operation, Event event) {
+	private HorizontalLayout getOperationItem(VerticalLayout operationList, Operation operation, Event event, Boolean enableRemoveButton) {
 		var operationItem = new HorizontalLayout();
 		operationItem.setAlignItems(Alignment.END);
 		operationItem.setSpacing(true);
@@ -147,13 +148,6 @@ public class ServiceView extends VerticalLayout {
 		trackerBox.setItems(trackers);
 		trackerBox.setItemLabelGenerator(Tracker::getName);
 		trackerBox.setValue(operation.getTracker());
-
-		trackerBox.addValueChangeListener(trackerEv -> {
-			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-			Operation freshOp = service.findUpdatedOperation(operation);
-			freshOp.setTracker(trackerEv.getValue());
-			service.saveOperation(freshOp);
-		});
 
 		// --- Menubar buttons ---
 		var menuBar = new HorizontalLayout();
@@ -167,12 +161,23 @@ public class ServiceView extends VerticalLayout {
 		var removeButton = new Button(new Icon(VaadinIcon.TRASH));
 		removeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
 		removeButton.getElement().setAttribute("title", "Remove this operation");
+		removeButton.setEnabled(enableRemoveButton);
+
+		trackerBox.addValueChangeListener(trackerEv -> {
+			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
+			Operation freshOp = service.findUpdatedOperation(operation);
+			freshOp.setTracker(trackerEv.getValue());
+			service.saveOperation(freshOp);
+
+			removeButton.setEnabled(true);
+		});
 
 		// --- Button logic ---
 		addButton.addClickListener(e -> {
 			// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
-			createOperationItem(operationList, event);
-			//updateRemoveButtonsState(operationList);
+			createOperationItem(operationList, event, true);
+
+			setRemoveButtonsState(operationList, true);
 		});
 
 		removeButton.addClickListener(e -> {
@@ -180,7 +185,6 @@ public class ServiceView extends VerticalLayout {
 			service.deleteOperationById(operation.getId());
 			operationList.remove(operationItem);
 			addDefaultOperationIfEmpty(operationList, event);
-			//updateRemoveButtonsState(operationList);
 		});
 
 		menuBar.add(addButton, removeButton);
@@ -191,21 +195,24 @@ public class ServiceView extends VerticalLayout {
 
 	private void addDefaultOperationIfEmpty(VerticalLayout operationList, Event event) {
 		if (operationList.getComponentCount() == 0) {
-			createOperationItem(operationList, event);
+			createOperationItem(operationList, event, false);
 		}
 	}
 
-	private void createOperationItem(VerticalLayout operationList, Event event) {
+	private void createOperationItem(VerticalLayout operationList, Event event, Boolean enableRemoveButton) {
 		var op = new Operation();
 		op.setEvent(event);
-		operationList.add(getOperationItem(operationList, op, event));
+		operationList.add(getOperationItem(operationList, op, event, enableRemoveButton));
 	}
 
-	/*
-	private void updateRemoveButtonsState(VerticalLayout operationList) {
-		int count = operationList.getComponentCount();
-		//System.out.println("operationList size: " + count);
+	//private void updateRemoveButtonsState(VerticalLayout operationList) {
+		//int count = operationList.getComponentCount();
+		////System.out.println("operationList size: " + count);
 
+		//setRemoveButtonsState(operationList, count > 1);
+	//}
+
+	private void setRemoveButtonsState(VerticalLayout operationList, Boolean state) {
 		// Disable remove button if only one item is in list
 		operationList.getChildren().forEach(component -> {
 			if (component instanceof HorizontalLayout hl) {
@@ -214,11 +221,12 @@ public class ServiceView extends VerticalLayout {
 					.filter(Button.class::isInstance)
 					.map(Button.class::cast)
 					.filter(btn -> btn.getElement().getAttribute("title").equals("Remove this operation"))
-					.forEach(btn -> btn.setEnabled(count > 1));
+					.forEach(btn -> btn.setEnabled(state));
 			}
 		});
 	}
 
+	/*
 	private void saveOperation(ServiceForm.SaveEvent event) {
 		service.saveOperation(event.getOperation());
 		updateList();
