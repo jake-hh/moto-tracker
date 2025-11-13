@@ -66,7 +66,7 @@ public class OplistView extends VerticalLayout {
 	}
 
 	private void deleteOperation(OperationForm.DeleteEvent event) {
-		service.deleteOperation(event.getOperation());
+		service.deleteOperation(event.getOperation(), true);
 		updateList();
 		closeEditor();
 	}

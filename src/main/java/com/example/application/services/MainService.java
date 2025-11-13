@@ -70,10 +70,11 @@ public class MainService {
 		return findOperationById(operation.getId()).orElse(operation);
 	}
 
-	public void deleteOperation(Operation operation) {
+	public void deleteOperation(Operation operation, boolean showOkNotif) {
 		try {
 			operationRepository.delete(operation);
-			Notify.ok("Deleted operation");
+			if (showOkNotif)
+				Notify.ok("Deleted operation");
 		} catch (Exception e) {
 			Notify.warn("Failed to delete operation: " + e.getMessage());
 			throw new RuntimeException("Could not delete operation", e);
@@ -82,7 +83,7 @@ public class MainService {
 
 	public void deleteOperationById(Long id) {
 		// Get operation with updated version
-		findOperationById(id).ifPresent(this::deleteOperation);
+		findOperationById(id).ifPresent(op -> deleteOperation(op, true));
 	}
 
 	public void saveOperation(Operation operation) {

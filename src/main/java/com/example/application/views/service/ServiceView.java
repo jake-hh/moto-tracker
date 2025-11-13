@@ -10,6 +10,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -94,9 +95,38 @@ public class ServiceView extends VerticalLayout {
 		deleteButton.getElement().setAttribute("title", "Remove this event");
 
 		deleteButton.addClickListener(e -> {
+
 			// Get event with updated version (event record has outdated version after saving changes in db)
-			service.deleteEventById(event.getId());
-			eventList.remove(eventItem);
+			Event updatedEvent = service.findEventById(event.getId()).get();
+			List<Operation> operations = service.findAllOperations(event);
+
+			if (operations.isEmpty()) {
+				service.deleteEvent(updatedEvent);
+				eventList.remove(eventItem);
+			}
+			else {
+				var dialog = new ConfirmDialog();
+				if (operations.size() == 1) {
+					dialog.setHeader("Event contains one operation");
+					dialog.setText("Do you want to delete it?");
+				} else {
+					dialog.setHeader("Event contains " + operations.size() + " operations");
+					dialog.setText("Do you want to delete them all?");
+				}
+				dialog.setCancelable(true);
+				dialog.setConfirmText("Delete");
+				dialog.setConfirmButtonTheme("error primary");
+
+				dialog.addConfirmListener(ce -> {
+					for (Operation operation : operations)
+						service.deleteOperation(operation, false);
+
+					service.deleteEvent(updatedEvent);
+					eventList.remove(eventItem);
+				});
+
+				dialog.open();
+			}
 		});
 
 		var mileageField = new IntegerField("Mileage");
