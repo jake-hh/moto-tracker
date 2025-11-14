@@ -95,7 +95,6 @@ public class ServiceView extends VerticalLayout {
 		deleteButton.getElement().setAttribute("title", "Remove this event");
 
 		deleteButton.addClickListener(e -> {
-
 			// Get event with updated version (event record has outdated version after saving changes in db)
 			Event updatedEvent = service.findEventById(event.getId()).get();
 			List<Operation> operations = service.findAllOperations(event);
@@ -162,6 +161,8 @@ public class ServiceView extends VerticalLayout {
 		addDefaultOperationIfEmpty(operationList, event);
 		//updateRemoveButtonsState(operationList);
 
+		updateAllTrackerLabels(operationList);
+
 		return operationList;
 	}
 
@@ -177,6 +178,7 @@ public class ServiceView extends VerticalLayout {
 		var operationItem = new OperationItem(operationList, op, event);
 		operationItem.setRemoveButtonEnabled(enableRemoveButton);
 		operationList.addComponentAtIndex(position, operationItem);
+		operationItem.updateTrackerLabel();
 	}
 
 	//private void updateRemoveButtonsState(VerticalLayout operationList) {
@@ -197,6 +199,10 @@ public class ServiceView extends VerticalLayout {
 		getChildrenStream(operationList).forEach(item -> item.setRemoveButtonEnabled(state));
 	}
 
+	private void updateAllTrackerLabels(VerticalLayout operationList) {
+		getChildrenStream(operationList).forEach(OperationItem::updateTrackerLabel);
+	}
+
 	private void addEvent() {
 		var event = new Event();
 		event.setDate(LocalDate.now().toString());
@@ -206,12 +212,15 @@ public class ServiceView extends VerticalLayout {
 	}
 
 	class OperationItem extends HorizontalLayout {
+		private VerticalLayout operationList;
 		private ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
 		private HorizontalLayout menuBar = new HorizontalLayout();
 		private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 		private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
 		private OperationItem(VerticalLayout operationList, Operation operation, Event event) {
+			this.operationList = operationList;
+
 			this.setAlignItems(Alignment.END);
 			this.setSpacing(true);
 
@@ -253,6 +262,8 @@ public class ServiceView extends VerticalLayout {
 				operationList.remove(this);
 				addDefaultOperationIfEmpty(operationList, event);
 
+				updateAllTrackerLabels(operationList);
+
 				// If last remaining item is empty -> disable its remove button
 				var remainingItems = getChildrenStream(operationList).toList();
 				if (remainingItems.size() == 1)
@@ -261,6 +272,10 @@ public class ServiceView extends VerticalLayout {
 
 			menuBar.add(addButton, removeButton);
 			this.add(trackerBox, menuBar);
+		}
+
+		private void updateTrackerLabel() {
+			trackerBox.setLabel(operationList.indexOf(this) == 0 ? "Tracker" : null);
 		}
 
 		// Call only if it's the last item in list
