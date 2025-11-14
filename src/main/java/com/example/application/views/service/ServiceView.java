@@ -167,16 +167,16 @@ public class ServiceView extends VerticalLayout {
 
 	private void addDefaultOperationIfEmpty(VerticalLayout operationList, Event event) {
 		if (operationList.getComponentCount() == 0)
-			createOperationItem(operationList, event, false);
+			createOperationItem(operationList, event, 0, false);
 	}
 
-	private void createOperationItem(VerticalLayout operationList, Event event, boolean enableRemoveButton) {
+	private void createOperationItem(VerticalLayout operationList, Event event, int position, boolean enableRemoveButton) {
 		var op = new Operation();
 		op.setEvent(event);
 
 		var operationItem = new OperationItem(operationList, op, event);
 		operationItem.setRemoveButtonEnabled(enableRemoveButton);
-		operationList.add(operationItem);
+		operationList.addComponentAtIndex(position, operationItem);
 	}
 
 	//private void updateRemoveButtonsState(VerticalLayout operationList) {
@@ -242,7 +242,7 @@ public class ServiceView extends VerticalLayout {
 
 			addButton.addClickListener(e -> {
 				// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
-				createOperationItem(operationList, event, true);
+				createOperationItem(operationList, event, operationList.indexOf(this) + 1, true);
 
 				setRemoveButtonsState(operationList, true);
 			});
