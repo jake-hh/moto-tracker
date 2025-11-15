@@ -203,6 +203,13 @@ public class ServiceView extends VerticalLayout {
 		getChildrenStream(operationList).forEach(OperationItem::updateTrackerLabel);
 	}
 
+	private void deleteEmptyOperationItems(VerticalLayout operationList, int omitPosition) {
+		getChildrenStream(operationList).forEach(item -> {
+			if (item.isEmpty() && operationList.indexOf(item) != omitPosition)
+				operationList.remove(item);
+		});
+	}
+
 	private void addEvent() {
 		var event = new Event();
 		event.setDate(LocalDate.now().toString());
@@ -250,6 +257,9 @@ public class ServiceView extends VerticalLayout {
 			});
 
 			addButton.addClickListener(e -> {
+				if (isEmpty()) return;
+
+				deleteEmptyOperationItems(operationList, operationList.indexOf(this));
 				// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
 				createOperationItem(operationList, event, operationList.indexOf(this) + 1, true);
 
@@ -274,14 +284,17 @@ public class ServiceView extends VerticalLayout {
 			this.add(trackerBox, menuBar);
 		}
 
+		private boolean isEmpty() {
+			return trackerBox.getValue() == null;
+		}
+
 		private void updateTrackerLabel() {
 			trackerBox.setLabel(operationList.indexOf(this) == 0 ? "Tracker" : null);
 		}
 
 		// Call only if it's the last item in list
 		private void updateRemoveButtonState() {
-			boolean isEmpty = trackerBox.getValue() == null;
-			setRemoveButtonEnabled(!isEmpty); // disable if empty
+			setRemoveButtonEnabled(!isEmpty()); // disable if empty
 		}
 
 		private void setRemoveButtonEnabled(boolean state) {
