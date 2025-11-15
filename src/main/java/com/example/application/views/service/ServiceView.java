@@ -51,7 +51,6 @@ public class ServiceView extends VerticalLayout {
 
 		eventList = getEventList();
 		add(getToolbar(), eventList);
-		//updateList();
 	}
 
 	private void updateTrackers() {
@@ -158,20 +157,19 @@ public class ServiceView extends VerticalLayout {
 			operationList.add(new OperationItem(operationList, operation, event));
 		}
 
-		addDefaultOperationIfEmpty(operationList, event);
-		//updateRemoveButtonsState(operationList);
+		addNewOperationIfEmpty(operationList, event);
 
 		updateAllTrackerLabels(operationList);
 
 		return operationList;
 	}
 
-	private void addDefaultOperationIfEmpty(VerticalLayout operationList, Event event) {
+	private void addNewOperationIfEmpty(VerticalLayout operationList, Event event) {
 		if (operationList.getComponentCount() == 0)
-			createOperationItem(operationList, event, 0, true, false);
+			addNewOperationItem(operationList, event, 0, true, false);
 	}
 
-	private void createOperationItem(VerticalLayout operationList, Event event, int position, boolean enableAddButton, boolean enableRemoveButton) {
+	private void addNewOperationItem(VerticalLayout operationList, Event event, int position, boolean enableAddButton, boolean enableRemoveButton) {
 		var op = new Operation();
 		op.setEvent(event);
 
@@ -182,26 +180,18 @@ public class ServiceView extends VerticalLayout {
 		operationItem.updateTrackerLabel();
 	}
 
-	//private void updateRemoveButtonsState(VerticalLayout operationList) {
-		//int count = operationList.getComponentCount();
-		////System.out.println("operationList size: " + count);
-
-		//// Disable remove button if only one item is in list
-		//setRemoveButtonsState(operationList, count > 1);
-	//}
-
 	private Stream<OperationItem> getChildrenStream(VerticalLayout operationList) {
 		return operationList.getChildren()
 				.filter(OperationItem.class::isInstance)
 				.map(OperationItem.class::cast);
 	}
 
-	private void enableAddButtons(VerticalLayout operationList) {
+	private void enableAllAddButtons(VerticalLayout operationList) {
 		getChildrenStream(operationList).forEach(item -> item.setAddButtonEnabled(true));
 	}
 
-	private void setRemoveButtonsState(VerticalLayout operationList, boolean state) {
-		getChildrenStream(operationList).forEach(item -> item.setRemoveButtonEnabled(state));
+	private void enableAllRemoveButtons(VerticalLayout operationList) {
+		getChildrenStream(operationList).forEach(item -> item.setRemoveButtonEnabled(true));
 	}
 
 	private void updateAllTrackerLabels(VerticalLayout operationList) {
@@ -216,7 +206,7 @@ public class ServiceView extends VerticalLayout {
 	}
 
 	private void updateAddButtonStates(VerticalLayout operationList) {
-		enableAddButtons(operationList);
+		enableAllAddButtons(operationList);
 
 		getChildrenStream(operationList).forEach(item -> {
 			if (item.isEmpty()) {
@@ -268,7 +258,7 @@ public class ServiceView extends VerticalLayout {
 			// --- Listeners ---
 			trackerBox.addValueChangeListener(trackerEv -> {
 				if (operation.getId() == null)
-					enableAddButtons(operationList);
+					enableAllAddButtons(operationList);
 
 				// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
 				Operation updatedOperation = service.findUpdatedOperation(operation);
@@ -282,11 +272,11 @@ public class ServiceView extends VerticalLayout {
 				if (isEmpty()) return;
 
 				deleteEmptyOperationItems(operationList, operationList.indexOf(this));
-				enableAddButtons(operationList);
-				setRemoveButtonsState(operationList, true);
+				enableAllAddButtons(operationList);
+				enableAllRemoveButtons(operationList);
 
 				// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
-				createOperationItem(operationList, event, operationList.indexOf(this) + 1, false, true);
+				addNewOperationItem(operationList, event, operationList.indexOf(this) + 1, false, true);
 				setAddButtonEnabled(false);
 			});
 
@@ -294,7 +284,7 @@ public class ServiceView extends VerticalLayout {
 				// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
 				service.deleteOperationById(operation.getId());
 				operationList.remove(this);
-				addDefaultOperationIfEmpty(operationList, event);
+				addNewOperationIfEmpty(operationList, event);
 
 				updateAllTrackerLabels(operationList);
 				updateAddButtonStates(operationList);
