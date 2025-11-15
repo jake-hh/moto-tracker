@@ -168,14 +168,15 @@ public class ServiceView extends VerticalLayout {
 
 	private void addDefaultOperationIfEmpty(VerticalLayout operationList, Event event) {
 		if (operationList.getComponentCount() == 0)
-			createOperationItem(operationList, event, 0, false);
+			createOperationItem(operationList, event, 0, true, false);
 	}
 
-	private void createOperationItem(VerticalLayout operationList, Event event, int position, boolean enableRemoveButton) {
+	private void createOperationItem(VerticalLayout operationList, Event event, int position, boolean enableAddButton, boolean enableRemoveButton) {
 		var op = new Operation();
 		op.setEvent(event);
 
 		var operationItem = new OperationItem(operationList, op, event);
+		operationItem.setAddButtonEnabled(enableAddButton);
 		operationItem.setRemoveButtonEnabled(enableRemoveButton);
 		operationList.addComponentAtIndex(position, operationItem);
 		operationItem.updateTrackerLabel();
@@ -195,6 +196,10 @@ public class ServiceView extends VerticalLayout {
 				.map(OperationItem.class::cast);
 	}
 
+	private void enableAddButtons(VerticalLayout operationList) {
+		getChildrenStream(operationList).forEach(item -> item.setAddButtonEnabled(true));
+	}
+
 	private void setRemoveButtonsState(VerticalLayout operationList, boolean state) {
 		getChildrenStream(operationList).forEach(item -> item.setRemoveButtonEnabled(state));
 	}
@@ -207,6 +212,20 @@ public class ServiceView extends VerticalLayout {
 		getChildrenStream(operationList).forEach(item -> {
 			if (item.isEmpty() && operationList.indexOf(item) != omitPosition)
 				operationList.remove(item);
+		});
+	}
+
+	private void updateAddButtonStates(VerticalLayout operationList) {
+		enableAddButtons(operationList);
+
+		getChildrenStream(operationList).forEach(item -> {
+			if (item.isEmpty()) {
+				item.setAddButtonEnabled(false);
+
+				var prevPos = operationList.indexOf(item) - 1;
+				if (prevPos >= 0 && operationList.getComponentAt(prevPos) instanceof OperationItem prevItem)
+					prevItem.setAddButtonEnabled(false);
+			}
 		});
 	}
 
@@ -248,6 +267,9 @@ public class ServiceView extends VerticalLayout {
 
 			// --- Listeners ---
 			trackerBox.addValueChangeListener(trackerEv -> {
+				if (operation.getId() == null)
+					enableAddButtons(operationList);
+
 				// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
 				Operation updatedOperation = service.findUpdatedOperation(operation);
 				updatedOperation.setTracker(trackerEv.getValue());
@@ -260,10 +282,12 @@ public class ServiceView extends VerticalLayout {
 				if (isEmpty()) return;
 
 				deleteEmptyOperationItems(operationList, operationList.indexOf(this));
-				// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
-				createOperationItem(operationList, event, operationList.indexOf(this) + 1, true);
-
+				enableAddButtons(operationList);
 				setRemoveButtonsState(operationList, true);
+
+				// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
+				createOperationItem(operationList, event, operationList.indexOf(this) + 1, false, true);
+				setAddButtonEnabled(false);
 			});
 
 			removeButton.addClickListener(e -> {
@@ -273,6 +297,7 @@ public class ServiceView extends VerticalLayout {
 				addDefaultOperationIfEmpty(operationList, event);
 
 				updateAllTrackerLabels(operationList);
+				updateAddButtonStates(operationList);
 
 				// If last remaining item is empty -> disable its remove button
 				var remainingItems = getChildrenStream(operationList).toList();
@@ -299,6 +324,10 @@ public class ServiceView extends VerticalLayout {
 
 		private void setRemoveButtonEnabled(boolean state) {
 			removeButton.setEnabled(state);
+		}
+
+		private void setAddButtonEnabled(boolean state) {
+			addButton.setEnabled(state);
 		}
 	}
 }
