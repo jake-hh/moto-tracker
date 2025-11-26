@@ -12,6 +12,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -132,7 +133,8 @@ public class ServiceView extends VerticalLayout {
 		mileageField.setValue(event.getMileage());
 		mileageField.setStepButtonsVisible(true);
 		mileageField.setStep(100);
-		//dateField.setHelperText("km");
+		mileageField.setSuffixComponent(new Span("km"));
+		//mileageField.setHelperText("km");
 
 		mileageField.setI18n(new IntegerField.IntegerFieldI18n()
 				.setBadInputErrorMessage("Invalid number format")
@@ -151,7 +153,7 @@ public class ServiceView extends VerticalLayout {
 				.ifPresent(dateField::setValue);
 
 		dateField.setRequired(true);
-		dateField.setRequiredIndicatorVisible(true);
+		dateField.setRequiredIndicatorVisible(false);
 		dateField.setMax(getDateToday());
 		dateField.setPlaceholder("yyyy-MM-dd");
 		//dateField.setHelperText("yyyy-MM-dd");
