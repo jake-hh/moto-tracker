@@ -11,12 +11,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -25,6 +25,7 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -135,7 +136,7 @@ public class ServiceView extends VerticalLayout {
 			service.saveEvent(updatedEvent);
 		});
 
-		var dateField = new TextField("Date");
+		var dateField = new DatePicker("Date");
 		Optional.ofNullable(event.getDate())
 				.ifPresent(dateField::setValue);
 		dateField.addValueChangeListener(dateEv -> {
@@ -143,6 +144,9 @@ public class ServiceView extends VerticalLayout {
 			updatedEvent.setDate(dateEv.getValue());
 			service.saveEvent(updatedEvent);
 		});
+
+		dateField.setRequiredIndicatorVisible(true);
+		dateField.setMax(LocalDate.now(ZoneId.systemDefault()));
 
 		eventItem.add(deleteButton, dateField, mileageField, getOperationList(event));
 		return eventItem;
@@ -221,7 +225,7 @@ public class ServiceView extends VerticalLayout {
 
 	private void addEvent() {
 		var event = new Event();
-		event.setDate(LocalDate.now().toString());
+		event.setDate(LocalDate.now(ZoneId.systemDefault()));
 
 		service.saveEvent(event);
 		eventList.addComponentAsFirst(getEventItem(event));

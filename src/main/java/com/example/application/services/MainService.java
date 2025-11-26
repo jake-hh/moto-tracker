@@ -194,7 +194,7 @@ public class MainService {
 		if (event == null) {
 			Notify.warn("Event is null. Are you sure you have connected your form to the application?");
 		}
-		else if (event.getDate().isEmpty()) {
+		else if (event.getDate() == null) {
 			Notify.warn(event + " needs a date before saving");
 		}
 		else {

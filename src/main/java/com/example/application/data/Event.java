@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 
-// import java.time.LocalDate;
+import java.time.LocalDate;
 
 
 @Entity
@@ -12,8 +12,7 @@ public class Event extends AbstractEntity {
 
 	@NotNull
 	@Column(name = "date_value")
-	private String date;
-	// private LocalDate date;
+	private LocalDate date;
 
 	private Integer mileage;
 
@@ -24,10 +23,10 @@ public class Event extends AbstractEntity {
 	}
 
 	public String getDateStr() {
-		return date;  //.toString();
+		return date.toString();
 	}
 
-	public String getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
@@ -35,7 +34,7 @@ public class Event extends AbstractEntity {
 		return mileage;
 	}
 
-	public void setDate(String date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
