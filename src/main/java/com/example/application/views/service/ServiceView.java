@@ -130,23 +130,46 @@ public class ServiceView extends VerticalLayout {
 
 		var mileageField = new IntegerField("Mileage");
 		mileageField.setValue(event.getMileage());
+		mileageField.setStepButtonsVisible(true);
+		mileageField.setStep(100);
+		//dateField.setHelperText("km");
+
+		mileageField.setI18n(new IntegerField.IntegerFieldI18n()
+				.setBadInputErrorMessage("Invalid number format")
+				.setStepErrorMessage("Number must be a multiple of 100"));
+
 		mileageField.addValueChangeListener(mileageEv -> {
-			Event updatedEvent = service.findUpdatedEvent(event);
-			updatedEvent.setMileage(mileageEv.getValue());
-			service.saveEvent(updatedEvent);
+			if (mileageEv.getValue() == null || mileageEv.getValue() % 100 == 0) {
+				Event updatedEvent = service.findUpdatedEvent(event);
+				updatedEvent.setMileage(mileageEv.getValue());
+				service.saveEvent(updatedEvent);
+			}
 		});
 
 		var dateField = new DatePicker("Date");
 		Optional.ofNullable(event.getDate())
 				.ifPresent(dateField::setValue);
-		dateField.addValueChangeListener(dateEv -> {
-			Event updatedEvent = service.findUpdatedEvent(event);
-			updatedEvent.setDate(dateEv.getValue());
-			service.saveEvent(updatedEvent);
-		});
 
+		dateField.setRequired(true);
 		dateField.setRequiredIndicatorVisible(true);
-		dateField.setMax(LocalDate.now(ZoneId.systemDefault()));
+		dateField.setMax(getDateToday());
+		dateField.setPlaceholder("yyyy-MM-dd");
+		//dateField.setHelperText("yyyy-MM-dd");
+
+		dateField.setI18n(new DatePicker.DatePickerI18n()
+				.setFirstDayOfWeek(1)
+				.setDateFormat("yyyy-MM-dd")
+				.setRequiredErrorMessage("Field is required")
+				.setBadInputErrorMessage("Invalid date format")
+				.setMaxErrorMessage("Future dates aren’t allowed"));
+
+		dateField.addValueChangeListener(dateEv -> {
+			if (dateEv.getValue() != null && !dateEv.getValue().isAfter(getDateToday())) {
+				Event updatedEvent = service.findUpdatedEvent(event);
+				updatedEvent.setDate(dateEv.getValue());
+				service.saveEvent(updatedEvent);
+			}
+		});
 
 		eventItem.add(deleteButton, dateField, mileageField, getOperationList(event));
 		return eventItem;
@@ -225,10 +248,14 @@ public class ServiceView extends VerticalLayout {
 
 	private void addEvent() {
 		var event = new Event();
-		event.setDate(LocalDate.now(ZoneId.systemDefault()));
+		event.setDate(getDateToday());
 
 		service.saveEvent(event);
 		eventList.addComponentAsFirst(getEventItem(event));
+	}
+
+	private LocalDate getDateToday() {
+		return LocalDate.now(ZoneId.systemDefault());
 	}
 
 	class OperationItem extends HorizontalLayout {
