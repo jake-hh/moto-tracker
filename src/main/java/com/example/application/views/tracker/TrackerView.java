@@ -20,6 +20,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -130,25 +131,25 @@ public class TrackerView extends VerticalLayout {
 
 	private void updateList() {
 		List<Tracker> trackers = service.findAllTrackers(filterText.getValue());
-		Map<Long, Pair<String, Integer>> lastEventDataMap = service.findLastEventDataForTrackers(trackers);
+		Map<Long, Pair<LocalDate, Integer>> lastEventDataMap = service.findLastEventDataForTrackers(trackers);
 
 		grid.setItems(trackers);
 
 		// Replace column renderer dynamically
 		grid.getColumnByKey("lastDate").setRenderer(new TextRenderer<>(t -> {
 
-			Pair<String, Integer> pair = lastEventDataMap.get(t.getId());
+			Pair<LocalDate, Integer> pair = lastEventDataMap.get(t.getId());
 			// System.out.println("is null: " + (pair == null));
 
 			return Optional.ofNullable(pair)
-				.map(x -> x.first())
+				.map(x -> x.first().toString())
 				.orElse("-");
 		}));
 
 		// Replace column renderer dynamically
 		grid.getColumnByKey("lastMileage").setRenderer(new TextRenderer<>(t -> {
 
-			Pair<String, Integer> pair = lastEventDataMap.get(t.getId());
+			Pair<LocalDate, Integer> pair = lastEventDataMap.get(t.getId());
 			// System.out.println("is null: " + (pair == null));
 
 			return Optional.ofNullable(pair)
