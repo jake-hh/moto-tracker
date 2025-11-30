@@ -8,25 +8,25 @@ import java.time.Period;
 public record BasicInterval(int amount, Unit unit) {
 
 	public enum Unit {
-		DAYS, WEEKS, MONTHS, YEARS
+		Days, Weeks, Months, Years
 	}
 
 	public Period toPeriod() {
 		return switch (unit) {
-			case DAYS -> Period.ofDays(amount);
-			case WEEKS -> Period.ofDays(amount * 7);
-			case MONTHS -> Period.ofMonths(amount);
-			case YEARS -> Period.ofYears(amount);
+			case Days -> Period.ofDays(amount);
+			case Weeks -> Period.ofDays(amount * 7);
+			case Months -> Period.ofMonths(amount);
+			case Years -> Period.ofYears(amount);
 		};
 	}
 
 	public String toString() {
-		return amount + " " + unit;
+		return amount + " " + (amount == 1 ? unit.name().substring(0, unit.name().length() - 1) : unit.name());
 	}
 
 	public static void updateAmount(Tracker tracker, int amount) {
 		BasicInterval current = tracker.getInterval();
-		var unit = current != null ? current.unit() : BasicInterval.Unit.YEARS;
+		var unit = current != null ? current.unit() : BasicInterval.Unit.Years;
 		tracker.setInterval(new BasicInterval(amount, unit));
 	}
 
