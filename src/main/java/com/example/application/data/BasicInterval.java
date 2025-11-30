@@ -23,4 +23,16 @@ public record BasicInterval(int amount, Unit unit) {
 	public String toString() {
 		return amount + " " + unit;
 	}
+
+	public static void updateAmount(Tracker tracker, int amount) {
+		BasicInterval current = tracker.getInterval();
+		var unit = current != null ? current.unit() : BasicInterval.Unit.YEARS;
+		tracker.setInterval(new BasicInterval(amount, unit));
+	}
+
+	public static void updateUnit(Tracker tracker, BasicInterval.Unit unit) {
+		BasicInterval current = tracker.getInterval();
+		var amount = current != null ? current.amount() : 1;
+		tracker.setInterval(new BasicInterval(amount, unit));
+	}
 }

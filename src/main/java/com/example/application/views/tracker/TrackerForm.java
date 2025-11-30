@@ -39,25 +39,11 @@ public class TrackerForm extends FormLayout {
 
 	// Bind amount
 	binder.forField(interv_amount)
-			.bind(
-				tracker -> tracker.getInterval() != null ? tracker.getInterval().amount() : null,
-				(tracker, amount) -> {
-					BasicInterval current = tracker.getInterval();
-					var unit = current != null ? current.unit() : BasicInterval.Unit.YEARS;
-					tracker.setInterval(new BasicInterval(amount, unit));
-				}
-	);
+			.bind(tracker -> tracker.getInterval() != null ? tracker.getInterval().amount() : null, BasicInterval::updateAmount);
 
 	// Bind unit
 	binder.forField(interv_unit)
-			.bind(
-				tracker -> tracker.getInterval() != null ? tracker.getInterval().unit() : null,
-				(tracker, unit) -> {
-					BasicInterval current = tracker.getInterval();
-					var amount = current != null ? current.amount() : 1;
-					tracker.setInterval(new BasicInterval(amount, unit));
-				}
-	);
+			.bind(tracker -> tracker.getInterval() != null ? tracker.getInterval().unit() : null, BasicInterval::updateUnit);
 
 	add(name,
 		range,
