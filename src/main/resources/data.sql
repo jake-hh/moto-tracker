@@ -70,11 +70,11 @@ INSERT INTO "EVENT" (ID, VERSION, DATE_VALUE, MILEAGE) VALUES
 (103, 1, DATE '2024-09-21', 50600),
 (104, 1, DATE '2025-08-26', 51500);
 
-INSERT INTO "TRACKER" (ID, VERSION, NAME, INTERVAL_VALUE, RANGE) VALUES
-(201, 1, 'Oil change', '1 y', 10000),
-(202, 1, 'Brake fluid change', '2 y', 20000),
-(203, 1, 'Coolant', '3y', 30000),
-(204, 1, 'Chain cleaning', '1 m', 700);
+INSERT INTO "TRACKER" (ID, VERSION, NAME, INTERV_AMOUNT, INTERV_UNIT, RANGE) VALUES
+(201, 1, 'Oil change',         1, 3, 10000),
+(202, 1, 'Brake fluid change', 2, 3, 20000),
+(203, 1, 'Coolant',            3, 3, 30000),
+(204, 1, 'Chain cleaning',     1, 2, 700);
 INSERT INTO "TRACKER" (ID, VERSION, NAME) VALUES
 (205, 1, 'Brake pads'),
 (206, 1, 'Chain & sprockets'),

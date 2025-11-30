@@ -1,5 +1,6 @@
 package com.example.application.views.tracker;
 
+import com.example.application.data.BasicInterval;
 import com.example.application.data.Tracker;
 
 import com.vaadin.flow.component.Component;
@@ -8,6 +9,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -19,7 +21,8 @@ import com.vaadin.flow.data.binder.Binder;
 public class TrackerForm extends FormLayout {
   TextField name = new TextField("Name");
   IntegerField range = new IntegerField("Range"); // range.setLabel("X");
-  TextField interval = new TextField("Interval");
+  IntegerField interv_amount = new IntegerField("Interval amount");
+  ComboBox<BasicInterval.Unit> interv_unit = new ComboBox<>("Interval unit");
 
   Button save = new Button("Save");
   Button delete = new Button("Delete");
@@ -31,9 +34,35 @@ public class TrackerForm extends FormLayout {
 	addClassName("tracker-form");
 	binder.bindInstanceFields(this);
 
+	interv_unit.setItems(BasicInterval.Unit.values());
+	interv_unit.setAllowCustomValue(false);
+
+	// Bind amount
+	binder.forField(interv_amount)
+			.bind(
+				tracker -> tracker.getInterval() != null ? tracker.getInterval().amount() : null,
+				(tracker, amount) -> {
+					BasicInterval current = tracker.getInterval();
+					var unit = current != null ? current.unit() : BasicInterval.Unit.YEARS;
+					tracker.setInterval(new BasicInterval(amount, unit));
+				}
+	);
+
+	// Bind unit
+	binder.forField(interv_unit)
+			.bind(
+				tracker -> tracker.getInterval() != null ? tracker.getInterval().unit() : null,
+				(tracker, unit) -> {
+					BasicInterval current = tracker.getInterval();
+					var amount = current != null ? current.amount() : 1;
+					tracker.setInterval(new BasicInterval(amount, unit));
+				}
+	);
+
 	add(name,
 		range,
-		interval,
+		interv_amount,
+		interv_unit,
 		createButtonsLayout());
   }
 

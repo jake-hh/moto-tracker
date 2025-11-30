@@ -1,7 +1,6 @@
 package com.example.application.data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 // import java.time.Period;
@@ -13,9 +12,13 @@ public class Tracker extends AbstractEntity {
 	@NotBlank
 	private String name;
 
-	@Column(name = "interval_value")
-	private String interval;
-	// private Period interval;
+	// @Column(name = "interval_value")
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name = "amount", column = @Column(name = "INTERV_AMOUNT")),
+			@AttributeOverride(name = "unit",   column = @Column(name = "INTERV_UNIT"))
+	})
+	private BasicInterval interv;
 
 	private Integer range;
 
@@ -29,8 +32,8 @@ public class Tracker extends AbstractEntity {
 		return name;
 	}
 
-	public String getInterval() {
-		return interval;
+	public BasicInterval getInterval() {
+		return interv;
 	}
 
 	public Integer getRange() {
@@ -41,8 +44,8 @@ public class Tracker extends AbstractEntity {
 		this.name = name;
 	}
 
-	public void setInterval(String interval) {
-		this.interval = interval;
+	public void setInterval(BasicInterval interv) {
+		this.interv = interv;
 	}
 
 	public void setRange(Integer range) {
