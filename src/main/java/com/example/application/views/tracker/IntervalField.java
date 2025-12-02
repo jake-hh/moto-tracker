@@ -7,29 +7,29 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 
 public class IntervalField extends CustomField<BasicInterval> {
-	private final IntegerField amount = new IntegerField();
-	private final ComboBox<BasicInterval.Unit> unit = new ComboBox<>();
+	private final IntegerField amountField = new IntegerField();
+	private final ComboBox<BasicInterval.Unit> unitField = new ComboBox<>();
 
 	public IntervalField(String label) {
 		setLabel(label);
 
-		amount.setHelperText("Amount");
-		amount.setStepButtonsVisible(true);
-		amount.setStep(1);
-		amount.setMin(1);
+		amountField.setHelperText("Amount");
+		amountField.setStepButtonsVisible(true);
+		amountField.setStep(1);
+		amountField.setMin(1);
 
-		unit.setItems(BasicInterval.Unit.values());
-		unit.setHelperText("Unit");
+		unitField.setItems(BasicInterval.Unit.values());
+		unitField.setHelperText("Unit");
 
-		var layout = new HorizontalLayout(amount, unit);
+		var layout = new HorizontalLayout(amountField, unitField);
 		layout.setSpacing(true);
 		add(layout);
 	}
 
 	@Override
 	protected BasicInterval generateModelValue() {
-		Integer a = amount.getValue();
-		BasicInterval.Unit u = unit.getValue();
+		Integer a = amountField.getValue();
+		BasicInterval.Unit u = unitField.getValue();
 
 		if (a == null || u == null)
 			return null;
@@ -40,11 +40,11 @@ public class IntervalField extends CustomField<BasicInterval> {
 	@Override
 	protected void setPresentationValue(BasicInterval value) {
 		if (value == null) {
-			amount.clear();
-			unit.clear();
+			amountField.clear();
+			unitField.clear();
 		} else {
-			amount.setValue(value.amount());
-			unit.setValue(value.unit());
+			amountField.setValue(value.amount());
+			unitField.setValue(value.unit());
 		}
 	}
 }
