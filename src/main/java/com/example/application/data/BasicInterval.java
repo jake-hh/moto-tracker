@@ -5,7 +5,7 @@ import java.time.Period;
 
 
 @Embeddable
-public record BasicInterval(int amount, Unit unit) {
+public record BasicInterval(Integer amount, Unit unit) {
 
 	public enum Unit {
 		Days, Weeks, Months, Years
@@ -26,5 +26,9 @@ public record BasicInterval(int amount, Unit unit) {
 
 	private String getUnitSingularName() {
 		return unit.name().substring(0, unit.name().length() - 1);
+	}
+
+	public boolean isValid() {
+		return amount != null && unit != null && amount() > 0;
 	}
 }

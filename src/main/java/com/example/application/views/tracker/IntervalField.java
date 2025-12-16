@@ -28,13 +28,13 @@ public class IntervalField extends CustomField<BasicInterval> {
 
 	@Override
 	protected BasicInterval generateModelValue() {
-		Integer a = amountField.getValue();
-		BasicInterval.Unit u = unitField.getValue();
+		Integer amount = amountField.getValue();
+		BasicInterval.Unit unit = unitField.getValue();
 
-		if (a == null || u == null)
+		if (amount == null && unit == null)
 			return null;
 		else
-			return new BasicInterval(a, u);
+			return new BasicInterval(amount, unit);
 	}
 
 	@Override

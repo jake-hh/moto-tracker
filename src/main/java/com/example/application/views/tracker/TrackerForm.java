@@ -32,6 +32,7 @@ public class TrackerForm extends FormLayout {
 	binder.bindInstanceFields(this);
 
 	binder.forField(interv)
+			.withValidator(i -> i == null || i.isValid(), "Amount and unit must both be set or both empty")
 			.bind(Tracker::getInterval, Tracker::setInterval);
 
 	add(name,
