@@ -5,6 +5,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 
 public class IntervalField extends CustomField<BasicInterval> {
 	private final IntegerField amountField = new IntegerField();
@@ -20,6 +21,10 @@ public class IntervalField extends CustomField<BasicInterval> {
 
 		unitField.setItems(BasicInterval.Unit.values());
 		unitField.setHelperText("Unit");
+
+		amountField.setValueChangeMode(ValueChangeMode.LAZY);
+		amountField.addValueChangeListener(e -> updateValue());
+		unitField.addValueChangeListener(e -> updateValue());
 
 		var layout = new HorizontalLayout(amountField, unitField);
 		layout.setSpacing(true);

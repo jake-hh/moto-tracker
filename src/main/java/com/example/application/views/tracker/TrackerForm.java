@@ -14,6 +14,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.value.ValueChangeMode;
 
 
 public class TrackerForm extends FormLayout {
@@ -32,8 +33,15 @@ public class TrackerForm extends FormLayout {
 	binder.bindInstanceFields(this);
 
 	binder.forField(interv)
-			.withValidator(i -> i == null || i.isValid(), "Amount and unit must both be set or both empty")
+			.withValidator(i -> i == null || i.isValid(), "amount and unit must both be set or both empty")
 			.bind(Tracker::getInterval, Tracker::setInterval);
+
+	name.setValueChangeMode(ValueChangeMode.LAZY);
+
+	range.setValueChangeMode(ValueChangeMode.LAZY);
+	range.setStepButtonsVisible(true);
+	range.setStep(100);
+	range.setMin(100);
 
 	add(name,
 		range,
