@@ -20,11 +20,11 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 public class TrackerForm extends FormLayout {
   TextField name = new TextField("Name");
   IntegerField range = new IntegerField("Range"); // range.setLabel("X");
-  IntervalField interv = new IntervalField("Interval");
+  IntervalField intervalField = new IntervalField("Interval");
 
-  Button save = new Button("Save");
-  Button delete = new Button("Delete");
-  Button close = new Button("Cancel");
+  Button saveBtn = new Button("Save");
+  Button deleteBtn = new Button("Delete");
+  Button closeBtn = new Button("Cancel");
 
   Binder<Tracker> binder = new BeanValidationBinder<>(Tracker.class);
 
@@ -32,7 +32,7 @@ public class TrackerForm extends FormLayout {
 	addClassName("tracker-form");
 	binder.bindInstanceFields(this);
 
-	binder.forField(interv)
+	binder.forField(intervalField)
 			.withValidator(i -> i == null || i.isValid(), "amount and unit must both be set or both empty")
 			.bind(Tracker::getInterval, Tracker::setInterval);
 
@@ -45,24 +45,24 @@ public class TrackerForm extends FormLayout {
 
 	add(name,
 		range,
-		interv,
+		intervalField,
 		createButtonsLayout());
   }
 
   private Component createButtonsLayout() {
-	save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-	delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-	close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+	saveBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+	deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
+	closeBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-	save.addClickShortcut(Key.ENTER);
-	close.addClickShortcut(Key.ESCAPE);
+	saveBtn.addClickShortcut(Key.ENTER);
+	closeBtn.addClickShortcut(Key.ESCAPE);
 
-	save.addClickListener(event -> validateAndSave());
-	delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
-	close.addClickListener(event -> fireEvent(new CloseEvent(this)));
+	saveBtn.addClickListener(event -> validateAndSave());
+	deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+	closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
-	binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
-	return new HorizontalLayout(save, delete, close);
+	binder.addStatusChangeListener(e -> saveBtn.setEnabled(binder.isValid()));
+	return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
   }
 
   private void validateAndSave() {
