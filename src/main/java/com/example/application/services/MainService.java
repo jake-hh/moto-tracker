@@ -144,15 +144,28 @@ public class MainService {
     }
 
 	public void deleteTracker(Tracker tracker) {
-		trackerRepository.delete(tracker);
+		try {
+			trackerRepository.delete(tracker);
+			Notify.ok("Deleted event");
+		} catch (Exception e) {
+			Notify.warn("Failed to delete tracker: " + e.getMessage());
+			throw new RuntimeException("Could not delete tracker", e);
+		}
 	}
 
 	public void saveTracker(Tracker tracker) {
 		if (tracker == null) {
-			System.err.println("Tracker is null. Are you sure you have connected your form to the application?");
+			Notify.warn("Tracker is null. Are you sure you have connected your form to the application?");
 			return;
 		}
-		trackerRepository.save(tracker);
+
+		try {
+			trackerRepository.save(tracker);
+			Notify.ok("Saved tracker");
+		} catch (Exception e) {
+			Notify.warn("Failed to save tracker: " + e.getMessage());
+			throw new RuntimeException("Could not save tracker", e);
+		}
 	}
 
 	  ///////////////////////////////////
