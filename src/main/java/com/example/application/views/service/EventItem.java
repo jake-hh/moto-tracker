@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+record OperationRender(List<Operation> operations, Optional<Integer> emptyPos) {}
+
 
 @SuppressWarnings("FieldMayBeFinal")
 public class EventItem extends HorizontalLayout {
@@ -29,14 +31,12 @@ public class EventItem extends HorizontalLayout {
 	private Runnable refreshEventList;
 	private List<Tracker> trackers;
 	private MainService service;
-	private Optional<Integer> emptyPos;
 
 	public EventItem(Event event, Runnable refreshEventList, List<Tracker> trackers, MainService service) {
 		this.event = event;
 		this.refreshEventList = refreshEventList;
 		this.trackers = trackers;
 		this.service = service;
-		this.emptyPos = Optional.empty();
 
 		this.setAlignItems(FlexComponent.Alignment.START);
 		this.setPadding(true);
@@ -60,7 +60,6 @@ public class EventItem extends HorizontalLayout {
 
 	public void render(Optional<Integer> newOperationPos) {
 		this.removeAll();
-		this.emptyPos = newOperationPos;
 
 		add(createDeleteButton(),
 			createMileageField(),
@@ -166,11 +165,14 @@ public class EventItem extends HorizontalLayout {
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
 
-		List<Operation> operations = getOperations(newOperationPos);
+		OperationRender render = getOperations(newOperationPos);
+		List<Operation> operations = render.operations();
+		Optional<Integer> emptyPos = render.emptyPos();
+
 		Optional<OperationItem> prevItem = Optional.empty();
 
 		for (Operation operation : operations) {
-			var opItem = new OperationItem(this, trackers, service, operationList, operation);
+			var opItem = new OperationItem(this, trackers, service, operationList, operation, emptyPos);
 			operationList.add(opItem);
 
 			opItem.updateTrackerLabel();
@@ -182,8 +184,9 @@ public class EventItem extends HorizontalLayout {
 		return operationList;
 	}
 
-	public List<Operation> getOperations(Optional<Integer> newOperationPos) {
+	public OperationRender getOperations(Optional<Integer> newOperationPos) {
 		List<Operation> operations = service.findAllOperations(event);
+		Optional<Integer> emptyPos = Optional.empty();
 
 		if (operations.isEmpty()) {
 			var op = new Operation();
@@ -192,17 +195,14 @@ public class EventItem extends HorizontalLayout {
 			emptyPos = Optional.of(0);
 		}
 
-		else newOperationPos.ifPresent(position -> {
+		else if (newOperationPos.isPresent()) {
+			int pos = newOperationPos.get();
 			var op = new Operation();
 			op.setEvent(event);
-			operations.add(position, op);
-			emptyPos = Optional.of(position);
-		});
+			operations.add(pos, op);
+			emptyPos = Optional.of(pos);
+		};
 
-		return operations;
-	}
-
-	public Optional<Integer> getEmptyPos() {
-		return emptyPos;
+		return new OperationRender(operations, emptyPos);
 	}
 }

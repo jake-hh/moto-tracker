@@ -19,13 +19,15 @@ import java.util.Optional;
 @SuppressWarnings("FieldMayBeFinal")
 public class OperationItem extends HorizontalLayout {
 	private VerticalLayout operationList;
+	private Optional<Integer> emptyPos;
 
 	private ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
 	private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
-	public OperationItem(EventItem eventItem, List<Tracker> trackers, MainService service, VerticalLayout operationList, Operation operation) {
+	public OperationItem(EventItem eventItem, List<Tracker> trackers, MainService service, VerticalLayout operationList, Operation operation, Optional<Integer> emptyPos) {
 		this.operationList = operationList;
+		this.emptyPos = emptyPos;
 
 		this.setAlignItems(Alignment.END);
 		this.setSpacing(true);
@@ -64,14 +66,13 @@ public class OperationItem extends HorizontalLayout {
 		addButton.addClickListener(e -> {
 			if (isEmpty()) return;
 
-			// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
-			final int newPosition = operationList.indexOf(this) + 1;
+			int insertPos = operationList.indexOf(this) + 1;
 
-			final int adjustPosition = eventItem.getEmptyPos()
-					.filter(emptyPos -> emptyPos < newPosition)
-					.isPresent() ? -1 : 0;
+			if (emptyPos.isPresent() && emptyPos.get() < insertPos)
+				insertPos--;
 
-			eventItem.render(Optional.of(newPosition + adjustPosition));
+			// Add new operation to logic list but don't save it in db, it will be saved when user sets the tracker
+			eventItem.render(Optional.of(insertPos));
 		});
 	}
 
