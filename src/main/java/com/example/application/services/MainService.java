@@ -123,6 +123,10 @@ public class MainService {
 		return trackerRepository.findAll();
 	}
 
+	public boolean isTrackerUsed(Tracker tracker) {
+		return operationRepository.existsByTracker(tracker);
+	}
+
 	public Map<Long, Pair<LocalDate, Integer>> findLastEventDataForTrackers(List<Tracker> trackers) {
         if (trackers.isEmpty()) {
 			return Collections.emptyMap();

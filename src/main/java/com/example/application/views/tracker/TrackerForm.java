@@ -8,6 +8,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -25,6 +26,7 @@ public class TrackerForm extends FormLayout {
   Button saveBtn = new Button("Save");
   Button deleteBtn = new Button("Delete");
   Button closeBtn = new Button("Cancel");
+  Span btnFooter = new Span();
 
   Binder<Tracker> binder = new BeanValidationBinder<>(Tracker.class);
 
@@ -43,10 +45,13 @@ public class TrackerForm extends FormLayout {
 	range.setStep(100);
 	range.setMin(100);
 
+	btnFooter.addClassName("mt-helper-text");
+
 	add(name,
 		range,
 		intervalField,
-		createButtonsLayout());
+		createButtonsLayout(),
+		btnFooter);
   }
 
   private Component createButtonsLayout() {
@@ -62,7 +67,13 @@ public class TrackerForm extends FormLayout {
 	closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
 	binder.addStatusChangeListener(e -> saveBtn.setEnabled(binder.isValid()));
+
 	return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
+  }
+
+  public void setDeleteEnabled(boolean enabled) {
+	deleteBtn.setEnabled(enabled);
+	btnFooter.setText(enabled ? null : "Tracker is used in service history");
   }
 
   private void validateAndSave() {
@@ -70,7 +81,6 @@ public class TrackerForm extends FormLayout {
 	  fireEvent(new SaveEvent(this, binder.getBean()));
 	}
   }
-
 
   public void setTracker(Tracker tracker) {
 	binder.setBean(tracker);

@@ -25,4 +25,6 @@ public interface OperationRepository extends JpaRepository<Operation, Long> {
     List<Object[]> findLatestEventDatesAndMileagesForTrackers(@Param("trackers") List<Tracker> trackers);
 
 	List<Operation> findByEvent(Event event);
+
+	boolean existsByTracker(Tracker tracker);
 }

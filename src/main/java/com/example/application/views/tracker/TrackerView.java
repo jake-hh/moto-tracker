@@ -111,11 +111,15 @@ public class TrackerView extends VerticalLayout {
 	public void editTracker(Tracker tracker) {
 		if (tracker == null) {
 			closeEditor();
-		} else {
-			form.setTracker(tracker);
-			form.setVisible(true);
-			addClassName("tracker-editing");
+			return;
 		}
+
+		form.setTracker(tracker);
+		form.setVisible(true);
+		addClassName("tracker-editing");
+
+		boolean used = tracker.getId() != null && service.isTrackerUsed(tracker);
+		form.setDeleteEnabled(!used);
 	}
 
 	private void closeEditor() {

@@ -8,3 +8,9 @@ a[highlight] {
 		font-weight: bold;
 		text-decoration: underline;
 }
+
+.mt-helper-text {
+  color: var(--lumo-secondary-text-color);
+  font-size: var(--lumo-font-size-xs);
+  line-height: var(--lumo-line-height-s);
+}
