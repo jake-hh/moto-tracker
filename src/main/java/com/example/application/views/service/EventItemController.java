@@ -6,7 +6,9 @@ import com.example.application.data.Tracker;
 import com.example.application.services.MainService;
 import jakarta.annotation.Nullable;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public class EventItemController {
@@ -31,7 +33,7 @@ public class EventItemController {
 	//}
 
 	public OperationRender getOperations(Integer newOperationPos) {
-		List<Operation> operations = service.findAllOperations(event);
+		List<Operation> operations = getOperations();
 		@Nullable
 		Integer emptyPos = null;
 
@@ -54,16 +56,41 @@ public class EventItemController {
 		return op;
 	}
 
+	public Event getUpdatedEvent() {
+		return service.findEventById(event.getId()).get();
+	}
+
+	public List<Operation> getOperations() {
+		return service.findAllOperations(event);
+	}
+
+	public void deleteEvent() {
+		service.deleteEventById(event.getId());
+	}
+
+	public void deleteOperations(List<Operation> operations) {
+		for (Operation operation : operations)
+			service.deleteOperation(operation, false);
+	}
+
+	public void setMileage(Consumer<Integer> mileageFieldSetter) {
+		if (event.getMileage() != null)
+			mileageFieldSetter.accept(event.getMileage());
+	}
+
+	public void setDate(Consumer<LocalDate> dateFieldSetter) {
+		if (event.getDate() != null)
+			dateFieldSetter.accept(event.getDate());
+	}
+
+	public void updateEvent(Consumer<Event> mutator) {
+		Event fresh = getUpdatedEvent();
+		mutator.accept(fresh);
+		service.saveEvent(fresh);
+		event = fresh;
+	}
 
 	// --- Temporary during migration ---
-
-	public Event getEvent() {
-		return event;
-	}
-
-	public void setEvent(Event event) {
-		this.event = event;
-	}
 
 	public MainService getService() {
 		return service;

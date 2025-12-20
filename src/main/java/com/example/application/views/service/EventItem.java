@@ -22,8 +22,6 @@ import jakarta.annotation.Nullable;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 
 @SuppressWarnings("FieldMayBeFinal")
@@ -41,14 +39,6 @@ public class EventItem extends HorizontalLayout {
 		this.setSpacing(true);
 		this.addClassName("mt-list-item-border");
 
-		render();
-	}
-
-	private void updateEvent(Consumer<Event> mutator) {
-		Event fresh = controller.getService().findUpdatedEvent(controller.getEvent());
-		mutator.accept(fresh);
-		controller.getService().saveEvent(fresh);
-		controller.setEvent(fresh);
 		render();
 	}
 
@@ -72,11 +62,10 @@ public class EventItem extends HorizontalLayout {
 
 		deleteButton.addClickListener(e -> {
 			// Get event with updated version (event record has outdated version after saving changes in db)
-			Event updatedEvent = controller.getService().findEventById(controller.getEvent().getId()).get();
-			List<Operation> operations = controller.getService().findAllOperations(controller.getEvent());
+			List<Operation> operations = controller.getOperations();
 
 			if (operations.isEmpty()) {
-				controller.getService().deleteEvent(updatedEvent);
+				controller.deleteEvent();
 				refreshEventList.run();
 			}
 			else {
@@ -93,10 +82,8 @@ public class EventItem extends HorizontalLayout {
 				dialog.setConfirmButtonTheme("error primary");
 
 				dialog.addConfirmListener(ce -> {
-					for (Operation operation : operations)
-						controller.getService().deleteOperation(operation, false);
-
-					controller.getService().deleteEvent(updatedEvent);
+					controller.deleteOperations(operations);
+					controller.deleteEvent();
 					refreshEventList.run();
 				});
 
@@ -109,7 +96,7 @@ public class EventItem extends HorizontalLayout {
 
 	private IntegerField createMileageField() {
 		var mileageField = new IntegerField("Mileage");
-		mileageField.setValue(controller.getEvent().getMileage());
+		controller.setMileage(mileageField::setValue);
 		mileageField.setStepButtonsVisible(true);
 		mileageField.setStep(100);
 		mileageField.setSuffixComponent(new Span("km"));
@@ -122,8 +109,10 @@ public class EventItem extends HorizontalLayout {
 		mileageField.addValueChangeListener(mileageEv -> {
 			Integer mileage = mileageEv.getValue();
 
-			if (mileage == null || mileage % 100 == 0)
-				updateEvent(e -> e.setMileage(mileage));
+			if (mileage == null || mileage % 100 == 0) {
+				controller.updateEvent(e -> e.setMileage(mileage));
+				render();
+			}
 		});
 
 		return mileageField;
@@ -131,8 +120,7 @@ public class EventItem extends HorizontalLayout {
 
 	private DatePicker createDateField() {
 		var dateField = new DatePicker("Date");
-		Optional.ofNullable(controller.getEvent().getDate())
-				.ifPresent(dateField::setValue);
+		controller.setDate(dateField::setValue);
 
 		dateField.setRequired(true);
 		dateField.setRequiredIndicatorVisible(false);
@@ -151,7 +139,8 @@ public class EventItem extends HorizontalLayout {
 			LocalDate date = dateEv.getValue();
 
 			if (date != null && !date.isAfter(ServiceView.getDateToday())) {
-				updateEvent(e -> e.setDate(date));
+				controller.updateEvent(e -> e.setDate(date));
+				render();
 			}
 		});
 
