@@ -1,6 +1,5 @@
 package com.example.application.views.service;
 
-import com.example.application.data.Event;
 import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
 import com.example.application.services.MainService;
@@ -19,20 +18,13 @@ import java.util.Optional;
 
 @SuppressWarnings("FieldMayBeFinal")
 public class OperationItem extends HorizontalLayout {
-	private Event event;
-	private EventItem eventItem;
-	private List<Tracker> trackers;
-	private MainService service;
-
 	private VerticalLayout operationList;
 	private ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
 	private HorizontalLayout menuBar = new HorizontalLayout();
 	private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
-	public OperationItem(EventItem eventItem, List<Tracker> trackers, MainService service, VerticalLayout operationList, Operation operation, Event event) {
-		this.event = event;
-		this.eventItem = eventItem;
+	public OperationItem(EventItem eventItem, List<Tracker> trackers, MainService service, VerticalLayout operationList, Operation operation) {
 		this.operationList = operationList;
 
 		this.setAlignItems(Alignment.END);

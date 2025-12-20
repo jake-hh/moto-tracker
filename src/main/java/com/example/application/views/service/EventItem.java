@@ -46,7 +46,7 @@ public class EventItem extends HorizontalLayout {
 		render();
 	}
 
-	private VerticalLayout getOperationList(Event event, Optional<Integer> newOperationPos) {
+	private VerticalLayout getOperationList(Optional<Integer> newOperationPos) {
 		var operationList = new VerticalLayout();
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
@@ -55,7 +55,7 @@ public class EventItem extends HorizontalLayout {
 		Optional<OperationItem> prevItem = Optional.empty();
 
 		for (Operation operation : operations) {
-			var opItem = new OperationItem(this, trackers, service, operationList, operation, event);
+			var opItem = new OperationItem(this, trackers, service, operationList, operation);
 			operationList.add(opItem);
 
 			opItem.updateTrackerLabel();
@@ -164,7 +164,7 @@ public class EventItem extends HorizontalLayout {
 			}
 		});
 
-		this.add(deleteButton, dateField, mileageField, getOperationList(event, newOperationPos));
+		this.add(deleteButton, dateField, mileageField, getOperationList(newOperationPos));
 	}
 
 	public List<Operation> getOperations(Optional<Integer> newOperationPos) {
