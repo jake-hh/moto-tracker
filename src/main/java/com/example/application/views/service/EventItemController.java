@@ -68,6 +68,11 @@ public class EventItemController {
 		service.deleteEventById(event.getId());
 	}
 
+	public void deleteOperation(Operation op) {
+		// Select operation with id (operation has outdated version after saving in db trackerBox change event)
+		service.deleteOperationById(op.getId());
+	}
+
 	public void deleteOperations(List<Operation> operations) {
 		for (Operation operation : operations)
 			service.deleteOperation(operation, false);
@@ -90,13 +95,16 @@ public class EventItemController {
 		event = fresh;
 	}
 
-	// --- Temporary during migration ---
-
-	public MainService getService() {
-		return service;
+	public void updateOperation(Operation op, Tracker tracker) {
+		// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
+		Operation fresh = service.findUpdatedOperation(op);
+		fresh.setTracker(tracker);
+		service.saveOperation(fresh);
 	}
 
-	public List<Tracker> getTrackers() {
-		return trackers;
+	// --- Temporary during migration ---
+
+	public void sendTrackers(Consumer<List<Tracker>> trackerSetter) {
+		trackerSetter.accept(trackers);
 	}
 }

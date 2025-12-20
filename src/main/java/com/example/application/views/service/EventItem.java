@@ -39,10 +39,6 @@ public class EventItem extends HorizontalLayout {
 		this.setSpacing(true);
 		this.addClassName("mt-list-item-border");
 
-		render();
-	}
-
-	public void render() {
 		render(null);
 	}
 
@@ -111,7 +107,7 @@ public class EventItem extends HorizontalLayout {
 
 			if (mileage == null || mileage % 100 == 0) {
 				controller.updateEvent(e -> e.setMileage(mileage));
-				render();
+				render(null);
 			}
 		});
 
@@ -140,7 +136,7 @@ public class EventItem extends HorizontalLayout {
 
 			if (date != null && !date.isAfter(ServiceView.getDateToday())) {
 				controller.updateEvent(e -> e.setDate(date));
-				render();
+				render(null);
 			}
 		});
 
@@ -152,15 +148,15 @@ public class EventItem extends HorizontalLayout {
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
 
-		OperationRender render = controller.getOperations(newOperationPos);
-		List<Operation> operations = render.operations();
-		Integer emptyPos = render.emptyPos();
+		OperationRender r = controller.getOperations(newOperationPos);
+		List<Operation> operations = r.operations();
+		Integer emptyPos = r.emptyPos();
 
 		@Nullable
 		OperationItem prevItem = null;
 
 		for (Operation operation : operations) {
-			var opItem = new OperationItem(this, controller.getTrackers(), controller.getService(), operationList, operation, emptyPos);
+			var opItem = new OperationItem(this::render, controller, operationList, operation, emptyPos);
 			operationList.add(opItem);
 
 			opItem.updateTrackerLabel();

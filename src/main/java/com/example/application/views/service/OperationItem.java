@@ -2,7 +2,6 @@ package com.example.application.views.service;
 
 import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
-import com.example.application.services.MainService;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -13,11 +12,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import jakarta.annotation.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 
 @SuppressWarnings("FieldMayBeFinal")
 public class OperationItem extends HorizontalLayout {
+
+	private Consumer<Integer> refreshEventItem;
+	private EventItemController controller;
 	private VerticalLayout operationList;
 	@Nullable
 	private Integer emptyPos;
@@ -26,16 +28,18 @@ public class OperationItem extends HorizontalLayout {
 	private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
-	public OperationItem(EventItem eventItem, List<Tracker> trackers, MainService service, VerticalLayout operationList, Operation operation, @Nullable Integer emptyPos) {
+	public OperationItem(Consumer<Integer> refreshEventItem, EventItemController controller, VerticalLayout operationList, Operation operation, @Nullable Integer emptyPos) {
+		this.refreshEventItem = refreshEventItem;
+		this.controller = controller;
 		this.operationList = operationList;
 		this.emptyPos = emptyPos;
 
 		this.setAlignItems(Alignment.END);
 		this.setSpacing(true);
 
-		createTrackerBox(operation, service, trackers, eventItem);
-		createAddButton(eventItem);
-		createRemoveButton(operation, service, eventItem);
+		createTrackerBox(operation);
+		createAddButton();
+		createRemoveButton(operation);
 
 		var menuBar = new HorizontalLayout();
 		menuBar.setSpacing(false);
@@ -45,22 +49,19 @@ public class OperationItem extends HorizontalLayout {
 		this.add(trackerBox, menuBar);
 	}
 
-	private void createTrackerBox(Operation operation, MainService service, List<Tracker> trackers, EventItem eventItem) {
-		trackerBox.setItems(trackers);
+	private void createTrackerBox(Operation operation) {
+		controller.sendTrackers(trackerBox::setItems);
+
 		trackerBox.setItemLabelGenerator(Tracker::getName);
 		trackerBox.setValue(operation.getTracker());
 
 		trackerBox.addValueChangeListener(trackerEv -> {
-			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-			Operation updatedOperation = service.findUpdatedOperation(operation);
-			updatedOperation.setTracker(trackerEv.getValue());
-			service.saveOperation(updatedOperation);
-
-			eventItem.render();
+			controller.updateOperation(operation, trackerEv.getValue());
+			refreshEventItem.accept(null);
 		});
 	}
 
-	private void createAddButton(EventItem eventItem) {
+	private void createAddButton() {
 		addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
 		addButton.getElement().setAttribute("title", "Add new operation");
 
@@ -73,18 +74,17 @@ public class OperationItem extends HorizontalLayout {
 				insertPos--;
 
 			// Add new operation to logic list but don't save it in db, it will be saved when user sets the tracker
-			eventItem.render(insertPos);
+			refreshEventItem.accept(insertPos);
 		});
 	}
 
-	private void createRemoveButton(Operation operation, MainService service, EventItem eventItem) {
+	private void createRemoveButton(Operation operation) {
 		removeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
 		removeButton.getElement().setAttribute("title", "Remove this operation");
 
 		removeButton.addClickListener(e -> {
-			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-			service.deleteOperationById(operation.getId());
-			eventItem.render();
+			controller.deleteOperation(operation);
+			refreshEventItem.accept(null);
 		});
 	}
 
