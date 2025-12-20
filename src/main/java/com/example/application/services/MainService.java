@@ -46,18 +46,6 @@ public class MainService {
 			return operationRepository.findByEvent(event);
 	}
 
-	// public List<Operation> findAllOperations(String filter) {
-	// 	if (filter == null || filter.isEmpty()) {
-	// 		return operationRepository.findAll();
-	// 	} else {
-	// 		return operationRepository.search(filter);
-	// 	}
-	// }
-
-	// public long countOperations() {
-	// 	return operationRepository.count();
-	// }
-
 	// Get operation with updated version
 	public Optional<Operation> findOperationById(Long id) {
 		if (id != null)
@@ -134,8 +122,6 @@ public class MainService {
 
         List<Object[]> results = operationRepository.findLatestEventDatesAndMileagesForTrackers(trackers);
 
-		// System.out.println("Results: " + results);
-        // Map<Long, Pair<LocalDate, Integer>> map = results
 		return results
 			.stream()
 			.collect(
@@ -143,8 +129,6 @@ public class MainService {
 					row -> (Long) row[0],
 					row -> new Pair<>((LocalDate) row[1], (Integer) row[2])  // [0]=tracker.id, [1]=date, [2]=mileage
 		));
-		// System.out.println("Map: " + map);
-		// return map;
     }
 
 	public void deleteTracker(Tracker tracker) {

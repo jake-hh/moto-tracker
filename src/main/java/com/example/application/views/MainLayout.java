@@ -1,7 +1,6 @@
 package com.example.application.views;
 
 import com.example.application.security.SecurityService;
-import com.example.application.views.list.ListView;
 import com.example.application.views.oplist.OplistView;
 import com.example.application.views.service.ServiceView;
 import com.example.application.views.tracker.TrackerView;
@@ -49,8 +48,6 @@ public class MainLayout extends AppLayout {
 
 	private void createDrawer() {
 		addToDrawer(new VerticalLayout(
-				new RouterLink("List", ListView.class),
-				new RouterLink("Dashboard", DashboardView.class),
 				new RouterLink("Operations", OplistView.class),
 				new RouterLink("Services", ServiceView.class),
 				new RouterLink("Trackers", TrackerView.class)

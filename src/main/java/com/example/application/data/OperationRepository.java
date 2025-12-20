@@ -9,11 +9,6 @@ import java.util.List;
 
 public interface OperationRepository extends JpaRepository<Operation, Long> {
 
-	// @Query("select c from Operation c " +
-	// 		"where lower(c.firstName) like lower(concat('%', :searchTerm, '%')) " +
-	// 		"or lower(c.lastName) like lower(concat('%', :searchTerm, '%'))")
-	// List<Operation> search(@Param("searchTerm") String searchTerm);
-
     /* --- Batch lookup for all trackers --- */
     @Query("""
         SELECT o.tracker.id, MAX(e.date), MAX(e.mileage)
