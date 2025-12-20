@@ -4,6 +4,7 @@ import com.example.application.data.Event;
 import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
 import com.example.application.services.MainService;
+import com.example.application.views.service.EventItemController.OperationRender;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -27,18 +28,13 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("FieldMayBeFinal")
 public class EventItem extends HorizontalLayout {
-	private Event event;
-	private Runnable refreshEventList;
-	private List<Tracker> trackers;
-	private MainService service;
 
-	record OperationRender(List<Operation> operations, Integer emptyPos) {}
+	private EventItemController controller;
+	private Runnable refreshEventList;
 
 	public EventItem(Event event, Runnable refreshEventList, List<Tracker> trackers, MainService service) {
-		this.event = event;
+		this.controller = new EventItemController(service, event, trackers);
 		this.refreshEventList = refreshEventList;
-		this.trackers = trackers;
-		this.service = service;
 
 		this.setAlignItems(FlexComponent.Alignment.START);
 		this.setPadding(true);
@@ -49,10 +45,10 @@ public class EventItem extends HorizontalLayout {
 	}
 
 	private void updateEvent(Consumer<Event> mutator) {
-		Event fresh = service.findUpdatedEvent(event);
+		Event fresh = controller.getService().findUpdatedEvent(controller.getEvent());
 		mutator.accept(fresh);
-		service.saveEvent(fresh);
-		event = fresh;
+		controller.getService().saveEvent(fresh);
+		controller.setEvent(fresh);
 		render();
 	}
 
@@ -76,11 +72,11 @@ public class EventItem extends HorizontalLayout {
 
 		deleteButton.addClickListener(e -> {
 			// Get event with updated version (event record has outdated version after saving changes in db)
-			Event updatedEvent = service.findEventById(event.getId()).get();
-			List<Operation> operations = service.findAllOperations(event);
+			Event updatedEvent = controller.getService().findEventById(controller.getEvent().getId()).get();
+			List<Operation> operations = controller.getService().findAllOperations(controller.getEvent());
 
 			if (operations.isEmpty()) {
-				service.deleteEvent(updatedEvent);
+				controller.getService().deleteEvent(updatedEvent);
 				refreshEventList.run();
 			}
 			else {
@@ -98,9 +94,9 @@ public class EventItem extends HorizontalLayout {
 
 				dialog.addConfirmListener(ce -> {
 					for (Operation operation : operations)
-						service.deleteOperation(operation, false);
+						controller.getService().deleteOperation(operation, false);
 
-					service.deleteEvent(updatedEvent);
+					controller.getService().deleteEvent(updatedEvent);
 					refreshEventList.run();
 				});
 
@@ -113,7 +109,7 @@ public class EventItem extends HorizontalLayout {
 
 	private IntegerField createMileageField() {
 		var mileageField = new IntegerField("Mileage");
-		mileageField.setValue(event.getMileage());
+		mileageField.setValue(controller.getEvent().getMileage());
 		mileageField.setStepButtonsVisible(true);
 		mileageField.setStep(100);
 		mileageField.setSuffixComponent(new Span("km"));
@@ -135,7 +131,7 @@ public class EventItem extends HorizontalLayout {
 
 	private DatePicker createDateField() {
 		var dateField = new DatePicker("Date");
-		Optional.ofNullable(event.getDate())
+		Optional.ofNullable(controller.getEvent().getDate())
 				.ifPresent(dateField::setValue);
 
 		dateField.setRequired(true);
@@ -167,7 +163,7 @@ public class EventItem extends HorizontalLayout {
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
 
-		OperationRender render = getOperations(newOperationPos);
+		OperationRender render = controller.getOperations(newOperationPos);
 		List<Operation> operations = render.operations();
 		Integer emptyPos = render.emptyPos();
 
@@ -175,7 +171,7 @@ public class EventItem extends HorizontalLayout {
 		OperationItem prevItem = null;
 
 		for (Operation operation : operations) {
-			var opItem = new OperationItem(this, trackers, service, operationList, operation, emptyPos);
+			var opItem = new OperationItem(this, controller.getTrackers(), controller.getService(), operationList, operation, emptyPos);
 			operationList.add(opItem);
 
 			opItem.updateTrackerLabel();
@@ -185,27 +181,5 @@ public class EventItem extends HorizontalLayout {
 		}
 
 		return operationList;
-	}
-
-	private OperationRender getOperations(Integer newOperationPos) {
-		List<Operation> operations = service.findAllOperations(event);
-		@Nullable
-		Integer emptyPos = null;
-
-		if (operations.isEmpty()) {
-			var op = new Operation();
-			op.setEvent(event);
-			operations.add(op);
-			emptyPos = 0;
-		}
-
-		else if (newOperationPos != null) {
-			var op = new Operation();
-			op.setEvent(event);
-			operations.add(newOperationPos, op);
-			emptyPos = newOperationPos;
-		}
-
-		return new OperationRender(operations, emptyPos);
 	}
 }
