@@ -26,14 +26,14 @@ import java.util.function.Consumer;
 @SuppressWarnings("FieldMayBeFinal")
 public class EventItem extends HorizontalLayout {
 	private Event event;
-	private VerticalLayout eventList;
+	private Runnable refreshEventList;
 	private List<Tracker> trackers;
 	private MainService service;
 	private Optional<Integer> emptyPos;
 
-	public EventItem(Event event, VerticalLayout eventList, List<Tracker> trackers, MainService service) {
+	public EventItem(Event event, Runnable refreshEventList, List<Tracker> trackers, MainService service) {
 		this.event = event;
-		this.eventList = eventList;
+		this.refreshEventList = refreshEventList;
 		this.trackers = trackers;
 		this.service = service;
 		this.emptyPos = Optional.empty();
@@ -94,7 +94,7 @@ public class EventItem extends HorizontalLayout {
 
 			if (operations.isEmpty()) {
 				service.deleteEvent(updatedEvent);
-				eventList.remove(this);
+				refreshEventList.run();
 			}
 			else {
 				var dialog = new ConfirmDialog();
@@ -114,7 +114,7 @@ public class EventItem extends HorizontalLayout {
 						service.deleteOperation(operation, false);
 
 					service.deleteEvent(updatedEvent);
-					eventList.remove(this);
+					refreshEventList.run();
 				});
 
 				dialog.open();

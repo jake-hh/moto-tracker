@@ -40,7 +40,7 @@ public class ServiceView extends VerticalLayout {
 		setSizeFull();
 		updateTrackers();
 
-		eventList = getEventList();
+		createEventList();
 		add(getToolbar(), eventList);
 	}
 
@@ -57,18 +57,22 @@ public class ServiceView extends VerticalLayout {
 		return toolbar;
 	}
 
-	private VerticalLayout getEventList() {
-		var eventList = new VerticalLayout();
+	private void createEventList() {
+		eventList = new VerticalLayout();
 		eventList.addClassName("service-event-list");
 		eventList.setSizeFull();
-		//eventList.removeAll();
+
+		renderEventList();
+	}
+
+	public void renderEventList() {
+		eventList.removeAll();
 
 		for (Event event : service.findAllEvents().reversed()) {
-			eventList.add(new EventItem(event, eventList, trackers, service));
+			eventList.add(new EventItem(event, this::renderEventList, trackers, service));
 		}
 
 		eventList.addClassNames("service-event-item");
-		return eventList;
 	}
 
 	public void addEvent() {
@@ -76,7 +80,7 @@ public class ServiceView extends VerticalLayout {
 		event.setDate(getDateToday());
 
 		service.saveEvent(event);
-		eventList.addComponentAsFirst(new EventItem(event, eventList, trackers, service));
+		renderEventList();
 	}
 
 	public static LocalDate getDateToday() {
