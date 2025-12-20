@@ -20,98 +20,100 @@ import java.util.List;
 
 
 public class OperationForm extends FormLayout {
-  ComboBox<Event> event = new ComboBox<>("Event");
-  ComboBox<Tracker> tracker = new ComboBox<>("Tracker");
+	ComboBox<Event> event = new ComboBox<>("Event");
+	ComboBox<Tracker> tracker = new ComboBox<>("Tracker");
 
-  Button save = new Button("Save");
-  Button delete = new Button("Delete");
-  Button close = new Button("Cancel");
-  // Other fields omitted
-  Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
+	Button save = new Button("Save");
+	Button delete = new Button("Delete");
+	Button close = new Button("Cancel");
 
-  public OperationForm(List<Tracker> trackers, List<Event> events) {
-	addClassName("operation-form");
-	binder.bindInstanceFields(this);
+	Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
 
-	tracker.setItems(trackers);
-	tracker.setItemLabelGenerator(Tracker::getName);
-	event.setItems(events);
-	event.setItemLabelGenerator(Event::getDateStr);
+	public OperationForm(List<Tracker> trackers, List<Event> events) {
+		addClassName("operation-form");
+		binder.bindInstanceFields(this);
 
-	add(tracker,
-		event,
-		createButtonsLayout());
-  }
+		tracker.setItems(trackers);
+		tracker.setItemLabelGenerator(Tracker::getName);
+		event.setItems(events);
+		event.setItemLabelGenerator(Event::getDateStr);
 
-  private Component createButtonsLayout() {
-	save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-	delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-	close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-	save.addClickShortcut(Key.ENTER);
-	close.addClickShortcut(Key.ESCAPE);
-
-	save.addClickListener(event -> validateAndSave());
-	delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
-	close.addClickListener(event -> fireEvent(new CloseEvent(this)));
-
-	binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
-	return new HorizontalLayout(save, delete, close);
-  }
-
-  private void validateAndSave() {
-	if(binder.isValid()) {
-	  fireEvent(new SaveEvent(this, binder.getBean()));
-	}
-  }
-
-
-  public void setOperation(Operation operation) {
-	binder.setBean(operation);
-  }
-
-  // Events
-  public static abstract class OperationFormEvent extends ComponentEvent<OperationForm> {
-	private final Operation operation;
-
-	protected OperationFormEvent(OperationForm source, Operation operation) {
-	  super(source, false);
-	  this.operation = operation;
+		add(tracker, event, createButtonsLayout());
 	}
 
-	public Operation getOperation() {
-	  return operation;
+	private Component createButtonsLayout() {
+		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+		close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+		save.addClickShortcut(Key.ENTER);
+		close.addClickShortcut(Key.ESCAPE);
+
+		save.addClickListener(event -> validateAndSave());
+		delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+		close.addClickListener(event -> fireEvent(new CloseEvent(this)));
+
+		binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
+
+		return new HorizontalLayout(save, delete, close);
 	}
-  }
 
-  public static class SaveEvent extends OperationFormEvent {
-	SaveEvent(OperationForm source, Operation operation) {
-	  super(source, operation);
-	}
-  }
-
-  public static class DeleteEvent extends OperationFormEvent {
-	DeleteEvent(OperationForm source, Operation operation) {
-	  super(source, operation);
+	private void validateAndSave() {
+		if (binder.isValid())
+			fireEvent(new SaveEvent(this, binder.getBean()));
 	}
 
-  }
 
-  public static class CloseEvent extends OperationFormEvent {
-	CloseEvent(OperationForm source) {
-	  super(source, null);
+	public void setOperation(Operation operation) {
+		binder.setBean(operation);
 	}
-  }
 
-  public void addDeleteListener(ComponentEventListener<DeleteEvent> listener) {
-	  addListener(DeleteEvent.class, listener);
-  }
 
-  public void addSaveListener(ComponentEventListener<SaveEvent> listener) {
-	  addListener(SaveEvent.class, listener);
-  }
+	  // --------------
+	 // --- Events ---
+	// --------------
 
-  public void addCloseListener(ComponentEventListener<CloseEvent> listener) {
-	  addListener(CloseEvent.class, listener);
-  }
+	public static abstract class OperationFormEvent extends ComponentEvent<OperationForm> {
+		private final Operation operation;
+
+		protected OperationFormEvent(OperationForm source, Operation operation) {
+			super(source, false);
+			this.operation = operation;
+		}
+
+		public Operation getOperation() {
+			return operation;
+		}
+	}
+
+	public static class SaveEvent extends OperationFormEvent {
+		SaveEvent(OperationForm source, Operation operation) {
+			super(source, operation);
+		}
+	}
+
+	public static class DeleteEvent extends OperationFormEvent {
+		DeleteEvent(OperationForm source, Operation operation) {
+			super(source, operation);
+		}
+
+	}
+
+	public static class CloseEvent extends OperationFormEvent {
+		CloseEvent(OperationForm source) {
+			super(source, null);
+		}
+	}
+
+	public void addDeleteListener(ComponentEventListener<DeleteEvent> listener) {
+		addListener(DeleteEvent.class, listener);
+	}
+
+	public void addSaveListener(ComponentEventListener<SaveEvent> listener) {
+		addListener(SaveEvent.class, listener);
+	}
+
+	public void addCloseListener(ComponentEventListener<CloseEvent> listener) {
+		addListener(CloseEvent.class, listener);
+	}
 }
