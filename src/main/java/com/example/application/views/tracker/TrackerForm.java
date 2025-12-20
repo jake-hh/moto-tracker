@@ -19,115 +19,114 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 
 
 public class TrackerForm extends FormLayout {
-  TextField name = new TextField("Name");
-  IntegerField range = new IntegerField("Range"); // range.setLabel("X");
-  IntervalField intervalField = new IntervalField("Interval");
+	TextField name = new TextField("Name");
+	IntegerField range = new IntegerField("Range"); // range.setLabel("X");
+	IntervalField intervalField = new IntervalField("Interval");
 
-  Button saveBtn = new Button("Save");
-  Button deleteBtn = new Button("Delete");
-  Button closeBtn = new Button("Cancel");
-  Span btnFooter = new Span();
+	Button saveBtn = new Button("Save");
+	Button deleteBtn = new Button("Delete");
+	Button closeBtn = new Button("Cancel");
+	Span btnFooter = new Span();
 
-  Binder<Tracker> binder = new BeanValidationBinder<>(Tracker.class);
+	Binder<Tracker> binder = new BeanValidationBinder<>(Tracker.class);
 
-  public TrackerForm() {
-	addClassName("tracker-form");
-	binder.bindInstanceFields(this);
+	public TrackerForm() {
+		addClassName("tracker-form");
+		binder.bindInstanceFields(this);
 
-	binder.forField(intervalField)
-			.withValidator(i -> i == null || i.isValid(), "amount and unit must both be set or both empty")
-			.bind(Tracker::getInterval, Tracker::setInterval);
+		binder.forField(intervalField)
+				.withValidator(i -> i == null || i.isValid(), "amount and unit must both be set or both empty")
+				.bind(Tracker::getInterval, Tracker::setInterval);
 
-	name.setValueChangeMode(ValueChangeMode.LAZY);
+		name.setValueChangeMode(ValueChangeMode.LAZY);
 
-	range.setValueChangeMode(ValueChangeMode.LAZY);
-	range.setStepButtonsVisible(true);
-	range.setStep(100);
-	range.setMin(100);
+		range.setValueChangeMode(ValueChangeMode.LAZY);
+		range.setStepButtonsVisible(true);
+		range.setStep(100);
+		range.setMin(100);
 
-	btnFooter.addClassName("mt-helper-text");
+		btnFooter.addClassName("mt-helper-text");
 
-	add(name,
-		range,
-		intervalField,
-		createButtonsLayout(),
-		btnFooter);
-  }
-
-  private Component createButtonsLayout() {
-	saveBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-	deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
-	closeBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-	saveBtn.addClickShortcut(Key.ENTER);
-	closeBtn.addClickShortcut(Key.ESCAPE);
-
-	saveBtn.addClickListener(event -> validateAndSave());
-	deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
-	closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
-
-	binder.addStatusChangeListener(e -> saveBtn.setEnabled(binder.isValid()));
-
-	return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
-  }
-
-  public void setDeleteEnabled(boolean enabled) {
-	deleteBtn.setEnabled(enabled);
-	btnFooter.setText(enabled ? null : "Tracker is used in service history");
-  }
-
-  private void validateAndSave() {
-	if(binder.isValid()) {
-	  fireEvent(new SaveEvent(this, binder.getBean()));
-	}
-  }
-
-  public void setTracker(Tracker tracker) {
-	binder.setBean(tracker);
-  }
-
-  // Events
-  public static abstract class TrackerFormEvent extends ComponentEvent<TrackerForm> {
-	private final Tracker tracker;
-
-	protected TrackerFormEvent(TrackerForm source, Tracker tracker) {
-	  super(source, false);
-	  this.tracker = tracker;
+		add(name, range, intervalField, createButtonsLayout(), btnFooter);
 	}
 
-	public Tracker getTracker() {
-	  return tracker;
+	private Component createButtonsLayout() {
+		saveBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
+		closeBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+		saveBtn.addClickShortcut(Key.ENTER);
+		closeBtn.addClickShortcut(Key.ESCAPE);
+
+		saveBtn.addClickListener(event -> validateAndSave());
+		deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+		closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
+
+		binder.addStatusChangeListener(e -> saveBtn.setEnabled(binder.isValid()));
+
+		return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
 	}
-  }
 
-  public static class SaveEvent extends TrackerFormEvent {
-	SaveEvent(TrackerForm source, Tracker tracker) {
-	  super(source, tracker);
-	}
-  }
-
-  public static class DeleteEvent extends TrackerFormEvent {
-	DeleteEvent(TrackerForm source, Tracker tracker) {
-	  super(source, tracker);
+	public void setDeleteEnabled(boolean enabled) {
+		deleteBtn.setEnabled(enabled);
+		btnFooter.setText(enabled ? null : "Tracker is used in service history");
 	}
 
-  }
-
-  public static class CloseEvent extends TrackerFormEvent {
-	CloseEvent(TrackerForm source) {
-	  super(source, null);
+	private void validateAndSave() {
+		if (binder.isValid())
+			fireEvent(new SaveEvent(this, binder.getBean()));
 	}
-  }
 
-  public void addDeleteListener(ComponentEventListener<DeleteEvent> listener) {
-	  addListener(DeleteEvent.class, listener);
-  }
+	public void setTracker(Tracker tracker) {
+		binder.setBean(tracker);
+	}
 
-  public void addSaveListener(ComponentEventListener<SaveEvent> listener) {
-	  addListener(SaveEvent.class, listener);
-  }
 
-  public void addCloseListener(ComponentEventListener<CloseEvent> listener) {
-	  addListener(CloseEvent.class, listener);
-  }
+	  // --------------
+	 // --- Events ---
+	// --------------
+
+	public static abstract class TrackerFormEvent extends ComponentEvent<TrackerForm> {
+		private final Tracker tracker;
+
+		protected TrackerFormEvent(TrackerForm source, Tracker tracker) {
+			super(source, false);
+			this.tracker = tracker;
+		}
+
+		public Tracker getTracker() {
+			return tracker;
+		}
+	}
+
+	public static class SaveEvent extends TrackerFormEvent {
+		SaveEvent(TrackerForm source, Tracker tracker) {
+			super(source, tracker);
+		}
+	}
+
+	public static class DeleteEvent extends TrackerFormEvent {
+		DeleteEvent(TrackerForm source, Tracker tracker) {
+			super(source, tracker);
+		}
+
+	}
+
+	public static class CloseEvent extends TrackerFormEvent {
+		CloseEvent(TrackerForm source) {
+			super(source, null);
+		}
+	}
+
+	public void addDeleteListener(ComponentEventListener<DeleteEvent> listener) {
+		addListener(DeleteEvent.class, listener);
+	}
+
+	public void addSaveListener(ComponentEventListener<SaveEvent> listener) {
+		addListener(SaveEvent.class, listener);
+	}
+
+	public void addCloseListener(ComponentEventListener<CloseEvent> listener) {
+		addListener(CloseEvent.class, listener);
+	}
 }
