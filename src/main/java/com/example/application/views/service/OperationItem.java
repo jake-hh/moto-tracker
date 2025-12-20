@@ -11,21 +11,22 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @SuppressWarnings("FieldMayBeFinal")
 public class OperationItem extends HorizontalLayout {
 	private VerticalLayout operationList;
-	private Optional<Integer> emptyPos;
+	@Nullable
+	private Integer emptyPos;
 
 	private ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
 	private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
-	public OperationItem(EventItem eventItem, List<Tracker> trackers, MainService service, VerticalLayout operationList, Operation operation, Optional<Integer> emptyPos) {
+	public OperationItem(EventItem eventItem, List<Tracker> trackers, MainService service, VerticalLayout operationList, Operation operation, @Nullable Integer emptyPos) {
 		this.operationList = operationList;
 		this.emptyPos = emptyPos;
 
@@ -68,11 +69,11 @@ public class OperationItem extends HorizontalLayout {
 
 			int insertPos = operationList.indexOf(this) + 1;
 
-			if (emptyPos.isPresent() && emptyPos.get() < insertPos)
+			if (emptyPos != null && emptyPos < insertPos)
 				insertPos--;
 
 			// Add new operation to logic list but don't save it in db, it will be saved when user sets the tracker
-			eventItem.render(Optional.of(insertPos));
+			eventItem.render(insertPos);
 		});
 	}
 
@@ -95,10 +96,12 @@ public class OperationItem extends HorizontalLayout {
 		trackerBox.setLabel(operationList.indexOf(this) == 0 ? "Tracker" : null);
 	}
 
-	public void updateAddButton(OperationItem opItem, Optional<OperationItem> prevItem) {
+	public void updateAddButton(OperationItem opItem, @Nullable OperationItem prevItem) {
 		if (opItem.isEmpty()) {
 			opItem.setAddButtonEnabled(false);
-			prevItem.ifPresent(i -> i.setAddButtonEnabled(false));
+
+			if (prevItem != null)
+				prevItem.setAddButtonEnabled(false);
 		}
 	}
 

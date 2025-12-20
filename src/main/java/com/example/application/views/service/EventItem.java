@@ -17,12 +17,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 
+import jakarta.annotation.Nullable;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-
-record OperationRender(List<Operation> operations, Optional<Integer> emptyPos) {}
 
 
 @SuppressWarnings("FieldMayBeFinal")
@@ -31,6 +31,8 @@ public class EventItem extends HorizontalLayout {
 	private Runnable refreshEventList;
 	private List<Tracker> trackers;
 	private MainService service;
+
+	record OperationRender(List<Operation> operations, Integer emptyPos) {}
 
 	public EventItem(Event event, Runnable refreshEventList, List<Tracker> trackers, MainService service) {
 		this.event = event;
@@ -46,7 +48,7 @@ public class EventItem extends HorizontalLayout {
 		render();
 	}
 
-	public void updateEvent(Consumer<Event> mutator) {
+	private void updateEvent(Consumer<Event> mutator) {
 		Event fresh = service.findUpdatedEvent(event);
 		mutator.accept(fresh);
 		service.saveEvent(fresh);
@@ -55,10 +57,10 @@ public class EventItem extends HorizontalLayout {
 	}
 
 	public void render() {
-		render(Optional.empty());
+		render(null);
 	}
 
-	public void render(Optional<Integer> newOperationPos) {
+	public void render(Integer newOperationPos) {
 		this.removeAll();
 
 		add(createDeleteButton(),
@@ -160,16 +162,17 @@ public class EventItem extends HorizontalLayout {
 		return dateField;
 	}
 
-	private VerticalLayout createOperationList(Optional<Integer> newOperationPos) {
+	private VerticalLayout createOperationList(Integer newOperationPos) {
 		var operationList = new VerticalLayout();
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
 
 		OperationRender render = getOperations(newOperationPos);
 		List<Operation> operations = render.operations();
-		Optional<Integer> emptyPos = render.emptyPos();
+		Integer emptyPos = render.emptyPos();
 
-		Optional<OperationItem> prevItem = Optional.empty();
+		@Nullable
+		OperationItem prevItem = null;
 
 		for (Operation operation : operations) {
 			var opItem = new OperationItem(this, trackers, service, operationList, operation, emptyPos);
@@ -178,30 +181,30 @@ public class EventItem extends HorizontalLayout {
 			opItem.updateTrackerLabel();
 			opItem.updateRemoveButton(operations.size());
 			opItem.updateAddButton(opItem, prevItem);
-			prevItem = Optional.of(opItem);
+			prevItem = opItem;
 		}
 
 		return operationList;
 	}
 
-	public OperationRender getOperations(Optional<Integer> newOperationPos) {
+	private OperationRender getOperations(Integer newOperationPos) {
 		List<Operation> operations = service.findAllOperations(event);
-		Optional<Integer> emptyPos = Optional.empty();
+		@Nullable
+		Integer emptyPos = null;
 
 		if (operations.isEmpty()) {
 			var op = new Operation();
 			op.setEvent(event);
 			operations.add(op);
-			emptyPos = Optional.of(0);
+			emptyPos = 0;
 		}
 
-		else if (newOperationPos.isPresent()) {
-			int pos = newOperationPos.get();
+		else if (newOperationPos != null) {
 			var op = new Operation();
 			op.setEvent(event);
-			operations.add(pos, op);
-			emptyPos = Optional.of(pos);
-		};
+			operations.add(newOperationPos, op);
+			emptyPos = newOperationPos;
+		}
 
 		return new OperationRender(operations, emptyPos);
 	}
