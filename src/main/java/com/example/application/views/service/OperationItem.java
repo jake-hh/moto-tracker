@@ -14,13 +14,16 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.List;
+import java.util.Optional;
 
 
+@SuppressWarnings("FieldMayBeFinal")
 public class OperationItem extends HorizontalLayout {
 	private Event event;
 	private EventItem eventItem;
 	private List<Tracker> trackers;
 	private MainService service;
+
 	private VerticalLayout operationList;
 	private ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
 	private HorizontalLayout menuBar = new HorizontalLayout();
@@ -52,42 +55,31 @@ public class OperationItem extends HorizontalLayout {
 
 		// --- Listeners ---
 		trackerBox.addValueChangeListener(trackerEv -> {
-			if (operation.getId() == null)
-				eventItem.enableAllAddButtons(operationList);
-
 			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
 			Operation updatedOperation = service.findUpdatedOperation(operation);
 			updatedOperation.setTracker(trackerEv.getValue());
 			service.saveOperation(updatedOperation);
 
-			removeButton.setEnabled(true);
+			eventItem.render();
 		});
 
 		addButton.addClickListener(e -> {
 			if (isEmpty()) return;
 
-			eventItem.deleteEmptyOperationItems(operationList, operationList.indexOf(this));
-			eventItem.enableAllAddButtons(operationList);
-			eventItem.enableAllRemoveButtons(operationList);
-
 			// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
-			eventItem.addNewOperationItem(operationList, event, operationList.indexOf(this) + 1, false, true);
-			setAddButtonEnabled(false);
+			final int newPosition = operationList.indexOf(this) + 1;
+
+			final int adjustPosition = eventItem.getEmptyPos()
+					.filter(emptyPos -> emptyPos < newPosition)
+					.isPresent() ? -1 : 0;
+
+			eventItem.render(Optional.of(newPosition + adjustPosition));
 		});
 
 		removeButton.addClickListener(e -> {
 			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
 			service.deleteOperationById(operation.getId());
-			operationList.remove(this);
-			eventItem.addNewOperationIfEmpty(operationList, event);
-
-			eventItem.updateAllTrackerLabels(operationList);
-			eventItem.updateAddButtonStates(operationList);
-
-			// If last remaining item is empty -> disable its remove button
-			var remainingItems = eventItem.getChildrenStream(operationList).toList();
-			if (remainingItems.size() == 1)
-				remainingItems.getFirst().updateRemoveButtonState();
+			eventItem.render();
 		});
 
 		menuBar.add(addButton, removeButton);
@@ -95,16 +87,23 @@ public class OperationItem extends HorizontalLayout {
 	}
 
 	public boolean isEmpty() {
-		return trackerBox.getValue() == null;
+		return trackerBox.isEmpty();
 	}
 
 	public void updateTrackerLabel() {
 		trackerBox.setLabel(operationList.indexOf(this) == 0 ? "Tracker" : null);
 	}
 
-	// Call only if it's the last item in list
-	private void updateRemoveButtonState() {
-		setRemoveButtonEnabled(!isEmpty()); // disable if empty
+	public void updateAddButton(OperationItem opItem, Optional<OperationItem> prevItem) {
+		if (opItem.isEmpty()) {
+			opItem.setAddButtonEnabled(false);
+			prevItem.ifPresent(i -> i.setAddButtonEnabled(false));
+		}
+	}
+
+	public void updateRemoveButton(long num_operations) {
+		// Disable removeButton if it's the only item in list and is empty
+		setRemoveButtonEnabled(num_operations != 1 || !isEmpty());
 	}
 
 	public void setRemoveButtonEnabled(boolean state) {

@@ -1,6 +1,5 @@
 package com.example.application.views.service;
 
-import com.example.application.Notify;
 import com.example.application.data.Event;
 import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
@@ -30,30 +29,39 @@ public class EventItem extends HorizontalLayout {
 	private VerticalLayout eventList;
 	private List<Tracker> trackers;
 	private MainService service;
+	private Optional<Integer> emptyPos;
 
 	public EventItem(Event event, VerticalLayout eventList, List<Tracker> trackers, MainService service) {
 		this.event = event;
 		this.eventList = eventList;
 		this.trackers = trackers;
 		this.service = service;
+		this.emptyPos = Optional.empty();
 
 		this.setAlignItems(FlexComponent.Alignment.START);
 		this.setPadding(true);
 		this.setSpacing(true);
 		this.addClassName("mt-list-item-border");
 
-		renderContent();
+		render();
 	}
 
-	private VerticalLayout getOperationList(Event event) {
+	private VerticalLayout getOperationList(Event event, Optional<Integer> newOperationPos) {
 		var operationList = new VerticalLayout();
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
 
-		for (Operation operation : getOperations()) {
+		List<Operation> operations = getOperations(newOperationPos);
+		Optional<OperationItem> prevItem = Optional.empty();
+
+		for (Operation operation : operations) {
 			var opItem = new OperationItem(this, trackers, service, operationList, operation, event);
 			operationList.add(opItem);
+
 			opItem.updateTrackerLabel();
+			opItem.updateRemoveButton(operations.size());
+			opItem.updateAddButton(opItem, prevItem);
+			prevItem = Optional.of(opItem);
 		}
 
 		return operationList;
@@ -64,15 +72,16 @@ public class EventItem extends HorizontalLayout {
 		mutator.accept(fresh);
 		service.saveEvent(fresh);
 		event = fresh;
-		renderContent();
+		render();
 	}
 
-	//public void updateOperation(Consumer<Operation> mutator) {
-		//Operation op = service.findUp
-	//}
+	public void render() {
+		render(Optional.empty());
+	}
 
-	public void renderContent() {
+	public void render(Optional<Integer> newOperationPos) {
 		this.removeAll();
+		this.emptyPos = newOperationPos;
 
 		var deleteButton = new Button(new Icon(VaadinIcon.TRASH));
 		deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
@@ -155,66 +164,30 @@ public class EventItem extends HorizontalLayout {
 			}
 		});
 
-		this.add(deleteButton, dateField, mileageField, getOperationList(event));
+		this.add(deleteButton, dateField, mileageField, getOperationList(event, newOperationPos));
 	}
 
-	public List<Operation> getOperations() {
+	public List<Operation> getOperations(Optional<Integer> newOperationPos) {
 		List<Operation> operations = service.findAllOperations(event);
 
 		if (operations.isEmpty()) {
 			var op = new Operation();
 			op.setEvent(event);
 			operations.add(op);
-			Notify.ok("Added new Operation: " + op + " for Event: " + event);
+			emptyPos = Optional.of(0);
 		}
+
+		else newOperationPos.ifPresent(position -> {
+			var op = new Operation();
+			op.setEvent(event);
+			operations.add(position, op);
+			emptyPos = Optional.of(position);
+		});
 
 		return operations;
 	}
 
-	/*
-	public void addNewOperationItem(VerticalLayout operationList, Event event, int position, boolean enableAddButton, boolean enableRemoveButton) {
-		var op = new Operation();
-		op.setEvent(event);
-
-		var operationItem = new OperationItem(this, trackers, service, operationList, op, event);
-		operationItem.setAddButtonEnabled(enableAddButton);
-		operationItem.setRemoveButtonEnabled(enableRemoveButton);
-		operationList.addComponentAtIndex(position, operationItem);
-		operationItem.updateTrackerLabel();
+	public Optional<Integer> getEmptyPos() {
+		return emptyPos;
 	}
-
-	public Stream<OperationItem> getChildrenStream(VerticalLayout operationList) {
-		return operationList.getChildren()
-				.filter(OperationItem.class::isInstance)
-				.map(OperationItem.class::cast);
-	}
-
-	public void enableAllAddButtons(VerticalLayout operationList) {
-		getChildrenStream(operationList).forEach(item -> item.setAddButtonEnabled(true));
-	}
-
-	public void enableAllRemoveButtons(VerticalLayout operationList) {
-		getChildrenStream(operationList).forEach(item -> item.setRemoveButtonEnabled(true));
-	}
-
-	public void deleteEmptyOperationItems(VerticalLayout operationList, int omitPosition) {
-		getChildrenStream(operationList).forEach(item -> {
-			if (item.isEmpty() && operationList.indexOf(item) != omitPosition)
-				operationList.remove(item);
-		});
-	}
-
-	public void updateAddButtonStates(VerticalLayout operationList) {
-		enableAllAddButtons(operationList);
-
-		getChildrenStream(operationList).forEach(item -> {
-			if (item.isEmpty()) {
-				item.setAddButtonEnabled(false);
-
-				var prevPos = operationList.indexOf(item) - 1;
-				if (prevPos >= 0 && operationList.getComponentAt(prevPos) instanceof OperationItem prevItem)
-					prevItem.setAddButtonEnabled(false);
-			}
-		});
-	}*/
 }
