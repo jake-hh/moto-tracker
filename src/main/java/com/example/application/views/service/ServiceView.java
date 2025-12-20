@@ -87,8 +87,7 @@ public class ServiceView extends VerticalLayout {
 		eventItem.setAlignItems(Alignment.START);
 		eventItem.setPadding(true);
 		eventItem.setSpacing(true);
-		eventItem.getStyle().set("border", "1px solid var(--lumo-contrast-20pct)");
-		eventItem.getStyle().set("border-radius", "8px");
+		eventItem.addClassName("mt-list-item-border");
 
 		// Event item fields
 		var deleteButton = new Button(new Icon(VaadinIcon.TRASH));
