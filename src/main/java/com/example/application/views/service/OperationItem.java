@@ -19,8 +19,8 @@ import java.util.Optional;
 @SuppressWarnings("FieldMayBeFinal")
 public class OperationItem extends HorizontalLayout {
 	private VerticalLayout operationList;
+
 	private ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
-	private HorizontalLayout menuBar = new HorizontalLayout();
 	private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
@@ -30,22 +30,23 @@ public class OperationItem extends HorizontalLayout {
 		this.setAlignItems(Alignment.END);
 		this.setSpacing(true);
 
-		// --- Tracker ComboBox ---
+		createTrackerBox(operation, service, trackers, eventItem);
+		createAddButton(eventItem);
+		createRemoveButton(operation, service, eventItem);
+
+		var menuBar = new HorizontalLayout();
+		menuBar.setSpacing(false);
+		menuBar.setPadding(false);
+		menuBar.add(addButton, removeButton);
+
+		this.add(trackerBox, menuBar);
+	}
+
+	private void createTrackerBox(Operation operation, MainService service, List<Tracker> trackers, EventItem eventItem) {
 		trackerBox.setItems(trackers);
 		trackerBox.setItemLabelGenerator(Tracker::getName);
 		trackerBox.setValue(operation.getTracker());
 
-		// --- Menubar buttons ---
-		menuBar.setSpacing(false);
-		menuBar.setPadding(false);
-
-		addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
-		addButton.getElement().setAttribute("title", "Add new operation");
-
-		removeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
-		removeButton.getElement().setAttribute("title", "Remove this operation");
-
-		// --- Listeners ---
 		trackerBox.addValueChangeListener(trackerEv -> {
 			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
 			Operation updatedOperation = service.findUpdatedOperation(operation);
@@ -54,6 +55,11 @@ public class OperationItem extends HorizontalLayout {
 
 			eventItem.render();
 		});
+	}
+
+	private void createAddButton(EventItem eventItem) {
+		addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
+		addButton.getElement().setAttribute("title", "Add new operation");
 
 		addButton.addClickListener(e -> {
 			if (isEmpty()) return;
@@ -67,15 +73,17 @@ public class OperationItem extends HorizontalLayout {
 
 			eventItem.render(Optional.of(newPosition + adjustPosition));
 		});
+	}
+
+	private void createRemoveButton(Operation operation, MainService service, EventItem eventItem) {
+		removeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
+		removeButton.getElement().setAttribute("title", "Remove this operation");
 
 		removeButton.addClickListener(e -> {
 			// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
 			service.deleteOperationById(operation.getId());
 			eventItem.render();
 		});
-
-		menuBar.add(addButton, removeButton);
-		this.add(trackerBox, menuBar);
 	}
 
 	public boolean isEmpty() {
@@ -95,11 +103,7 @@ public class OperationItem extends HorizontalLayout {
 
 	public void updateRemoveButton(long num_operations) {
 		// Disable removeButton if it's the only item in list and is empty
-		setRemoveButtonEnabled(num_operations != 1 || !isEmpty());
-	}
-
-	public void setRemoveButtonEnabled(boolean state) {
-		removeButton.setEnabled(state);
+		removeButton.setEnabled(num_operations != 1 || !isEmpty());
 	}
 
 	public void setAddButtonEnabled(boolean state) {

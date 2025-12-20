@@ -46,27 +46,6 @@ public class EventItem extends HorizontalLayout {
 		render();
 	}
 
-	private VerticalLayout getOperationList(Optional<Integer> newOperationPos) {
-		var operationList = new VerticalLayout();
-		operationList.setPadding(false);
-		operationList.setSpacing(false);
-
-		List<Operation> operations = getOperations(newOperationPos);
-		Optional<OperationItem> prevItem = Optional.empty();
-
-		for (Operation operation : operations) {
-			var opItem = new OperationItem(this, trackers, service, operationList, operation);
-			operationList.add(opItem);
-
-			opItem.updateTrackerLabel();
-			opItem.updateRemoveButton(operations.size());
-			opItem.updateAddButton(opItem, prevItem);
-			prevItem = Optional.of(opItem);
-		}
-
-		return operationList;
-	}
-
 	public void updateEvent(Consumer<Event> mutator) {
 		Event fresh = service.findUpdatedEvent(event);
 		mutator.accept(fresh);
@@ -83,6 +62,13 @@ public class EventItem extends HorizontalLayout {
 		this.removeAll();
 		this.emptyPos = newOperationPos;
 
+		add(createDeleteButton(),
+			createMileageField(),
+			createDateField(),
+			createOperationList(newOperationPos));
+	}
+
+	private Button createDeleteButton() {
 		var deleteButton = new Button(new Icon(VaadinIcon.TRASH));
 		deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
 		deleteButton.getElement().setAttribute("title", "Remove this event");
@@ -121,6 +107,10 @@ public class EventItem extends HorizontalLayout {
 			}
 		});
 
+		return deleteButton;
+	}
+
+	private IntegerField createMileageField() {
 		var mileageField = new IntegerField("Mileage");
 		mileageField.setValue(event.getMileage());
 		mileageField.setStepButtonsVisible(true);
@@ -139,6 +129,10 @@ public class EventItem extends HorizontalLayout {
 				updateEvent(e -> e.setMileage(mileage));
 		});
 
+		return mileageField;
+	}
+
+	private DatePicker createDateField() {
 		var dateField = new DatePicker("Date");
 		Optional.ofNullable(event.getDate())
 				.ifPresent(dateField::setValue);
@@ -164,7 +158,28 @@ public class EventItem extends HorizontalLayout {
 			}
 		});
 
-		this.add(deleteButton, dateField, mileageField, getOperationList(newOperationPos));
+		return dateField;
+	}
+
+	private VerticalLayout createOperationList(Optional<Integer> newOperationPos) {
+		var operationList = new VerticalLayout();
+		operationList.setPadding(false);
+		operationList.setSpacing(false);
+
+		List<Operation> operations = getOperations(newOperationPos);
+		Optional<OperationItem> prevItem = Optional.empty();
+
+		for (Operation operation : operations) {
+			var opItem = new OperationItem(this, trackers, service, operationList, operation);
+			operationList.add(opItem);
+
+			opItem.updateTrackerLabel();
+			opItem.updateRemoveButton(operations.size());
+			opItem.updateAddButton(opItem, prevItem);
+			prevItem = Optional.of(opItem);
+		}
+
+		return operationList;
 	}
 
 	public List<Operation> getOperations(Optional<Integer> newOperationPos) {
