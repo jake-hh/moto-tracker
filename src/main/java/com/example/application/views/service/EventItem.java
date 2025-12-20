@@ -1,5 +1,6 @@
 package com.example.application.views.service;
 
+import com.example.application.Notify;
 import com.example.application.data.Event;
 import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
@@ -17,9 +18,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 
 @SuppressWarnings("FieldMayBeFinal")
@@ -40,7 +42,38 @@ public class EventItem extends HorizontalLayout {
 		this.setSpacing(true);
 		this.addClassName("mt-list-item-border");
 
-		// Event item fields
+		renderContent();
+	}
+
+	private VerticalLayout getOperationList(Event event) {
+		var operationList = new VerticalLayout();
+		operationList.setPadding(false);
+		operationList.setSpacing(false);
+
+		for (Operation operation : getOperations()) {
+			var opItem = new OperationItem(this, trackers, service, operationList, operation, event);
+			operationList.add(opItem);
+			opItem.updateTrackerLabel();
+		}
+
+		return operationList;
+	}
+
+	public void updateEvent(Consumer<Event> mutator) {
+		Event fresh = service.findUpdatedEvent(event);
+		mutator.accept(fresh);
+		service.saveEvent(fresh);
+		event = fresh;
+		renderContent();
+	}
+
+	//public void updateOperation(Consumer<Operation> mutator) {
+		//Operation op = service.findUp
+	//}
+
+	public void renderContent() {
+		this.removeAll();
+
 		var deleteButton = new Button(new Icon(VaadinIcon.TRASH));
 		deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
 		deleteButton.getElement().setAttribute("title", "Remove this event");
@@ -91,11 +124,10 @@ public class EventItem extends HorizontalLayout {
 				.setStepErrorMessage("Number must be a multiple of 100"));
 
 		mileageField.addValueChangeListener(mileageEv -> {
-			if (mileageEv.getValue() == null || mileageEv.getValue() % 100 == 0) {
-				Event updatedEvent = service.findUpdatedEvent(event);
-				updatedEvent.setMileage(mileageEv.getValue());
-				service.saveEvent(updatedEvent);
-			}
+			Integer mileage = mileageEv.getValue();
+
+			if (mileage == null || mileage % 100 == 0)
+				updateEvent(e -> e.setMileage(mileage));
 		});
 
 		var dateField = new DatePicker("Date");
@@ -116,37 +148,30 @@ public class EventItem extends HorizontalLayout {
 				.setMaxErrorMessage("Future dates aren’t allowed"));
 
 		dateField.addValueChangeListener(dateEv -> {
-			if (dateEv.getValue() != null && !dateEv.getValue().isAfter(ServiceView.getDateToday())) {
-				Event updatedEvent = service.findUpdatedEvent(event);
-				updatedEvent.setDate(dateEv.getValue());
-				service.saveEvent(updatedEvent);
+			LocalDate date = dateEv.getValue();
+
+			if (date != null && !date.isAfter(ServiceView.getDateToday())) {
+				updateEvent(e -> e.setDate(date));
 			}
 		});
 
 		this.add(deleteButton, dateField, mileageField, getOperationList(event));
 	}
 
-	private VerticalLayout getOperationList(Event event) {
-		var operationList = new VerticalLayout();
-		operationList.setPadding(false);
-		operationList.setSpacing(false);
+	public List<Operation> getOperations() {
+		List<Operation> operations = service.findAllOperations(event);
 
-		for (Operation operation : service.findAllOperations(event)) {
-			operationList.add(new OperationItem(this, trackers, service, operationList, operation, event));
+		if (operations.isEmpty()) {
+			var op = new Operation();
+			op.setEvent(event);
+			operations.add(op);
+			Notify.ok("Added new Operation: " + op + " for Event: " + event);
 		}
 
-		addNewOperationIfEmpty(operationList, event);
-
-		updateAllTrackerLabels(operationList);
-
-		return operationList;
+		return operations;
 	}
 
-	public void addNewOperationIfEmpty(VerticalLayout operationList, Event event) {
-		if (operationList.getComponentCount() == 0)
-			addNewOperationItem(operationList, event, 0, true, false);
-	}
-
+	/*
 	public void addNewOperationItem(VerticalLayout operationList, Event event, int position, boolean enableAddButton, boolean enableRemoveButton) {
 		var op = new Operation();
 		op.setEvent(event);
@@ -172,10 +197,6 @@ public class EventItem extends HorizontalLayout {
 		getChildrenStream(operationList).forEach(item -> item.setRemoveButtonEnabled(true));
 	}
 
-	public void updateAllTrackerLabels(VerticalLayout operationList) {
-		getChildrenStream(operationList).forEach(OperationItem::updateTrackerLabel);
-	}
-
 	public void deleteEmptyOperationItems(VerticalLayout operationList, int omitPosition) {
 		getChildrenStream(operationList).forEach(item -> {
 			if (item.isEmpty() && operationList.indexOf(item) != omitPosition)
@@ -195,5 +216,5 @@ public class EventItem extends HorizontalLayout {
 					prevItem.setAddButtonEnabled(false);
 			}
 		});
-	}
+	}*/
 }
