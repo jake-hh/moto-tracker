@@ -4,9 +4,9 @@ import com.example.application.data.Event;
 import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
 import com.example.application.services.MainService;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Span;
@@ -132,7 +132,7 @@ public class EventItem extends HorizontalLayout {
 		operationList.setSpacing(false);
 
 		for (Operation operation : service.findAllOperations(event)) {
-			operationList.add(new OperationItem(operationList, operation, event));
+			operationList.add(new OperationItem(this, trackers, service, operationList, operation, event));
 		}
 
 		addNewOperationIfEmpty(operationList, event);
@@ -142,48 +142,48 @@ public class EventItem extends HorizontalLayout {
 		return operationList;
 	}
 
-	private void addNewOperationIfEmpty(VerticalLayout operationList, Event event) {
+	public void addNewOperationIfEmpty(VerticalLayout operationList, Event event) {
 		if (operationList.getComponentCount() == 0)
 			addNewOperationItem(operationList, event, 0, true, false);
 	}
 
-	private void addNewOperationItem(VerticalLayout operationList, Event event, int position, boolean enableAddButton, boolean enableRemoveButton) {
+	public void addNewOperationItem(VerticalLayout operationList, Event event, int position, boolean enableAddButton, boolean enableRemoveButton) {
 		var op = new Operation();
 		op.setEvent(event);
 
-		var operationItem = new OperationItem(operationList, op, event);
+		var operationItem = new OperationItem(this, trackers, service, operationList, op, event);
 		operationItem.setAddButtonEnabled(enableAddButton);
 		operationItem.setRemoveButtonEnabled(enableRemoveButton);
 		operationList.addComponentAtIndex(position, operationItem);
 		operationItem.updateTrackerLabel();
 	}
 
-	private Stream<OperationItem> getChildrenStream(VerticalLayout operationList) {
+	public Stream<OperationItem> getChildrenStream(VerticalLayout operationList) {
 		return operationList.getChildren()
 				.filter(OperationItem.class::isInstance)
 				.map(OperationItem.class::cast);
 	}
 
-	private void enableAllAddButtons(VerticalLayout operationList) {
+	public void enableAllAddButtons(VerticalLayout operationList) {
 		getChildrenStream(operationList).forEach(item -> item.setAddButtonEnabled(true));
 	}
 
-	private void enableAllRemoveButtons(VerticalLayout operationList) {
+	public void enableAllRemoveButtons(VerticalLayout operationList) {
 		getChildrenStream(operationList).forEach(item -> item.setRemoveButtonEnabled(true));
 	}
 
-	private void updateAllTrackerLabels(VerticalLayout operationList) {
+	public void updateAllTrackerLabels(VerticalLayout operationList) {
 		getChildrenStream(operationList).forEach(OperationItem::updateTrackerLabel);
 	}
 
-	private void deleteEmptyOperationItems(VerticalLayout operationList, int omitPosition) {
+	public void deleteEmptyOperationItems(VerticalLayout operationList, int omitPosition) {
 		getChildrenStream(operationList).forEach(item -> {
 			if (item.isEmpty() && operationList.indexOf(item) != omitPosition)
 				operationList.remove(item);
 		});
 	}
 
-	private void updateAddButtonStates(VerticalLayout operationList) {
+	public void updateAddButtonStates(VerticalLayout operationList) {
 		enableAllAddButtons(operationList);
 
 		getChildrenStream(operationList).forEach(item -> {
@@ -195,99 +195,5 @@ public class EventItem extends HorizontalLayout {
 					prevItem.setAddButtonEnabled(false);
 			}
 		});
-	}
-
-	class OperationItem extends HorizontalLayout {
-		private VerticalLayout operationList;
-		private ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
-		private HorizontalLayout menuBar = new HorizontalLayout();
-		private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
-		private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
-
-		private OperationItem(VerticalLayout operationList, Operation operation, Event event) {
-			this.operationList = operationList;
-
-			this.setAlignItems(Alignment.END);
-			this.setSpacing(true);
-
-			// --- Tracker ComboBox ---
-			trackerBox.setItems(trackers);
-			trackerBox.setItemLabelGenerator(Tracker::getName);
-			trackerBox.setValue(operation.getTracker());
-
-			// --- Menubar buttons ---
-			menuBar.setSpacing(false);
-			menuBar.setPadding(false);
-
-			addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
-			addButton.getElement().setAttribute("title", "Add new operation");
-
-			removeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
-			removeButton.getElement().setAttribute("title", "Remove this operation");
-
-			// --- Listeners ---
-			trackerBox.addValueChangeListener(trackerEv -> {
-				if (operation.getId() == null)
-					enableAllAddButtons(operationList);
-
-				// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-				Operation updatedOperation = service.findUpdatedOperation(operation);
-				updatedOperation.setTracker(trackerEv.getValue());
-				service.saveOperation(updatedOperation);
-
-				removeButton.setEnabled(true);
-			});
-
-			addButton.addClickListener(e -> {
-				if (isEmpty()) return;
-
-				deleteEmptyOperationItems(operationList, operationList.indexOf(this));
-				enableAllAddButtons(operationList);
-				enableAllRemoveButtons(operationList);
-
-				// Add new operation to GUI list but don't save it in db, it will be saved when user sets the tracker
-				addNewOperationItem(operationList, event, operationList.indexOf(this) + 1, false, true);
-				setAddButtonEnabled(false);
-			});
-
-			removeButton.addClickListener(e -> {
-				// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-				service.deleteOperationById(operation.getId());
-				operationList.remove(this);
-				addNewOperationIfEmpty(operationList, event);
-
-				updateAllTrackerLabels(operationList);
-				updateAddButtonStates(operationList);
-
-				// If last remaining item is empty -> disable its remove button
-				var remainingItems = getChildrenStream(operationList).toList();
-				if (remainingItems.size() == 1)
-					remainingItems.getFirst().updateRemoveButtonState();
-			});
-
-			menuBar.add(addButton, removeButton);
-			this.add(trackerBox, menuBar);
-		}
-
-		private boolean isEmpty() {
-			return trackerBox.getValue() == null;
-		}
-
-		private void updateTrackerLabel() {
-			trackerBox.setLabel(operationList.indexOf(this) == 0 ? "Tracker" : null);
-		}
-
-		// Call only if it's the last item in list
-		private void updateRemoveButtonState() {
-			setRemoveButtonEnabled(!isEmpty()); // disable if empty
-		}
-
-		private void setRemoveButtonEnabled(boolean state) {
-			removeButton.setEnabled(state);
-		}
-
-		private void setAddButtonEnabled(boolean state) {
-			addButton.setEnabled(state);
-		}
 	}
 }
