@@ -158,16 +158,16 @@ public class EventItem extends HorizontalLayout {
 		List<Operation> operations = r.operations();
 		@Nullable Integer emptyPos = r.emptyPos();
 
-		@Nullable OperationItem prevItem = null;
+		for (int i = 0; i < operations.size(); i++) {
+			Operation operation = operations.get(i);
 
-		for (Operation operation : operations) {
 			var opItem = new OperationItem(this::render, controller, operationList, operation, emptyPos, trackers);
 			operationList.add(opItem);
 
-			opItem.updateTrackerLabel();
-			opItem.updateRemoveButton(operations.size());
-			opItem.updateAddButton(opItem, prevItem);
-			prevItem = opItem;
+			opItem.enableTrackerLabel(i == 0);
+			opItem.disableRemoveButton(r.cannotRemove(i));
+			opItem.disableAddButton(r.isEmpty(i));
+			opItem.disableAddButton(r.isEmpty(i + 1));
 		}
 
 		return operationList;

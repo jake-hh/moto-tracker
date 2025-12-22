@@ -21,7 +21,16 @@ public class EventItemController {
 	public record OperationRender(
 			List<Operation> operations,
 			@Nullable Integer emptyPos
-	) {}
+	) {
+		// Disable removeButton if it's the only item in list and is empty
+		boolean cannotRemove(int pos) {
+			return operations.size() == 1 && isEmpty(pos);
+		}
+
+		boolean isEmpty(int pos) {
+			return emptyPos != null && pos == emptyPos;
+		}
+	}
 
 	public EventItemController(MainService service, Event event) {
 		this.service = service;

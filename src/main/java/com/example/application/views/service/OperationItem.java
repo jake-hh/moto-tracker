@@ -26,7 +26,7 @@ public class OperationItem extends HorizontalLayout {
 	private Integer emptyPos;
 	private List<Tracker> trackers;
 
-	private ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
+	private ComboBox<Tracker> trackerBox = new ComboBox<>();
 	private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
@@ -95,25 +95,18 @@ public class OperationItem extends HorizontalLayout {
 		return trackerBox.isEmpty();
 	}
 
-	public void updateTrackerLabel() {
-		trackerBox.setLabel(operationList.indexOf(this) == 0 ? "Tracker" : null);
+	public void enableTrackerLabel(boolean enable) {
+		if (enable)
+			trackerBox.setLabel("Tracker");
 	}
 
-	public void updateAddButton(OperationItem opItem, @Nullable OperationItem prevItem) {
-		if (opItem.isEmpty()) {
-			opItem.setAddButtonEnabled(false);
-
-			if (prevItem != null)
-				prevItem.setAddButtonEnabled(false);
-		}
+	public void disableRemoveButton(boolean disable) {
+		if (disable)
+			removeButton.setEnabled(false);
 	}
 
-	public void updateRemoveButton(long num_operations) {
-		// Disable removeButton if it's the only item in list and is empty
-		removeButton.setEnabled(num_operations != 1 || !isEmpty());
-	}
-
-	public void setAddButtonEnabled(boolean state) {
-		addButton.setEnabled(state);
+	public void disableAddButton(boolean disable) {
+		if (disable)
+			addButton.setEnabled(false);
 	}
 }
