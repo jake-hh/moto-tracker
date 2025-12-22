@@ -1,13 +1,7 @@
 package com.example.application.services;
 
 import com.example.application.Notify;
-import com.example.application.data.Tracker;
-import com.example.application.data.Operation;
-import com.example.application.data.Event;
-import com.example.application.data.TrackerRepository;
-import com.example.application.data.OperationRepository;
-import com.example.application.data.EventRepository;
-import com.example.application.data.Pair;
+import com.example.application.data.*;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +26,9 @@ public class MainService {
 		this.eventRepository = eventRepository;
 	}
 
-	  ///////////////////////////////////////
-	 // ---- OPERATION -- REPOSITORY ---- //
-	///////////////////////////////////////
+	  //////////////////////////
+	 // ---- OPERATIONS ---- //
+	//////////////////////////
 
 	public List<Operation> findAllOperations() {
 		return operationRepository.findAll();
@@ -65,11 +59,10 @@ public class MainService {
 		return operationRepository.countByEvent_Id(id);
 	}
 
-	public void deleteOperation(Operation operation, boolean showOkNotif) {
+	public void deleteOperation(Operation operation) {
 		try {
 			operationRepository.delete(operation);
-			if (showOkNotif)
-				Notify.ok("Deleted operation");
+			Notify.ok("Deleted operation");
 		} catch (Exception e) {
 			Notify.warn("Failed to delete operation: " + e.getMessage());
 			throw new RuntimeException("Could not delete operation", e);
@@ -78,7 +71,7 @@ public class MainService {
 
 	public void deleteOperationById(Long id) {
 		// Get operation with updated version
-		findOperationById(id).ifPresent(op -> deleteOperation(op, true));
+		findOperationById(id).ifPresent(op -> deleteOperation(op));
 	}
 
 	public void saveOperation(Operation operation) {
@@ -101,9 +94,9 @@ public class MainService {
 		}
 	}
 
-	  /////////////////////////////////////
-	 // ---- TRACKER -- REPOSITORY ---- //
-	/////////////////////////////////////
+	  ////////////////////////
+	 // ---- TRACKERS ---- //
+	////////////////////////
 
 	public List<Tracker> findAllTrackers(String filter) {
 		if (filter == null || filter.isEmpty()) {
@@ -162,15 +155,15 @@ public class MainService {
 		}
 	}
 
-	  ///////////////////////////////////
-	 // ---- EVENT -- REPOSITORY ---- //
-	///////////////////////////////////
+	  //////////////////////
+	 // ---- EVENTS ---- //
+	//////////////////////
 
 	public List<Event> findAllEvents(){
 		return eventRepository.findAll();
 	}
 
-	// Get operation with updated version
+	// Get event with updated version
 	private Optional<Event> findEventById(Long id) {
 		if (id != null)
 			return eventRepository.findById(id);
@@ -194,14 +187,20 @@ public class MainService {
 	}
 
 	public void deleteEventById(Long id) {
-		// Get operation with updated version
+		// Get event with updated version
 		findEventById(id).ifPresent(this::deleteEvent);
 	}
 
 	@Transactional
 	public void deleteEventCascade(Long eventId) {
-		operationRepository.deleteByEvent_Id(eventId);
-		eventRepository.deleteById(eventId);
+		try {
+			operationRepository.deleteByEvent_Id(eventId);
+			eventRepository.deleteById(eventId);
+			Notify.ok("Deleted event with operations");
+		} catch (Exception e) {
+			Notify.warn("Failed to delete event with operations: " + e.getMessage());
+			throw new RuntimeException("Could not delete event with operations", e);
+		}
 	}
 
 	public void saveEvent(Event event) {
