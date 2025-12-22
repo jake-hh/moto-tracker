@@ -17,17 +17,15 @@ public class EventItemController {
 
 	private MainService service;
 	private Event event;
-	private List<Tracker> trackers;
 
 	public record OperationRender(
 			List<Operation> operations,
 			@Nullable Integer emptyPos
 	) {}
 
-	public EventItemController(MainService service, Event event, List<Tracker> trackers) {
+	public EventItemController(MainService service, Event event) {
 		this.service = service;
 		this.event = event;
-		this.trackers = trackers;
 	}
 
 	public OperationRender prepareOperations(Integer newOperationPos) {
@@ -100,11 +98,5 @@ public class EventItemController {
 		Operation fresh = service.findUpdatedOperation(op);
 		fresh.setTracker(tracker);
 		service.saveOperation(fresh);
-	}
-
-	// --- Temporary during migration ---
-
-	public void sendTrackers(Consumer<List<Tracker>> trackerSetter) {
-		trackerSetter.accept(trackers);
 	}
 }

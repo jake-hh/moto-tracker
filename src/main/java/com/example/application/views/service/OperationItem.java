@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import jakarta.annotation.Nullable;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 
@@ -23,16 +24,18 @@ public class OperationItem extends HorizontalLayout {
 	private VerticalLayout operationList;
 	@Nullable
 	private Integer emptyPos;
+	private List<Tracker> trackers;
 
 	private ComboBox<Tracker> trackerBox = new ComboBox<>("Tracker");
 	private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
-	public OperationItem(Consumer<Integer> refreshEventItem, EventItemController controller, VerticalLayout operationList, Operation operation, @Nullable Integer emptyPos) {
+	public OperationItem(Consumer<Integer> refreshEventItem, EventItemController controller, VerticalLayout operationList, Operation operation, @Nullable Integer emptyPos, List<Tracker> trackers) {
 		this.refreshEventItem = refreshEventItem;
 		this.controller = controller;
 		this.operationList = operationList;
 		this.emptyPos = emptyPos;
+		this.trackers = trackers;
 
 		this.setAlignItems(Alignment.END);
 		this.setSpacing(true);
@@ -50,7 +53,7 @@ public class OperationItem extends HorizontalLayout {
 	}
 
 	private void createTrackerBox(Operation operation) {
-		controller.sendTrackers(trackerBox::setItems);
+		trackerBox.setItems(trackers);
 
 		trackerBox.setItemLabelGenerator(Tracker::getName);
 		trackerBox.setValue(operation.getTracker());

@@ -29,10 +29,12 @@ public class EventItem extends HorizontalLayout {
 
 	private EventItemController controller;
 	private Runnable refreshEventList;
+	private List<Tracker> trackers;
 
 	public EventItem(Event event, Runnable refreshEventList, List<Tracker> trackers, MainService service) {
-		this.controller = new EventItemController(service, event, trackers);
+		this.controller = new EventItemController(service, event);
 		this.refreshEventList = refreshEventList;
+		this.trackers = trackers;
 
 		this.setAlignItems(FlexComponent.Alignment.START);
 		this.setPadding(true);
@@ -159,7 +161,7 @@ public class EventItem extends HorizontalLayout {
 		@Nullable OperationItem prevItem = null;
 
 		for (Operation operation : operations) {
-			var opItem = new OperationItem(this::render, controller, operationList, operation, emptyPos);
+			var opItem = new OperationItem(this::render, controller, operationList, operation, emptyPos, trackers);
 			operationList.add(opItem);
 
 			opItem.updateTrackerLabel();
