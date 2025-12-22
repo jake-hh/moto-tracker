@@ -10,6 +10,7 @@ import com.example.application.data.EventRepository;
 import com.example.application.data.Pair;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -40,6 +41,7 @@ public class MainService {
 	}
 
 	public List<Operation> findAllOperations(Event event) {
+		//Notify.warn("fetching operations");
 		if (event == null || event.getId() == null)
 			return new ArrayList<>();
 		else
@@ -57,6 +59,10 @@ public class MainService {
 	public Operation findUpdatedOperation(Operation operation) {
 		// Get operation with updated version
 		return findOperationById(operation.getId()).orElse(operation);
+	}
+
+	public int findOperationCountByEventId(Long id) {
+		return operationRepository.countByEvent_Id(id);
 	}
 
 	public void deleteOperation(Operation operation, boolean showOkNotif) {
@@ -165,7 +171,7 @@ public class MainService {
 	}
 
 	// Get operation with updated version
-	public Optional<Event> findEventById(Long id) {
+	private Optional<Event> findEventById(Long id) {
 		if (id != null)
 			return eventRepository.findById(id);
 		else
@@ -173,7 +179,7 @@ public class MainService {
 	}
 
 	public Event findUpdatedEvent(Event event) {
-		// Get operation with updated version
+		// Get event with updated version
 		return findEventById(event.getId()).orElse(event);
 	}
 
@@ -190,6 +196,12 @@ public class MainService {
 	public void deleteEventById(Long id) {
 		// Get operation with updated version
 		findEventById(id).ifPresent(this::deleteEvent);
+	}
+
+	@Transactional
+	public void deleteEventCascade(Long eventId) {
+		operationRepository.deleteByEvent_Id(eventId);
+		eventRepository.deleteById(eventId);
 	}
 
 	public void saveEvent(Event event) {

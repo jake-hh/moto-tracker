@@ -39,6 +39,10 @@ public class EventItem extends HorizontalLayout {
 		this.setSpacing(true);
 		this.addClassName("mt-list-item-border");
 
+		render();
+	}
+
+	public void render() {
 		render(null);
 	}
 
@@ -57,42 +61,44 @@ public class EventItem extends HorizontalLayout {
 		deleteButton.getElement().setAttribute("title", "Remove this event");
 
 		deleteButton.addClickListener(e -> {
-			// Get event with updated version (event record has outdated version after saving changes in db)
-			List<Operation> operations = controller.getOperations();
+			int operationsCount = controller.getOperationCount();
 
-			if (operations.isEmpty()) {
+			if (operationsCount == 0) {
 				controller.deleteEvent();
 				refreshEventList.run();
 			}
 			else {
-				var dialog = new ConfirmDialog();
-				if (operations.size() == 1) {
-					dialog.setHeader("Event contains one operation");
-					dialog.setText("Do you want to delete it?");
-				} else {
-					dialog.setHeader("Event contains " + operations.size() + " operations");
-					dialog.setText("Do you want to delete them all?");
-				}
-				dialog.setCancelable(true);
-				dialog.setConfirmText("Delete");
-				dialog.setConfirmButtonTheme("error primary");
-
-				dialog.addConfirmListener(ce -> {
-					controller.deleteOperations(operations);
-					controller.deleteEvent();
-					refreshEventList.run();
-				});
-
-				dialog.open();
+				openDeleteDialog(operationsCount);
 			}
 		});
 
 		return deleteButton;
 	}
 
+	private void openDeleteDialog(int operationsCount) {
+		var dialog = new ConfirmDialog();
+		if (operationsCount == 1) {
+			dialog.setHeader("Event contains one operation");
+			dialog.setText("Do you want to delete it?");
+		} else {
+			dialog.setHeader("Event contains " + operationsCount + " operations");
+			dialog.setText("Do you want to delete them all?");
+		}
+		dialog.setCancelable(true);
+		dialog.setConfirmText("Delete");
+		dialog.setConfirmButtonTheme("error primary");
+
+		dialog.addConfirmListener(ce -> {
+			controller.deleteEventWithOperations();
+			refreshEventList.run();
+		});
+
+		dialog.open();
+	}
+
 	private IntegerField createMileageField() {
 		var mileageField = new IntegerField("Mileage");
-		controller.setMileage(mileageField::setValue);
+		controller.initMileageField(mileageField::setValue);
 		mileageField.setStepButtonsVisible(true);
 		mileageField.setStep(100);
 		mileageField.setSuffixComponent(new Span("km"));
@@ -106,8 +112,7 @@ public class EventItem extends HorizontalLayout {
 			Integer mileage = mileageEv.getValue();
 
 			if (mileage == null || mileage % 100 == 0) {
-				controller.updateEvent(e -> e.setMileage(mileage));
-				render(null);
+				controller.updateEvent(e -> e.setMileage(mileage), this::render);
 			}
 		});
 
@@ -116,7 +121,7 @@ public class EventItem extends HorizontalLayout {
 
 	private DatePicker createDateField() {
 		var dateField = new DatePicker("Date");
-		controller.setDate(dateField::setValue);
+		controller.initDateField(dateField::setValue);
 
 		dateField.setRequired(true);
 		dateField.setRequiredIndicatorVisible(false);
@@ -135,8 +140,7 @@ public class EventItem extends HorizontalLayout {
 			LocalDate date = dateEv.getValue();
 
 			if (date != null && !date.isAfter(ServiceView.getDateToday())) {
-				controller.updateEvent(e -> e.setDate(date));
-				render(null);
+				controller.updateEvent(e -> e.setDate(date), this::render);
 			}
 		});
 
@@ -148,12 +152,11 @@ public class EventItem extends HorizontalLayout {
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
 
-		OperationRender r = controller.getOperations(newOperationPos);
+		OperationRender r = controller.prepareOperations(newOperationPos);
 		List<Operation> operations = r.operations();
-		Integer emptyPos = r.emptyPos();
+		@Nullable Integer emptyPos = r.emptyPos();
 
-		@Nullable
-		OperationItem prevItem = null;
+		@Nullable OperationItem prevItem = null;
 
 		for (Operation operation : operations) {
 			var opItem = new OperationItem(this::render, controller, operationList, operation, emptyPos);

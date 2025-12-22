@@ -22,4 +22,8 @@ public interface OperationRepository extends JpaRepository<Operation, Long> {
 	List<Operation> findByEvent(Event event);
 
 	boolean existsByTracker(Tracker tracker);
+
+	int countByEvent_Id(Long eventId);
+
+	void deleteByEvent_Id(Long eventId);
 }
