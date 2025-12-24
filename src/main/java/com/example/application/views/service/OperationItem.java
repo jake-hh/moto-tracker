@@ -17,12 +17,6 @@ import java.util.function.Consumer;
 @SuppressWarnings("FieldMayBeFinal")
 public class OperationItem extends HorizontalLayout {
 
-	private final Runnable onAddButtonPressed;
-	private final Runnable onRemoveButtonPressed;
-	private final Consumer<Tracker> onTrackerBoxChanged;
-
-	private List<Tracker> trackers;
-
 	private ComboBox<Tracker> trackerBox = new ComboBox<>();
 	private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
@@ -34,17 +28,12 @@ public class OperationItem extends HorizontalLayout {
 			Operation operation,
 			List<Tracker> trackers
 	) {
-		this.onAddButtonPressed = onAddButtonPressed;
-		this.onRemoveButtonPressed = onRemoveButtonPressed;
-		this.onTrackerBoxChanged = onTrackerBoxChanged;
-		this.trackers = trackers;
-
 		this.setAlignItems(Alignment.END);
 		this.setSpacing(true);
 
-		createTrackerBox(operation);
-		createAddButton();
-		createRemoveButton();
+		createTrackerBox(onTrackerBoxChanged, operation, trackers);
+		createAddButton(onAddButtonPressed);
+		createRemoveButton(onRemoveButtonPressed);
 
 		var menuBar = new HorizontalLayout();
 		menuBar.setSpacing(false);
@@ -54,7 +43,7 @@ public class OperationItem extends HorizontalLayout {
 		this.add(trackerBox, menuBar);
 	}
 
-	private void createTrackerBox(Operation operation) {
+	private void createTrackerBox(Consumer<Tracker> onTrackerBoxChanged, Operation operation, List<Tracker> trackers) {
 		trackerBox.setItems(trackers);
 
 		trackerBox.setItemLabelGenerator(Tracker::getName);
@@ -63,22 +52,18 @@ public class OperationItem extends HorizontalLayout {
 		trackerBox.addValueChangeListener(trackerEv -> onTrackerBoxChanged.accept(trackerEv.getValue()));
 	}
 
-	private void createAddButton() {
+	private void createAddButton(Runnable onAddButtonPressed) {
 		addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
 		addButton.getElement().setAttribute("title", "Add new operation");
 
 		addButton.addClickListener(e -> onAddButtonPressed.run());
 	}
 
-	private void createRemoveButton() {
+	private void createRemoveButton(Runnable onRemoveButtonPressed) {
 		removeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
 		removeButton.getElement().setAttribute("title", "Remove this operation");
 
 		removeButton.addClickListener(e -> onRemoveButtonPressed.run());
-	}
-
-	public boolean isEmpty() {
-		return trackerBox.isEmpty();
 	}
 
 	public void enableTrackerLabel(boolean enable) {
