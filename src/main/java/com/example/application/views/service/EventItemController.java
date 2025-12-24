@@ -30,6 +30,18 @@ public class EventItemController {
 		boolean isEmpty(int pos) {
 			return emptyPos != null && pos == emptyPos;
 		}
+
+		int nextInsertPos(int pos) {
+			// TODO: refactor insert pos into a one-liner when brains starts working again
+			// int insertPos = (emptyPos == null || emptyPos > i ? i + 1; ???
+
+			int insertPos = pos + 1;
+
+			if (emptyPos != null && emptyPos < insertPos)
+				insertPos--;
+
+			return insertPos;
+		}
 	}
 
 	public EventItemController(MainService service, Event event) {

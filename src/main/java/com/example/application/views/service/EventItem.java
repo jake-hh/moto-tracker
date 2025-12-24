@@ -18,8 +18,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 
-import jakarta.annotation.Nullable;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -155,26 +153,16 @@ public class EventItem extends HorizontalLayout {
 		operationList.setSpacing(false);
 
 		OperationRender r = controller.prepareOperations(newOperationPos);
-		List<Operation> operations = r.operations();
-		@Nullable Integer emptyPos = r.emptyPos();
 
-		for (int i = 0; i < operations.size(); i++) {
-			Operation operation = operations.get(i);
+		for (int i = 0; i < r.operations().size(); i++) {
 
-			final int pos = i;
+			Operation operation = r.operations().get(i);
+			var nextPos = r.nextInsertPos(i);
 
 			var opItem = new OperationItem(
 					() -> {
-						// TODO: refactor insert pos into a one-liner when brains starts working again
-						// int insertPos = (emptyPos == null || emptyPos > i ? i + 1; ???
-
-						int insertPos = pos + 1;
-
-						if (emptyPos != null && emptyPos < insertPos)
-							insertPos--;
-
 						// Add new operation to logic list but don't save it in db, it will be saved when user sets the tracker
-						render(insertPos);
+						render(nextPos);
 					},
 					() -> {
 						controller.deleteOperation(operation);
