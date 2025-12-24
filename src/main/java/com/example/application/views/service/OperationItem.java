@@ -22,18 +22,15 @@ public class OperationItem extends HorizontalLayout {
 	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
 	public OperationItem(
-			Runnable onAddButtonPressed,
-			Runnable onRemoveButtonPressed,
-			Consumer<Tracker> onTrackerBoxChanged,
 			Operation operation,
 			List<Tracker> trackers
 	) {
 		this.setAlignItems(Alignment.END);
 		this.setSpacing(true);
 
-		createTrackerBox(onTrackerBoxChanged, operation, trackers);
-		createAddButton(onAddButtonPressed);
-		createRemoveButton(onRemoveButtonPressed);
+		createTrackerBox(operation, trackers);
+		createAddButton();
+		createRemoveButton();
 
 		var menuBar = new HorizontalLayout();
 		menuBar.setSpacing(false);
@@ -43,27 +40,33 @@ public class OperationItem extends HorizontalLayout {
 		this.add(trackerBox, menuBar);
 	}
 
-	private void createTrackerBox(Consumer<Tracker> onTrackerBoxChanged, Operation operation, List<Tracker> trackers) {
+	private void createTrackerBox(Operation operation, List<Tracker> trackers) {
 		trackerBox.setItems(trackers);
 
 		trackerBox.setItemLabelGenerator(Tracker::getName);
 		trackerBox.setValue(operation.getTracker());
-
-		trackerBox.addValueChangeListener(trackerEv -> onTrackerBoxChanged.accept(trackerEv.getValue()));
 	}
 
-	private void createAddButton(Runnable onAddButtonPressed) {
+	private void createAddButton() {
 		addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
 		addButton.getElement().setAttribute("title", "Add new operation");
-
-		addButton.addClickListener(e -> onAddButtonPressed.run());
 	}
 
-	private void createRemoveButton(Runnable onRemoveButtonPressed) {
+	private void createRemoveButton() {
 		removeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
 		removeButton.getElement().setAttribute("title", "Remove this operation");
+	}
 
-		removeButton.addClickListener(e -> onRemoveButtonPressed.run());
+	public void onTrackerBoxChanged(Consumer<Tracker> callback) {
+		trackerBox.addValueChangeListener(trackerVCE -> callback.accept(trackerVCE.getValue()));
+	}
+
+	public void onAddButtonPressed(Runnable callback) {
+		addButton.addClickListener(e -> callback.run());
+	}
+
+	public void onRemoveButtonPressed(Runnable callback) {
+		removeButton.addClickListener(e -> callback.run());
 	}
 
 	public void enableTrackerLabel(boolean enable) {

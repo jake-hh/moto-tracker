@@ -159,22 +159,7 @@ public class EventItem extends HorizontalLayout {
 			Operation operation = r.operations().get(i);
 			var nextPos = r.nextInsertPos(i);
 
-			var opItem = new OperationItem(
-					() -> {
-						// Add new operation to logic list but don't save it in db, it will be saved when user sets the tracker
-						render(nextPos);
-					},
-					() -> {
-						controller.deleteOperation(operation);
-						render();
-					},
-					tracker -> {
-						controller.updateOperation(operation, tracker);
-						render();
-					},
-					operation,
-					trackers
-			);
+			var opItem = new OperationItem(operation, trackers);
 
 			operationList.add(opItem);
 
@@ -182,6 +167,21 @@ public class EventItem extends HorizontalLayout {
 			opItem.disableRemoveButton(r.cannotRemove(i));
 			opItem.disableAddButton(r.isEmpty(i));
 			opItem.disableAddButton(r.isEmpty(i + 1));
+
+			opItem.onAddButtonPressed(() -> {
+					// Add new operation to logic list but don't save it in db, it will be saved when user sets the tracker
+					render(nextPos);
+			});
+
+			opItem.onRemoveButtonPressed(() -> {
+					controller.deleteOperation(operation);
+					render();
+			});
+
+			opItem.onTrackerBoxChanged(tracker -> {
+					controller.updateOperation(operation, tracker);
+					render();
+			});
 		}
 
 		return operationList;
