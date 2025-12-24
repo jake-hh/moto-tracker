@@ -161,7 +161,33 @@ public class EventItem extends HorizontalLayout {
 		for (int i = 0; i < operations.size(); i++) {
 			Operation operation = operations.get(i);
 
-			var opItem = new OperationItem(this::render, controller, operationList, operation, emptyPos, trackers);
+			final int pos = i;
+
+			var opItem = new OperationItem(
+					() -> {
+						// TODO: refactor insert pos into a one-liner when brains starts working again
+						// int insertPos = (emptyPos == null || emptyPos > i ? i + 1; ???
+
+						int insertPos = pos + 1;
+
+						if (emptyPos != null && emptyPos < insertPos)
+							insertPos--;
+
+						// Add new operation to logic list but don't save it in db, it will be saved when user sets the tracker
+						render(insertPos);
+					},
+					() -> {
+						controller.deleteOperation(operation);
+						render();
+					},
+					tracker -> {
+						controller.updateOperation(operation, tracker);
+						render();
+					},
+					operation,
+					trackers
+			);
+
 			operationList.add(opItem);
 
 			opItem.enableTrackerLabel(i == 0);
