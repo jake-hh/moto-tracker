@@ -22,12 +22,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-@SuppressWarnings("FieldMayBeFinal")
 public class EventItem extends HorizontalLayout {
 
-	private EventItemController controller;
-	private Runnable refreshEventList;
-	private List<Tracker> trackers;
+	private final EventItemController controller;
+	private final Runnable refreshEventList;
+	private final List<Tracker> trackers;
 
 	public EventItem(Event event, Runnable refreshEventList, List<Tracker> trackers, MainService service) {
 		this.controller = new EventItemController(service, event);

@@ -18,17 +18,19 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
 
+@SuppressWarnings("FieldCanBeLocal")
 public class TrackerForm extends FormLayout {
-	TextField name = new TextField("Name");
-	IntegerField range = new IntegerField("Range"); // range.setLabel("X");
-	IntervalField intervalField = new IntervalField("Interval");
 
-	Button saveBtn = new Button("Save");
-	Button deleteBtn = new Button("Delete");
-	Button closeBtn = new Button("Cancel");
-	Span btnFooter = new Span();
+	private final TextField name = new TextField("Name");
+	private final IntegerField range = new IntegerField("Range"); // range.setLabel("X");
+	private final IntervalField intervalField = new IntervalField("Interval");
 
-	Binder<Tracker> binder = new BeanValidationBinder<>(Tracker.class);
+	private final Button saveBtn = new Button("Save");
+	private final Button deleteBtn = new Button("Delete");
+	private final Button closeBtn = new Button("Cancel");
+	private final Span btnFooter = new Span();
+
+	private final Binder<Tracker> binder = new BeanValidationBinder<>(Tracker.class);
 
 	public TrackerForm() {
 		addClassName("tracker-form");

@@ -21,7 +21,6 @@ import java.time.ZoneId;
 import java.util.List;
 
 
-@SuppressWarnings("FieldMayBeFinal")
 @SpringComponent
 @Scope("prototype")
 @PermitAll
@@ -30,7 +29,7 @@ import java.util.List;
 public class ServiceView extends VerticalLayout {
 	private VerticalLayout eventList;
 	private List<Tracker> trackers;
-	private MainService service;
+	private final MainService service;
 
 	public ServiceView(MainService service) {
 		this.service = service;

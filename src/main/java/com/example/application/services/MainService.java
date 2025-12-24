@@ -71,7 +71,7 @@ public class MainService {
 
 	public void deleteOperationById(Long id) {
 		// Get operation with updated version
-		findOperationById(id).ifPresent(op -> deleteOperation(op));
+		findOperationById(id).ifPresent(this::deleteOperation);
 	}
 
 	public void saveOperation(Operation operation) {

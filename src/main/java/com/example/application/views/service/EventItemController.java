@@ -12,10 +12,9 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 
-@SuppressWarnings("FieldMayBeFinal")
 public class EventItemController {
 
-	private MainService service;
+	private final MainService service;
 	private Event event;
 
 	public record OperationRender(

@@ -19,15 +19,16 @@ import com.vaadin.flow.data.binder.Binder;
 import java.util.List;
 
 
+@SuppressWarnings("FieldCanBeLocal")
 public class OperationForm extends FormLayout {
-	ComboBox<Event> event = new ComboBox<>("Event");
-	ComboBox<Tracker> tracker = new ComboBox<>("Tracker");
+	private final ComboBox<Event> event = new ComboBox<>("Event");
+	private final ComboBox<Tracker> tracker = new ComboBox<>("Tracker");
 
-	Button save = new Button("Save");
-	Button delete = new Button("Delete");
-	Button close = new Button("Cancel");
+	private final Button save = new Button("Save");
+	private final Button delete = new Button("Delete");
+	private final Button close = new Button("Cancel");
 
-	Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
+	private final Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
 
 	public OperationForm(List<Tracker> trackers, List<Event> events) {
 		addClassName("operation-form");

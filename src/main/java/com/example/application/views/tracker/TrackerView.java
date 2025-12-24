@@ -33,10 +33,10 @@ import java.util.Optional;
 @PageTitle("Trackers | Moto Tracker")
 public class TrackerView extends VerticalLayout {
 
-	Grid<Tracker> grid = new Grid<>(Tracker.class, false);
-	TextField filterText = new TextField();
-	TrackerForm form;
-	MainService service;
+	private final Grid<Tracker> grid = new Grid<>(Tracker.class, false);
+	private final TextField filterText = new TextField();
+	private final TrackerForm form = new TrackerForm();
+	private final MainService service;
 
 
 	public TrackerView(MainService service) {
@@ -61,7 +61,6 @@ public class TrackerView extends VerticalLayout {
 	}
 
 	private void configureForm() {
-		form = new TrackerForm();
 		form.setWidth("25em");
 		form.addSaveListener(this::saveTracker);
 		form.addDeleteListener(this::deleteTracker);

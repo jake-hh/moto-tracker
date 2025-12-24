@@ -25,10 +25,11 @@ import org.springframework.context.annotation.Scope;
 @Route(value = "operations", layout = MainLayout.class)
 @PageTitle("Operations | Moto Tracker")
 public class OplistView extends VerticalLayout {
-	Grid<Operation> grid = new Grid<>(Operation.class, false);
+
+	private final MainService service;
+	private final Grid<Operation> grid = new Grid<>(Operation.class, false);
 	// TextField filterText = new TextField();
-	OperationForm form;
-	MainService service;
+	private OperationForm form;
 
 	public OplistView(MainService service) {
 		this.service = service;

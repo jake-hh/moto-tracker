@@ -14,12 +14,11 @@ import java.util.List;
 import java.util.function.Consumer;
 
 
-@SuppressWarnings("FieldMayBeFinal")
 public class OperationItem extends HorizontalLayout {
 
-	private ComboBox<Tracker> trackerBox = new ComboBox<>();
-	private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
-	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
+	private final ComboBox<Tracker> trackerBox = new ComboBox<>();
+	private final Button addButton = new Button(new Icon(VaadinIcon.PLUS));
+	private final Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
 	public OperationItem(Operation operation, List<Tracker> trackers) {
 		this.setAlignItems(Alignment.END);
