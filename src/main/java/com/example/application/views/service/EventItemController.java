@@ -7,6 +7,7 @@ import com.example.application.services.MainService;
 import jakarta.annotation.Nullable;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -17,29 +18,19 @@ public class EventItemController {
 	private final MainService service;
 	private Event event;
 
-	public record OperationRender(
-			List<Operation> operations,
-			@Nullable Integer emptyPos
+	public record OperationRow(
+			@Nullable Operation operation,
+			int nextPos,
+			boolean canAdd,
+			boolean canRemove,
+			boolean hasLabel
 	) {
-		// Disable removeButton if it's the only item in list and is empty
-		boolean cannotRemove(int pos) {
-			return operations.size() == 1 && isEmpty(pos);
+		static OperationRow from(Operation op, int nextPos, boolean canAdd, boolean hasLabel) {
+			return new OperationRow(op, nextPos, canAdd, true, hasLabel);
 		}
 
-		boolean isEmpty(int pos) {
-			return emptyPos != null && pos == emptyPos;
-		}
-
-		int nextInsertPos(int pos) {
-			// TODO: refactor insert pos into a one-liner when brains starts working again
-			// int insertPos = (emptyPos == null || emptyPos > i ? i + 1; ???
-
-			int insertPos = pos + 1;
-
-			if (emptyPos != null && emptyPos < insertPos)
-				insertPos--;
-
-			return insertPos;
+		static OperationRow empty(int nextPos, boolean canRemove, boolean hasLabel) {
+			return new OperationRow(null, nextPos, false, canRemove, hasLabel);
 		}
 	}
 
@@ -48,34 +39,36 @@ public class EventItemController {
 		this.event = event;
 	}
 
-	public OperationRender prepareOperations(Integer newOperationPos) {
-		List<Operation> operations = getOperations();
-		@Nullable Integer emptyPos = null;
+	public List<OperationRow> getOperationRows(@Nullable Integer newOperationPos) {
+		List<Operation> ops = service.findAllOperations(event);
+		List<OperationRow> rows = new ArrayList<>();
 
-		if (operations.isEmpty()) {
-			operations.add(newEmptyOperation());
-			emptyPos = 0;
-		}
-		else if (newOperationPos != null) {
-			operations.add(newOperationPos, newEmptyOperation());
-			emptyPos = newOperationPos;
+		var size = ops.size();
+
+		if (size == 0) {
+			rows.add(OperationRow.empty(1, false, true));
+			return rows;
 		}
 
-		return new OperationRender(operations, emptyPos);
-	}
+		else for (int i = 0; i < size; i++) {
+			if (newOperationPos != null && newOperationPos == i) {
+				rows.add(OperationRow.empty(i, true, i == 0));
+			}
 
-	private Operation newEmptyOperation() {
-		var op = new Operation();
-		op.setEvent(event);
-		return op;
+			boolean cannotAdd = newOperationPos != null && newOperationPos == i + 1;
+
+			rows.add(OperationRow.from(ops.get(i), i + 1, !cannotAdd, i == 0));
+		}
+
+		if (newOperationPos != null && newOperationPos == size) {
+			rows.add(OperationRow.empty(size, true, false));
+		}
+
+		return rows;
 	}
 
 	public Event getUpdatedEvent() {
 		return service.findUpdatedEvent(event);
-	}
-
-	public List<Operation> getOperations() {
-		return service.findAllOperations(event);
 	}
 
 	public void deleteEvent() {
@@ -84,7 +77,8 @@ public class EventItemController {
 
 	public void deleteOperation(Operation op) {
 		// Select operation with id (operation has outdated version after saving in db trackerBox change event)
-		service.deleteOperationById(op.getId());
+		if (op != null)
+			service.deleteOperationById(op.getId());
 	}
 
 	public void deleteEventWithOperations() {
@@ -115,7 +109,7 @@ public class EventItemController {
 
 	public void updateOperation(Operation op, Tracker tracker) {
 		// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-		Operation fresh = service.findUpdatedOperation(op);
+		Operation fresh = op == null ? new Operation(event) : service.findUpdatedOperation(op);
 		fresh.setTracker(tracker);
 		service.saveOperation(fresh);
 	}

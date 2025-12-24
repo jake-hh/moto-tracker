@@ -16,6 +16,11 @@ public class Operation extends AbstractEntity {
 	@ManyToOne
 	private Event event;
 
+	public Operation() {}
+
+	public Operation(Event event) {
+		this.event = event;
+	}
 
 	@Override
 	public String toString() {

@@ -1,10 +1,9 @@
 package com.example.application.views.service;
 
 import com.example.application.data.Event;
-import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
 import com.example.application.services.MainService;
-import com.example.application.views.service.EventItemController.OperationRender;
+import com.example.application.views.service.EventItemController.OperationRow;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -17,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -151,38 +151,35 @@ public class EventItem extends HorizontalLayout {
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
 
-		OperationRender r = controller.prepareOperations(newOperationPos);
-
-		for (int i = 0; i < r.operations().size(); i++) {
-
-			Operation operation = r.operations().get(i);
-			var nextPos = r.nextInsertPos(i);
-
-			var opItem = new OperationItem(operation, trackers);
-
-			operationList.add(opItem);
-
-			opItem.enableTrackerLabel(i == 0);
-			opItem.disableRemoveButton(r.cannotRemove(i));
-			opItem.disableAddButton(r.isEmpty(i));
-			opItem.disableAddButton(r.isEmpty(i + 1));
-
-			opItem.onAddButtonPressed(() -> {
-					// Add new operation to logic list but don't save it in db, it will be saved when user sets the tracker
-					render(nextPos);
-			});
-
-			opItem.onRemoveButtonPressed(() -> {
-					controller.deleteOperation(operation);
-					render();
-			});
-
-			opItem.onTrackerBoxChanged(tracker -> {
-					controller.updateOperation(operation, tracker);
-					render();
-			});
-		}
+		for (OperationRow row : controller.getOperationRows(newOperationPos))
+			operationList.add(createOperationItem(row));
 
 		return operationList;
+	}
+
+	@NotNull
+	private OperationItem createOperationItem(OperationRow row) {
+
+		OperationItem item = new OperationItem(row.operation(), trackers);
+
+		item.enableTrackerLabel(row.hasLabel());
+		item.disableRemoveButton(!row.canRemove());
+		item.disableAddButton(!row.canAdd());
+
+		item.onAddButtonPressed(() -> {
+				render(row.nextPos());
+		});
+
+		item.onRemoveButtonPressed(() -> {
+				controller.deleteOperation(row.operation());
+				render();
+		});
+
+		item.onTrackerBoxChanged(tracker -> {
+				controller.updateOperation(row.operation(), tracker);
+				render();
+		});
+
+		return item;
 	}
 }

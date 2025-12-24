@@ -9,6 +9,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -20,13 +21,15 @@ public class OperationItem extends HorizontalLayout {
 	private final Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private final Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
-	public OperationItem(Operation operation, List<Tracker> trackers) {
+	//TODO: Option C: pass `@Nullable Tracker tracker` instead of operation <--- BEST ?
+
+	public OperationItem(@Nullable Operation operation, List<Tracker> trackers) {
 		this.setAlignItems(Alignment.END);
 		this.setSpacing(true);
 
 		trackerBox.setItems(trackers);
 		trackerBox.setItemLabelGenerator(Tracker::getName);
-		trackerBox.setValue(operation.getTracker());
+		trackerBox.setValue(operation == null ? null : operation.getTracker());
 
 		this.add(trackerBox, createEditBar());
 	}
