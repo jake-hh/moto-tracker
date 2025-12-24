@@ -21,40 +21,37 @@ public class OperationItem extends HorizontalLayout {
 	private Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
-	public OperationItem(
-			Operation operation,
-			List<Tracker> trackers
-	) {
+	public OperationItem(Operation operation, List<Tracker> trackers) {
 		this.setAlignItems(Alignment.END);
 		this.setSpacing(true);
 
-		createTrackerBox(operation, trackers);
-		createAddButton();
-		createRemoveButton();
-
-		var menuBar = new HorizontalLayout();
-		menuBar.setSpacing(false);
-		menuBar.setPadding(false);
-		menuBar.add(addButton, removeButton);
-
-		this.add(trackerBox, menuBar);
-	}
-
-	private void createTrackerBox(Operation operation, List<Tracker> trackers) {
 		trackerBox.setItems(trackers);
-
 		trackerBox.setItemLabelGenerator(Tracker::getName);
 		trackerBox.setValue(operation.getTracker());
+
+		this.add(trackerBox, createEditBar());
 	}
 
-	private void createAddButton() {
-		addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
+	private HorizontalLayout createEditBar() {
+		var editBar = new HorizontalLayout();
+		editBar.setSpacing(false);
+		editBar.setPadding(false);
+		editBar.add(addButton, removeButton);
+
+		addButton.addThemeVariants(
+				ButtonVariant.LUMO_ICON,
+				ButtonVariant.LUMO_TERTIARY
+		);
 		addButton.getElement().setAttribute("title", "Add new operation");
-	}
 
-	private void createRemoveButton() {
-		removeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
+		removeButton.addThemeVariants(
+				ButtonVariant.LUMO_ICON,
+				ButtonVariant.LUMO_ERROR,
+				ButtonVariant.LUMO_TERTIARY
+		);
 		removeButton.getElement().setAttribute("title", "Remove this operation");
+
+		return editBar;
 	}
 
 	public void onTrackerBoxChanged(Consumer<Tracker> callback) {
