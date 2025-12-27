@@ -3,7 +3,7 @@ package com.example.application.views.service;
 import com.example.application.data.Event;
 import com.example.application.data.Tracker;
 import com.example.application.services.MainService;
-import com.example.application.views.service.OperationRowsBuilder.OperationRow;
+import com.example.application.views.service.OperationRowsBuilder.*;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -161,26 +161,38 @@ public class EventItem extends HorizontalLayout {
 
 	@NotNull
 	private OperationItem createOperationItem(OperationRow row) {
+		final OperationItem item;
 
-		OperationItem item = new OperationItem(row.operation(), trackers);
+		if (row instanceof ExistingOperationRow existing) {
+			item = new OperationItem(existing.operation(), trackers);
+
+			item.onTrackerBoxChanged(tracker -> {
+				controller.updateOperation(existing.operation(), tracker);
+				render();
+			});
+
+			item.onRemoveButtonPressed(() -> {
+				controller.deleteOperation(existing.operation());
+				render();
+			});
+
+		} else if (row instanceof NewOperationRow) {
+			item = new OperationItem(null, trackers);
+
+			item.onTrackerBoxChanged(tracker -> {
+				controller.createOperation(tracker);
+				render();
+			});
+
+		} else throw new IllegalStateException("UnknownOperationRow type");
+
+		item.onAddButtonPressed(() -> {
+			render(row.nextPos());
+		});
 
 		item.enableTrackerLabel(row.hasLabel());
 		item.disableRemoveButton(!row.canRemove());
 		item.disableAddButton(!row.canAdd());
-
-		item.onAddButtonPressed(() -> {
-				render(row.nextPos());
-		});
-
-		item.onRemoveButtonPressed(() -> {
-				controller.deleteOperation(row.operation());
-				render();
-		});
-
-		item.onTrackerBoxChanged(tracker -> {
-				controller.updateOperation(row.operation(), tracker);
-				render();
-		});
 
 		return item;
 	}

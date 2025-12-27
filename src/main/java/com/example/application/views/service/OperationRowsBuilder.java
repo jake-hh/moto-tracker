@@ -3,25 +3,40 @@ package com.example.application.views.service;
 import com.example.application.data.Operation;
 
 import jakarta.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public final class OperationRowsBuilder {
 
-	public record OperationRow(
+	public interface OperationRow {
+		int nextPos();
+		boolean canAdd();
+		boolean canRemove();
+		boolean hasLabel();
+	}
+
+	public record ExistingOperationRow(
 			@Nullable Operation operation,
 			int nextPos,
 			boolean canAdd,
+			boolean hasLabel
+	) implements OperationRow {
+
+		@Override
+		public boolean canRemove() {
+			return true;
+		}
+	}
+
+	public record NewOperationRow(
+			int nextPos,
 			boolean canRemove,
 			boolean hasLabel
-	) {
-		static OperationRow from(Operation op, int nextPos, boolean canAdd, boolean hasLabel) {
-			return new OperationRow(op, nextPos, canAdd, true, hasLabel);
-		}
+	) implements OperationRow {
 
-		static OperationRow empty(int nextPos, boolean canRemove, boolean hasLabel) {
-			return new OperationRow(null, nextPos, false, canRemove, hasLabel);
+		@Override
+		public boolean canAdd() {
+			return false;
 		}
 	}
 
@@ -34,22 +49,22 @@ public final class OperationRowsBuilder {
 		var size = operations.size();
 
 		if (size == 0) {
-			rows.add(OperationRow.empty(1, false, true));
+			rows.add(new NewOperationRow(1, false, true));
 			return rows;
 		}
 
 		else for (int i = 0; i < size; i++) {
 			if (newOperationPos != null && newOperationPos == i) {
-				rows.add(OperationRow.empty(i, true, i == 0));
+				rows.add(new NewOperationRow(i, true, i == 0));
 			}
 
 			boolean cannotAdd = newOperationPos != null && newOperationPos == i + 1;
 
-			rows.add(OperationRow.from(operations.get(i), i + 1, !cannotAdd, i == 0));
+			rows.add(new ExistingOperationRow(operations.get(i), i + 1, !cannotAdd, i == 0));
 		}
 
 		if (newOperationPos != null && newOperationPos == size) {
-			rows.add(OperationRow.empty(size, true, false));
+			rows.add(new NewOperationRow(size, true, false));
 		}
 
 		return rows;
