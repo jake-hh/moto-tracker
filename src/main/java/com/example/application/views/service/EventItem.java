@@ -3,7 +3,7 @@ package com.example.application.views.service;
 import com.example.application.data.Event;
 import com.example.application.data.Tracker;
 import com.example.application.services.MainService;
-import com.example.application.views.service.EventItemController.OperationRow;
+import com.example.application.views.service.OperationRowsBuilder.OperationRow;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -151,7 +151,9 @@ public class EventItem extends HorizontalLayout {
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
 
-		for (OperationRow row : controller.getOperationRows(newOperationPos))
+		List<OperationRow> rows = OperationRowsBuilder.build(controller.getOperations(), newOperationPos);
+
+		for (OperationRow row : rows)
 			operationList.add(createOperationItem(row));
 
 		return operationList;
