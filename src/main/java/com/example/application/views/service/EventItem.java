@@ -27,36 +27,44 @@ public class EventItem extends HorizontalLayout {
 	private final EventItemController controller;
 	private final Runnable refreshEventList;
 	private final List<Tracker> trackers;
+	private final VerticalLayout operationList;
 
 	public EventItem(Event event, Runnable refreshEventList, List<Tracker> trackers, MainService service) {
 		this.controller = new EventItemController(service, event);
 		this.refreshEventList = refreshEventList;
 		this.trackers = trackers;
 
-		this.setAlignItems(FlexComponent.Alignment.START);
-		this.setPadding(true);
-		this.setSpacing(true);
-		this.addClassName("mt-list-item-border");
+		setAlignItems(FlexComponent.Alignment.START);
+		setPadding(true);
+		setSpacing(true);
+		addClassName("mt-list-item-border");
 
-		render();
+		operationList = new VerticalLayout();
+		operationList.setPadding(false);
+		operationList.setSpacing(false);
+
+		refreshAll();
 	}
 
-	public void render() {
-		render(null);
-	}
-
-	public void render(Integer newOperationPos) {
-		this.removeAll();
+	public void refreshAll() {
+		removeAll();
 
 		add(createDeleteButton(),
 			createMileageField(),
 			createDateField(),
-			createOperationList(newOperationPos));
+			operationList);
+
+		refreshOperationList();
 	}
 
 	private Button createDeleteButton() {
 		var deleteButton = new Button(new Icon(VaadinIcon.TRASH));
-		deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
+
+		deleteButton.addThemeVariants(
+				ButtonVariant.LUMO_ICON,
+				ButtonVariant.LUMO_ERROR,
+				ButtonVariant.LUMO_TERTIARY
+		);
 		deleteButton.getElement().setAttribute("title", "Remove this event");
 
 		deleteButton.addClickListener(e -> {
@@ -111,7 +119,7 @@ public class EventItem extends HorizontalLayout {
 			Integer mileage = mileageEv.getValue();
 
 			if (mileage == null || mileage % 100 == 0) {
-				controller.updateEvent(e -> e.setMileage(mileage), this::render);
+				controller.updateEvent(e -> e.setMileage(mileage), this::refreshAll);
 			}
 		});
 
@@ -139,24 +147,24 @@ public class EventItem extends HorizontalLayout {
 			LocalDate date = dateEv.getValue();
 
 			if (date != null && !date.isAfter(ServiceView.getDateToday())) {
-				controller.updateEvent(e -> e.setDate(date), this::render);
+				controller.updateEvent(e -> e.setDate(date), this::refreshAll);
 			}
 		});
 
 		return dateField;
 	}
 
-	private VerticalLayout createOperationList(Integer newOperationPos) {
-		var operationList = new VerticalLayout();
-		operationList.setPadding(false);
-		operationList.setSpacing(false);
+	public void refreshOperationList() {
+		refreshOperationListAndAdd(null);
+	}
+
+	private void refreshOperationListAndAdd(Integer newOperationPos) {
+		operationList.removeAll();
 
 		List<OperationRow> rows = OperationRowsBuilder.build(controller.getOperations(), newOperationPos);
 
 		for (OperationRow row : rows)
 			operationList.add(createOperationItem(row));
-
-		return operationList;
 	}
 
 	@NotNull
@@ -168,13 +176,13 @@ public class EventItem extends HorizontalLayout {
 
 			item.onTrackerBoxChanged(tracker -> {
 				controller.updateOperation(existing.operation(), tracker);
-				render();
+				refreshOperationList();
 			});
 
 			if (row.canRemove())
 				item.onRemoveButtonPressed(() -> {
 					controller.deleteOperation(existing.operation());
-					render();
+					refreshOperationList();
 				});
 			else
 				item.disableRemoveButton(true);
@@ -184,11 +192,11 @@ public class EventItem extends HorizontalLayout {
 
 			item.onTrackerBoxChanged(tracker -> {
 				controller.createOperation(tracker);
-				render();
+				refreshOperationList();
 			});
 
 			if (row.canRemove())
-				item.onRemoveButtonPressed(this::render);
+				item.onRemoveButtonPressed(this::refreshOperationList);
 			else
 				item.disableRemoveButton(true);
 		}
@@ -197,7 +205,7 @@ public class EventItem extends HorizontalLayout {
 		item.enableTrackerLabel(row.hasLabel());
 
 		if (row.canAdd())
-			item.onAddButtonPressed(() -> render(row.nextPos()));
+			item.onAddButtonPressed(() -> refreshOperationListAndAdd(row.nextPos()));
 		else
 			item.disableAddButton(true);
 
