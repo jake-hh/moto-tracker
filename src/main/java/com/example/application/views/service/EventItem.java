@@ -171,12 +171,15 @@ public class EventItem extends HorizontalLayout {
 				render();
 			});
 
-			item.onRemoveButtonPressed(() -> {
-				controller.deleteOperation(existing.operation());
-				render();
-			});
-
-		} else if (row instanceof NewOperationRow) {
+			if (row.canRemove())
+				item.onRemoveButtonPressed(() -> {
+					controller.deleteOperation(existing.operation());
+					render();
+				});
+			else
+				item.disableRemoveButton(true);
+		}
+		else if (row instanceof NewOperationRow) {
 			item = new OperationItem(null, trackers);
 
 			item.onTrackerBoxChanged(tracker -> {
@@ -184,15 +187,19 @@ public class EventItem extends HorizontalLayout {
 				render();
 			});
 
-		} else throw new IllegalStateException("UnknownOperationRow type");
-
-		item.onAddButtonPressed(() -> {
-			render(row.nextPos());
-		});
+			if (row.canRemove())
+				item.onRemoveButtonPressed(this::render);
+			else
+				item.disableRemoveButton(true);
+		}
+		else throw new IllegalStateException("UnknownOperationRow type");
 
 		item.enableTrackerLabel(row.hasLabel());
-		item.disableRemoveButton(!row.canRemove());
-		item.disableAddButton(!row.canAdd());
+
+		if (row.canAdd())
+			item.onAddButtonPressed(() -> render(row.nextPos()));
+		else
+			item.disableAddButton(true);
 
 		return item;
 	}
