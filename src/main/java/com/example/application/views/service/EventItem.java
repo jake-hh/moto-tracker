@@ -119,7 +119,7 @@ public class EventItem extends HorizontalLayout {
 			Integer mileage = mileageEv.getValue();
 
 			if (mileage == null || mileage % 100 == 0) {
-				controller.updateEvent(e -> e.setMileage(mileage), this::refreshAll);
+				controller.updateEvent(e -> e.setMileage(mileage));
 			}
 		});
 
@@ -147,7 +147,7 @@ public class EventItem extends HorizontalLayout {
 			LocalDate date = dateEv.getValue();
 
 			if (date != null && !date.isAfter(ServiceView.getDateToday())) {
-				controller.updateEvent(e -> e.setDate(date), this::refreshAll);
+				controller.updateEvent(e -> e.setDate(date));
 			}
 		});
 

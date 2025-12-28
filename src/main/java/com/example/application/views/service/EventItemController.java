@@ -57,12 +57,11 @@ public class EventItemController {
 				.ifPresent(dateFieldSetter);
 	}
 
-	public void updateEvent(Consumer<Event> mutator, Runnable onFinished) {
+	public void updateEvent(Consumer<Event> mutator) {
 		Event fresh = getUpdatedEvent();
 		mutator.accept(fresh);
 		service.saveEvent(fresh);
 		event = fresh;
-		onFinished.run();
 	}
 
 	private void saveOperation(Operation op, Tracker tracker) {
