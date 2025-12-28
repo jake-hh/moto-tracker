@@ -1,6 +1,7 @@
 package com.example.application.views.service;
 
 import com.example.application.data.Event;
+import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
 import com.example.application.services.MainService;
 import com.example.application.views.service.OperationRowsBuilder.*;
@@ -172,16 +173,17 @@ public class EventItem extends HorizontalLayout {
 		final OperationItem item;
 
 		if (row instanceof ExistingOperationRow existing) {
-			item = new OperationItem(existing.operation(), trackers);
+			Operation op = existing.operation();
+			item = new OperationItem(op.getTracker(), trackers);
 
 			item.onTrackerBoxChanged(tracker -> {
-				controller.updateOperation(existing.operation(), tracker);
+				controller.updateOperation(op, tracker);
 				refreshOperationList();
 			});
 
 			if (row.canRemove())
 				item.onRemoveButtonPressed(() -> {
-					controller.deleteOperation(existing.operation());
+					controller.deleteOperation(op);
 					refreshOperationList();
 				});
 			else

@@ -1,6 +1,5 @@
 package com.example.application.views.service;
 
-import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
 
 import com.vaadin.flow.component.button.Button;
@@ -23,13 +22,13 @@ public class OperationItem extends HorizontalLayout {
 
 	//TODO: Option C: pass `@Nullable Tracker tracker` instead of operation <--- BEST ?
 
-	public OperationItem(@Nullable Operation operation, List<Tracker> trackers) {
+	public OperationItem(@Nullable Tracker selectedTracker, List<Tracker> trackers) {
 		this.setAlignItems(Alignment.END);
 		this.setSpacing(true);
 
 		trackerBox.setItems(trackers);
 		trackerBox.setItemLabelGenerator(Tracker::getName);
-		trackerBox.setValue(operation == null ? null : operation.getTracker());
+		trackerBox.setValue(selectedTracker);
 
 		this.add(trackerBox, createEditBar());
 	}

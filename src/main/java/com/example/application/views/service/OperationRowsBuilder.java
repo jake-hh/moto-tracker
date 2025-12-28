@@ -16,7 +16,7 @@ public final class OperationRowsBuilder {
 	}
 
 	public record ExistingOperationRow(
-			@Nullable Operation operation,
+			Operation operation,
 			int nextPos,
 			boolean canAdd,
 			boolean hasLabel
