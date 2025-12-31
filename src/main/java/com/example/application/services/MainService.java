@@ -51,16 +51,16 @@ public class MainService {
 			return Optional.empty();
 	}
 
-	public Operation findUpdatedOperation(Operation operation) {
+	public Operation findUpdatedOperation(@NotNull Operation operation) {
 		// Get operation with updated version
 		return findOperationById(operation.getId()).orElse(operation);
 	}
 
-	public int findOperationCountByEventId(Long id) {
+	public int findOperationCountByEventId(@NotNull Long id) {
 		return operationRepository.countByEvent_Id(id);
 	}
 
-	public void deleteOperation(Operation operation) {
+	public void deleteOperation(@NotNull Operation operation) {
 		try {
 			operationRepository.delete(operation);
 			Notify.ok("Deleted operation");
@@ -80,7 +80,7 @@ public class MainService {
 		}
 	}
 
-	public void saveOperation(Operation operation) {
+	public void saveOperation(@NotNull Operation operation) {
 		//Notify.info(operation.toString());
 
 		if (operation == null) {
@@ -116,11 +116,11 @@ public class MainService {
 		return trackerRepository.findAll();
 	}
 
-	public boolean isTrackerUsed(Tracker tracker) {
+	public boolean isTrackerUsed(@NotNull Tracker tracker) {
 		return operationRepository.existsByTracker(tracker);
 	}
 
-	public Map<Long, Pair<LocalDate, Integer>> findLastEventDataForTrackers(List<Tracker> trackers) {
+	public Map<Long, Pair<LocalDate, Integer>> findLastEventDataForTrackers(@NotNull List<Tracker> trackers) {
         if (trackers.isEmpty()) {
 			return Collections.emptyMap();
 		}
@@ -136,7 +136,7 @@ public class MainService {
 		));
     }
 
-	public void deleteTracker(Tracker tracker) {
+	public void deleteTracker(@NotNull Tracker tracker) {
 		try {
 			trackerRepository.delete(tracker);
 			Notify.ok("Deleted event");
@@ -146,7 +146,7 @@ public class MainService {
 		}
 	}
 
-	public void saveTracker(Tracker tracker) {
+	public void saveTracker(@NotNull Tracker tracker) {
 		if (tracker == null) {
 			Notify.warn("Tracker is null. Are you sure you have connected your form to the application?");
 			return;
@@ -203,7 +203,7 @@ public class MainService {
 	}
 
 	@Transactional
-	public void deleteEventCascade(Long eventId) {
+	public void deleteEventCascade(@NotNull Long eventId) {
 		try {
 			operationRepository.deleteByEvent_Id(eventId);
 			eventRepository.deleteById(eventId);
@@ -214,7 +214,7 @@ public class MainService {
 		}
 	}
 
-	public void saveEvent(Event event) {
+	public void saveEvent(@NotNull Event event) {
 		if (event == null) {
 			Notify.warn("Event is null. Are you sure you have connected your form to the application?");
 		}
