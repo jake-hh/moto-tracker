@@ -106,7 +106,8 @@ public class EventItem extends HorizontalLayout {
 
 	private IntegerField createMileageField() {
 		var mileageField = new IntegerField("Mileage");
-		controller.initMileageField(mileageField::setValue);
+		controller.getMileage().ifPresent(mileageField::setValue);
+
 		mileageField.setStepButtonsVisible(true);
 		mileageField.setStep(100);
 		mileageField.setSuffixComponent(new Span("km"));
@@ -119,9 +120,8 @@ public class EventItem extends HorizontalLayout {
 		mileageField.addValueChangeListener(mileageEv -> {
 			Integer mileage = mileageEv.getValue();
 
-			if (mileage == null || mileage % 100 == 0) {
-				controller.updateEvent(e -> e.setMileage(mileage));
-			}
+			if (mileage == null || mileage % 100 == 0)
+				controller.updateMileage(mileage);
 		});
 
 		return mileageField;
@@ -129,7 +129,7 @@ public class EventItem extends HorizontalLayout {
 
 	private DatePicker createDateField() {
 		var dateField = new DatePicker("Date");
-		controller.initDateField(dateField::setValue);
+		controller.getDate().ifPresent(dateField::setValue);
 
 		dateField.setRequired(true);
 		dateField.setRequiredIndicatorVisible(false);
@@ -147,9 +147,8 @@ public class EventItem extends HorizontalLayout {
 		dateField.addValueChangeListener(dateEv -> {
 			LocalDate date = dateEv.getValue();
 
-			if (date != null && !date.isAfter(ServiceView.getDateToday())) {
-				controller.updateEvent(e -> e.setDate(date));
-			}
+			if (date != null && !date.isAfter(ServiceView.getDateToday()))
+				controller.updateDate(date);
 		});
 
 		return dateField;

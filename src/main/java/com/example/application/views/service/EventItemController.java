@@ -8,7 +8,6 @@ import com.example.application.services.MainService;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 
 public class EventItemController {
@@ -21,12 +20,10 @@ public class EventItemController {
 		this.event = event;
 	}
 
+	// --- OPERATION LIST ---
+
 	public List<Operation> getOperations() {
 		return service.findAllOperations(event);
-	}
-
-	public Event getUpdatedEvent() {
-		return service.findUpdatedEvent(event);
 	}
 
 	public void deleteEvent() {
@@ -47,22 +44,31 @@ public class EventItemController {
 		return service.findOperationCountByEventId(event.getId());
 	}
 
-	public void initMileageField(Consumer<Integer> mileageFieldSetter) {
-		Optional.ofNullable(event.getMileage())
-				.ifPresent(mileageFieldSetter);
+	// --- EVENT ---
+
+	public Optional<Integer> getMileage() {
+		return Optional.ofNullable(event.getMileage());
 	}
 
-	public void initDateField(Consumer<LocalDate> dateFieldSetter) {
-		Optional.ofNullable(event.getDate())
-				.ifPresent(dateFieldSetter);
+	public Optional<LocalDate> getDate() {
+		return Optional.ofNullable(event.getDate());
 	}
 
-	public void updateEvent(Consumer<Event> mutator) {
-		Event fresh = getUpdatedEvent();
-		mutator.accept(fresh);
-		service.saveEvent(fresh);
-		event = fresh;
+	public void updateMileage(Integer mileage) {
+		Event event = service.findUpdatedEvent(this.event);
+		event.setMileage(mileage);
+		service.saveEvent(event);
+		this.event = event;
 	}
+
+	public void updateDate(LocalDate date) {
+		Event event = service.findUpdatedEvent(this.event);
+		event.setDate(date);
+		service.saveEvent(event);
+		this.event = event;
+	}
+
+	// --- OPERATION ---
 
 	private void saveOperation(Operation op, Tracker tracker) {
 		op.setTracker(tracker);
