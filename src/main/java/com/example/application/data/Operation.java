@@ -18,8 +18,9 @@ public class Operation extends AbstractEntity {
 
 	public Operation() {}
 
-	public Operation(Event event) {
+	public Operation(Event event, Tracker tracker) {
 		this.event = event;
+		this.tracker = tracker;
 	}
 
 	@Override

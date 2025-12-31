@@ -70,17 +70,14 @@ public class EventItemController {
 
 	// --- OPERATION ---
 
-	private void saveOperation(Operation op, Tracker tracker) {
-		op.setTracker(tracker);
-		service.saveOperation(op);
-	}
-
 	public void updateOperation(Operation op, Tracker tracker) {
 		// Get operation with updated version (operation has outdated version after saving in db trackerBox change event)
-		saveOperation(service.findUpdatedOperation(op), tracker);
+		Operation fresh = service.findUpdatedOperation(op);
+		fresh.setTracker(tracker);
+		service.saveOperation(fresh);
 	}
 
 	public void createOperation(Tracker tracker) {
-		saveOperation(new Operation(event), tracker);
+		service.saveOperation(new Operation(event, tracker));
 	}
 }
