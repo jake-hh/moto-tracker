@@ -27,8 +27,8 @@ import java.util.List;
 @Route(value = "services", layout = MainLayout.class)
 @PageTitle("Services | Moto Tracker")
 public class ServiceView extends VerticalLayout {
+
 	private VerticalLayout eventList;
-	private List<Tracker> trackers;
 	private final MainService service;
 
 	public ServiceView(MainService service) {
@@ -37,14 +37,9 @@ public class ServiceView extends VerticalLayout {
 		//setPadding(true);
 		//setSpacing(true);
 		setSizeFull();
-		updateTrackers();
 
 		createEventList();
 		add(getToolbar(), eventList);
-	}
-
-	private void updateTrackers() {
-		trackers = service.findAllTrackers();
 	}
 
 	private Component getToolbar() {
@@ -65,6 +60,8 @@ public class ServiceView extends VerticalLayout {
 	}
 
 	public void renderEventList() {
+		List<Tracker> trackers = service.findAllTrackers();
+
 		eventList.removeAll();
 
 		for (Event event : service.findAllEvents().reversed()) {
