@@ -35,12 +35,12 @@ public class MainService {
 		return operationRepository.findAll();
 	}
 
-	public List<Operation> findAllOperations(Event event) {
+	public List<Operation> findAllOperationsByEventId(Long eventId) {
 		//Notify.warn("fetching operations");
-		if (event == null || event.getId() == null)
+		if (eventId == null)
 			return new ArrayList<>();
 		else
-			return operationRepository.findByEvent(event);
+			return operationRepository.findByEvent_Id(eventId);
 	}
 
 	// Get operation with updated version

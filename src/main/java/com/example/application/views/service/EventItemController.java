@@ -23,7 +23,7 @@ public class EventItemController {
 	// --- OPERATION LIST ---
 
 	public List<Operation> getOperations() {
-		return service.findAllOperations(event);
+		return service.findAllOperationsByEventId(event.getId());
 	}
 
 	public void deleteEvent() {
