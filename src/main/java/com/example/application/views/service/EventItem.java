@@ -20,6 +20,7 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -27,13 +28,13 @@ public class EventItem extends HorizontalLayout {
 
 	private final EventItemController controller;
 	private final Runnable refreshEventList;
-	private final List<Tracker> trackers;
+	private final List<Tracker> allTrackers;
 	private final VerticalLayout operationList;
 
-	public EventItem(Event event, Runnable refreshEventList, List<Tracker> trackers, MainService service) {
+	public EventItem(Event event, Runnable refreshEventList, List<Tracker> allTrackers, MainService service) {
 		this.controller = new EventItemController(service, event);
 		this.refreshEventList = refreshEventList;
-		this.trackers = trackers;
+		this.allTrackers = allTrackers;
 
 		setAlignItems(FlexComponent.Alignment.START);
 		setPadding(true);
@@ -158,22 +159,35 @@ public class EventItem extends HorizontalLayout {
 		refreshOperationListAndAdd(null);
 	}
 
+	private List<Tracker> getAvailableTrackers(List<Operation> operations) {
+		var usedTrackers = new HashSet<Tracker>();
+
+		for (Operation op : operations)
+			usedTrackers.add(op.getTracker());
+
+		return allTrackers.stream()
+				.filter(t -> !usedTrackers.contains(t))
+				.toList();
+	}
+
 	private void refreshOperationListAndAdd(Integer newOperationPos) {
+		List<Operation> operations = controller.getOperations();
+		List<OperationRow> rows = OperationRowsBuilder.build(operations, newOperationPos);
+		List<Tracker> availableTrackers = getAvailableTrackers(operations);
+
 		operationList.removeAll();
 
-		List<OperationRow> rows = OperationRowsBuilder.build(controller.getOperations(), newOperationPos);
-
 		for (OperationRow row : rows)
-			operationList.add(createOperationItem(row));
+			operationList.add(createOperationItem(row, availableTrackers));
 	}
 
 	@NotNull
-	private OperationItem createOperationItem(OperationRow row) {
+	private OperationItem createOperationItem(OperationRow row, List<Tracker> availableTrackers) {
 		final OperationItem item;
 
 		if (row instanceof ExistingOperationRow existing) {
 			Operation op = existing.operation();
-			item = new OperationItem(op.getTracker(), trackers);
+			item = new OperationItem(op.getTracker(), availableTrackers);
 
 			item.onTrackerBoxChanged(tracker -> {
 				controller.updateOperation(op, tracker);
@@ -189,7 +203,7 @@ public class EventItem extends HorizontalLayout {
 				item.disableRemoveButton(true);
 		}
 		else if (row instanceof NewOperationRow) {
-			item = new OperationItem(null, trackers);
+			item = new OperationItem(null, availableTrackers);
 
 			item.onTrackerBoxChanged(tracker -> {
 				controller.createOperation(tracker);
