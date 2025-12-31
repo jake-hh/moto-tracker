@@ -3,6 +3,7 @@ package com.example.application.services;
 import com.example.application.Notify;
 import com.example.application.data.*;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,9 +70,14 @@ public class MainService {
 		}
 	}
 
-	public void deleteOperationById(Long id) {
-		// Get operation with updated version
-		findOperationById(id).ifPresent(this::deleteOperation);
+	public void deleteOperationById(@NotNull Long id) {
+		try {
+			operationRepository.deleteById(id);
+			Notify.ok("Deleted operation");
+		} catch (Exception e) {
+			Notify.warn("Failed to delete operation: " + e.getMessage());
+			throw new RuntimeException("Could not delete operation", e);
+		}
 	}
 
 	public void saveOperation(Operation operation) {
@@ -176,7 +182,7 @@ public class MainService {
 		return findEventById(event.getId()).orElse(event);
 	}
 
-	public void deleteEvent(Event event) {
+	/*public void deleteEvent(Event event) {
 		try {
 			eventRepository.delete(event);
 			Notify.ok("Deleted event");
@@ -184,11 +190,16 @@ public class MainService {
 			Notify.warn("Failed to delete event: " + e.getMessage());
 			throw new RuntimeException("Could not delete event", e);
 		}
-	}
+	}*/
 
-	public void deleteEventById(Long id) {
-		// Get event with updated version
-		findEventById(id).ifPresent(this::deleteEvent);
+	public void deleteEventById(@NotNull Long id) {
+		try {
+			eventRepository.deleteById(id);
+			Notify.ok("Deleted event");
+		} catch (Exception e) {
+			Notify.warn("Failed to delete event: " + e.getMessage());
+			throw new RuntimeException("Could not delete event", e);
+		}
 	}
 
 	@Transactional
