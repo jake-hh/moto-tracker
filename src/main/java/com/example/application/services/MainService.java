@@ -15,16 +15,29 @@ import java.util.stream.Collectors;
 @Service
 public class MainService {
 
+	private final VehicleRepository vehicleRepository;
 	private final OperationRepository operationRepository;
 	private final TrackerRepository trackerRepository;
 	private final EventRepository eventRepository;
 
-	public MainService(OperationRepository operationRepository,
-					  TrackerRepository trackerRepository,
-					  EventRepository eventRepository) {
+	public MainService(
+			VehicleRepository vehicleRepository,
+			OperationRepository operationRepository,
+			TrackerRepository trackerRepository,
+			EventRepository eventRepository
+	) {
+		this.vehicleRepository = vehicleRepository;
 		this.operationRepository = operationRepository;
 		this.trackerRepository = trackerRepository;
 		this.eventRepository = eventRepository;
+	}
+
+	  ////////////////////////
+	 // ---- VEHICLES ---- //
+	////////////////////////
+
+	public List<Vehicle> getAllVehicles() {
+		return vehicleRepository.findAll();
 	}
 
 	  //////////////////////////

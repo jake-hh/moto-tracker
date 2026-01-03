@@ -1,5 +1,4 @@
 package com.example.application.data;
-
 //import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
@@ -44,6 +43,10 @@ public class Vehicle extends AbstractEntity {
 	@Override
 	public String toString() {
 		return "Vehicle [ " + getMake() + " " + getModel() + " " + getEngine() + " " + getColour() + " " + getPlate() + " ]";
+	}
+
+	public String toStringShort() {
+		return getMake() + " " + getModel();
 	}
 
 	public String getType() {

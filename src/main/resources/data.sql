@@ -1,3 +1,9 @@
+INSERT INTO "VEHICLE" (ID, VERSION, TYPE, MAKE, MODEL, ENGINE, COLOUR, TRACKING_DATE) VALUES
+(001, 1, 'Car',       'Opel',   'Astra', '1.6 CDTI', 'Brown',  DATE '2026-01-01'),
+(002, 1, 'Car',       'Skoda',  'Fabia', '1.4 TDI',  'Red',    DATE '2026-01-01'),
+(003, 1, 'Motorbike', 'Yamaha', 'R125',  '125cc',    'Black',  DATE '2023-06-21'),
+(004, 1, 'Moped',     'Romet',  'ZXT50', '50cc',     'Yellow', DATE '2023-01-01');
+
 INSERT INTO "EVENT" (ID, VERSION, DATE_VALUE, MILEAGE) VALUES
 (101, 1, DATE '2023-06-21', 48000),
 (102, 1, DATE '2024-03-21', 50000),
