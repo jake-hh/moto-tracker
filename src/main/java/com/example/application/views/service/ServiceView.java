@@ -70,10 +70,7 @@ public class ServiceView extends VerticalLayout {
 	}
 
 	public void addEvent() {
-		var event = new Event();
-		event.setDate(MainService.getDateToday());
-
-		service.saveEvent(event);
+		service.createAndSaveEvent();
 		renderEventList();
 	}
 }

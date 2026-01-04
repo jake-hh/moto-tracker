@@ -291,6 +291,14 @@ public class MainService {
 		}
 	}
 
+	public void createAndSaveEvent() {
+		var event = new Event();
+		event.setVehicle(securityService.getCurrentUser().getSelectedVehicle());
+		event.setDate(getDateToday());
+
+		saveEvent(event);
+	}
+
 	public void saveEvent(@NotNull Event event) {
 		if (event == null) {
 			Notify.error("Event is null. Are you sure you have connected your form to the application?");
