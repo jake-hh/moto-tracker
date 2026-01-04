@@ -61,7 +61,7 @@ public class ServiceView extends VerticalLayout {
 	}
 
 	public void renderEventList() {
-		List<Tracker> trackers = service.findAllTrackers();
+		List<Tracker> trackers = service.findTrackers();
 
 		eventList.removeAll();
 
