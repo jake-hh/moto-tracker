@@ -16,8 +16,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 
@@ -73,13 +71,9 @@ public class ServiceView extends VerticalLayout {
 
 	public void addEvent() {
 		var event = new Event();
-		event.setDate(getDateToday());
+		event.setDate(MainService.getDateToday());
 
 		service.saveEvent(event);
 		renderEventList();
-	}
-
-	public static LocalDate getDateToday() {
-		return LocalDate.now(ZoneId.systemDefault());
 	}
 }

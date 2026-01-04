@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,10 @@ public class MainService {
 		this.operationRepository = operationRepository;
 		this.trackerRepository = trackerRepository;
 		this.eventRepository = eventRepository;
+	}
+
+	public static LocalDate getDateToday() {
+		return LocalDate.now(ZoneId.systemDefault());
 	}
 
 	  ////////////////////////

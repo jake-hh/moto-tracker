@@ -134,7 +134,7 @@ public class EventItem extends HorizontalLayout {
 
 		dateField.setRequired(true);
 		dateField.setRequiredIndicatorVisible(false);
-		dateField.setMax(ServiceView.getDateToday());
+		dateField.setMax(MainService.getDateToday());
 		dateField.setPlaceholder("yyyy-MM-dd");
 		//dateField.setHelperText("yyyy-MM-dd");
 
@@ -148,7 +148,7 @@ public class EventItem extends HorizontalLayout {
 		dateField.addValueChangeListener(dateEv -> {
 			LocalDate date = dateEv.getValue();
 
-			if (date != null && !date.isAfter(ServiceView.getDateToday()))
+			if (date != null && !date.isAfter(MainService.getDateToday()))
 				controller.updateDate(date);
 		});
 
