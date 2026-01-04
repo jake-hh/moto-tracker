@@ -2,10 +2,12 @@ package com.example.application.views.tracker;
 
 import com.example.application.data.Tracker;
 import com.example.application.data.Pair;
+import com.example.application.event.SelectedVehicleEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,9 +18,10 @@ import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.event.EventListener;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,7 +30,7 @@ import java.util.Optional;
 
 
 @SpringComponent
-@Scope("prototype")
+@UIScope
 @PermitAll
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Trackers | Moto Tracker")
@@ -133,7 +136,7 @@ public class TrackerView extends VerticalLayout {
 	}
 
 	private void updateList() {
-		List<Tracker> trackers = service.findAllTrackers(filterText.getValue());
+		List<Tracker> trackers = service.findTrackers(filterText.getValue());
 		Map<Long, Pair<LocalDate, Integer>> lastEventDataMap = service.findLastEventDataForTrackers(trackers);
 
 		grid.setItems(trackers);
@@ -159,5 +162,14 @@ public class TrackerView extends VerticalLayout {
 				.map(x -> x.second().toString())
 				.orElse("-");
 		}));
+	}
+
+	@EventListener
+	public void onSelectedVehicle(SelectedVehicleEvent e) {
+		UI ui = UI.getCurrent();
+		if (ui == null) // event from another UI/session
+			return;
+
+		ui.access(this::updateList);
 	}
 }

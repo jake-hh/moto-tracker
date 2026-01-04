@@ -192,12 +192,26 @@ public class MainService {
 		if (filter == null || filter.isEmpty()) {
 			return findAllTrackers();
 		} else {
-			return trackerRepository.search(filter);
+			return trackerRepository.searchAll(filter);
 		}
 	}
 
 	public List<Tracker> findAllTrackers() {
 		return trackerRepository.findAll();
+	}
+
+	public List<Tracker> findTrackers(String filter) {
+		if (filter == null || filter.isEmpty()) {
+			return findTrackers();
+		} else {
+			Vehicle selected = securityService.getCurrentUser().getSelectedVehicle();
+			return trackerRepository.searchByVehicleId(selected, filter);
+		}
+	}
+
+	public List<Tracker> findTrackers() {
+		Vehicle selected = securityService.getCurrentUser().getSelectedVehicle();
+		return trackerRepository.findByVehicle(selected);
 	}
 
 	public boolean isTrackerUsed(@NotNull Tracker tracker) {
