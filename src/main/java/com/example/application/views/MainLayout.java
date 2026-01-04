@@ -1,6 +1,7 @@
 package com.example.application.views;
 
 import com.example.application.data.Vehicle;
+import com.example.application.event.SelectedVehicleEvent;
 import com.example.application.event.VehicleChangedEvent;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
@@ -26,6 +27,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 
 
@@ -34,11 +36,17 @@ import org.springframework.context.event.EventListener;
 public class MainLayout extends AppLayout {
 	private final SecurityService securityService;
 	private final MainService mainService;
+	private final ApplicationEventPublisher events;
 	private final ComboBox<Vehicle> vehicleBox;
 
-	public MainLayout(SecurityService securityService, MainService mainService) {
+	public MainLayout(
+			SecurityService securityService,
+			MainService mainService,
+			ApplicationEventPublisher events
+	) {
 		this.securityService = securityService;
 		this.mainService = mainService;
+		this.events = events;
 		this.vehicleBox = new ComboBox<>("Vehicle");
 
 		createHeader();
@@ -77,7 +85,9 @@ public class MainLayout extends AppLayout {
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
 		vehicleBox.addValueChangeListener(e -> {
-				securityService.updateSelectedVehicle(e.getValue());
+				Vehicle vehicle = e.getValue();
+				securityService.updateSelectedVehicle(vehicle);
+				events.publishEvent(new SelectedVehicleEvent(vehicle));
 		});
 		refreshVehicleBox();
 
