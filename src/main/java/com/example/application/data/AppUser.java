@@ -19,6 +19,12 @@ public class AppUser extends AbstractEntity {
 
 	private String lastName;
 
+
+	@Override
+	public String toString() {
+		return username + " [ " + getId() +  " ]";
+	}
+
 	public String getUsername() {
 		return username;
 	}

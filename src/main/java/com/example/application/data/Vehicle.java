@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @Entity
 public class Vehicle extends AbstractEntity {
 
-	@NotBlank
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "owner_id")
     private AppUser owner;
@@ -46,11 +45,15 @@ public class Vehicle extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "Vehicle [ " + getMake() + " " + getModel() + " " + getEngine() + " " + getColour() + " " + getPlate() + " ]";
+		return "Vehicle of " + owner + " [ " + type + " " + make + " " + model + " " + engine + " " + colour + " " + plate + " " + trackingDate + " ]";
 	}
 
 	public String toStringShort() {
-		return getMake() + " " + getModel();
+		return make + " " + model;
+	}
+
+	public AppUser getOwner() {
+		return owner;
 	}
 
 	public String getType() {
@@ -91,6 +94,10 @@ public class Vehicle extends AbstractEntity {
 
 	public LocalDate getTrackingDate() {
 		return trackingDate;
+	}
+
+	public void setOwner(AppUser owner) {
+		this.owner = owner;
 	}
 
 	public void setType(String type) {

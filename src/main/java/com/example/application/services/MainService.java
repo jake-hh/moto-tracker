@@ -44,18 +44,31 @@ public class MainService {
 		return LocalDate.now(ZoneId.systemDefault());
 	}
 
+	  /////////////////////
+	 // ---- USERS ---- //
+	/////////////////////
+
+	private AppUser findUser() {
+		String username = securityService.getAuthenticatedUser().getUsername();
+		return userRepository.findByUsername(username).orElseThrow();
+	}
+
 	  ////////////////////////
 	 // ---- VEHICLES ---- //
 	////////////////////////
 
 	public List<Vehicle> findVehicles() {
-		String username = securityService.getAuthenticatedUser().getUsername();
-		AppUser user = userRepository.findByUsername(username).orElseThrow();
-		return vehicleRepository.findByOwner(user);
+		return vehicleRepository.findByOwner(findUser());
 	}
 
 	public boolean isVehicleUsed(@NotNull Vehicle vehicle) {
 		return eventRepository.existsByVehicle(vehicle);
+	}
+
+	public Vehicle createVehicle() {
+		var vehicle = new Vehicle();
+		vehicle.setOwner(findUser());
+		return vehicle;
 	}
 
 	public void deleteVehicle(@NotNull Vehicle vehicle) {
