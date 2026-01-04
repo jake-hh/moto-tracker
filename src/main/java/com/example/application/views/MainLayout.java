@@ -6,7 +6,9 @@ import com.example.application.services.MainService;
 import com.example.application.views.oplist.OplistView;
 import com.example.application.views.service.ServiceView;
 import com.example.application.views.tracker.TrackerView;
+import com.example.application.views.vehicle.VehicleView;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -20,6 +22,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+
 
 public class MainLayout extends AppLayout {
 	private final SecurityService securityService;
@@ -64,7 +67,7 @@ public class MainLayout extends AppLayout {
 
 	private void createDrawer() {
 		// Init Vehicle Box
-		vehicleBox.setItems(mainService.getAllVehicles());
+		vehicleBox.setItems(mainService.findAllVehicles());
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
 
@@ -76,10 +79,7 @@ public class MainLayout extends AppLayout {
 				ButtonVariant.LUMO_WARNING
 		);
 
-		editVehiclesBtn.addClickListener(e -> {
-			Vehicle v = vehicleBox.getValue();
-			//UI.getCurrent().navigate(VehicleView.class, v.getId());
-		});
+		editVehiclesBtn.addClickListener(e -> UI.getCurrent().navigate(VehicleView.class));
 
 		// Combine in Vehicle Layout
 		var vehicleLayout = new HorizontalLayout(vehicleBox, editVehiclesBtn);

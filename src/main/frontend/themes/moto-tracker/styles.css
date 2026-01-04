@@ -15,6 +15,10 @@ a[highlight] {
 		line-height:	var(--lumo-line-height-s);
 }
 
+.mt-helper-text.warning {
+		color:			var(--lumo-error-color);
+}
+
 .mt-list-item-border {
 		border:			1px solid var(--lumo-contrast-20pct);
 		border-radius:	8px;

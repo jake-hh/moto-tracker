@@ -36,8 +36,37 @@ public class MainService {
 	 // ---- VEHICLES ---- //
 	////////////////////////
 
-	public List<Vehicle> getAllVehicles() {
+	public List<Vehicle> findAllVehicles() {
 		return vehicleRepository.findAll();
+	}
+
+	public boolean isVehicleUsed(@NotNull Vehicle vehicle) {
+		return eventRepository.existsByVehicle(vehicle);
+	}
+
+	public void deleteVehicle(@NotNull Vehicle vehicle) {
+		try {
+			vehicleRepository.delete(vehicle);
+			Notify.ok("Deleted event");
+		} catch (Exception e) {
+			Notify.warn("Failed to delete vehicle: " + e.getMessage());
+			throw new RuntimeException("Could not delete vehicle", e);
+		}
+	}
+
+	public void saveVehicle(@NotNull Vehicle vehicle) {
+		if (vehicle == null) {
+			Notify.warn("Vehicle is null. Are you sure you have connected your form to the application?");
+			return;
+		}
+
+		try {
+			vehicleRepository.save(vehicle);
+			Notify.ok("Saved vehicle");
+		} catch (Exception e) {
+			Notify.warn("Failed to save vehicle: " + e.getMessage());
+			throw new RuntimeException("Could not save vehicle", e);
+		}
 	}
 
 	  //////////////////////////

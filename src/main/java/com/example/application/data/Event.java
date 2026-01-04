@@ -2,6 +2,7 @@ package com.example.application.data;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -9,6 +10,10 @@ import java.time.LocalDate;
 
 @Entity
 public class Event extends AbstractEntity {
+
+	@NotNull
+	@ManyToOne
+	private Vehicle vehicle;
 
 	@NotNull
 	@Column(name = "date_value")
@@ -26,12 +31,20 @@ public class Event extends AbstractEntity {
 		return date.toString();
 	}
 
+	public Vehicle getVehicle() {
+		return vehicle;
+	}
+
 	public LocalDate getDate() {
 		return date;
 	}
 
 	public Integer getMileage() {
 		return mileage;
+	}
+
+	public void setVehicle(Vehicle vehicle) {
+		this.vehicle = vehicle;
 	}
 
 	public void setDate(LocalDate date) {
