@@ -1,10 +1,12 @@
 package com.example.application.views.oplist;
 
 import com.example.application.data.Operation;
+import com.example.application.event.SelectedVehicleEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -14,13 +16,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.event.EventListener;
 
 
 @SpringComponent
-@Scope("prototype")
+@UIScope
 @PermitAll
 @Route(value = "operations", layout = MainLayout.class)
 @PageTitle("Operations | Moto Tracker")
@@ -53,11 +56,12 @@ public class OplistView extends VerticalLayout {
 	}
 
 	private void configureForm() {
-		form = new OperationForm(service.findAllTrackers(), service.findAllEvents());
+		form = new OperationForm(service.findAllTrackers());
 		form.setWidth("25em");
 		form.addSaveListener(this::saveOperation); // <1>
 		form.addDeleteListener(this::deleteOperation); // <2>
 		form.addCloseListener(e -> closeEditor()); // <3>
+		updateFormEvents();
 	}
 
 	private void saveOperation(OperationForm.SaveEvent event) {
@@ -123,6 +127,22 @@ public class OplistView extends VerticalLayout {
 	}
 
 	private void updateList() {
-		grid.setItems(service.findAllOperations(/*filterText.getValue()*/));
+		grid.setItems(service.findOperations(/*filterText.getValue()*/));
+	}
+
+	private void updateFormEvents() {
+		form.setEvents(service.findEvents());
+	}
+
+	@EventListener
+	public void onSelectedVehicle(SelectedVehicleEvent e) {
+		UI ui = UI.getCurrent();
+		if (ui == null) // event from another UI/session
+			return;
+
+		ui.access(() -> {
+			updateList();
+			updateFormEvents();
+		});
 	}
 }

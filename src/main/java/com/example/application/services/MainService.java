@@ -114,6 +114,11 @@ public class MainService {
 		return operationRepository.findAll();
 	}
 
+	public List<Operation> findOperations() {
+		Vehicle vehicle = securityService.getCurrentUser().getSelectedVehicle();
+		return operationRepository.findByEvent_VehicleId(vehicle.getId());
+	}
+
 	public List<Operation> findAllOperationsByEventId(Long eventId) {
 		//Notify.error("fetching operations");
 		if (eventId == null)

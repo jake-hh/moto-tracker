@@ -30,16 +30,19 @@ public class OperationForm extends FormLayout {
 
 	private final Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
 
-	public OperationForm(List<Tracker> trackers, List<Event> events) {
+	public OperationForm(List<Tracker> trackers) {
 		addClassName("operation-form");
 		binder.bindInstanceFields(this);
 
 		tracker.setItems(trackers);
 		tracker.setItemLabelGenerator(Tracker::getName);
-		event.setItems(events);
 		event.setItemLabelGenerator(Event::getDateStr);
 
 		add(tracker, event, createButtonsLayout());
+	}
+
+	public void setEvents(List<Event> events) {
+		event.setItems(events);
 	}
 
 	private Component createButtonsLayout() {
