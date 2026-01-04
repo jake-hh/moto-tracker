@@ -30,15 +30,18 @@ public class OperationForm extends FormLayout {
 
 	private final Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
 
-	public OperationForm(List<Tracker> trackers) {
+	public OperationForm() {
 		addClassName("operation-form");
 		binder.bindInstanceFields(this);
 
-		tracker.setItems(trackers);
 		tracker.setItemLabelGenerator(Tracker::getName);
 		event.setItemLabelGenerator(Event::getDateStr);
 
 		add(tracker, event, createButtonsLayout());
+	}
+
+	public void setTrackers(List<Tracker> trackers) {
+		tracker.setItems(trackers);
 	}
 
 	public void setEvents(List<Event> events) {

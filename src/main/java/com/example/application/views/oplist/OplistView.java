@@ -31,8 +31,8 @@ public class OplistView extends VerticalLayout {
 
 	private final MainService service;
 	private final Grid<Operation> grid = new Grid<>(Operation.class, false);
+	private final OperationForm form = new OperationForm();
 	// TextField filterText = new TextField();
-	private OperationForm form;
 
 	public OplistView(MainService service) {
 		this.service = service;
@@ -56,12 +56,11 @@ public class OplistView extends VerticalLayout {
 	}
 
 	private void configureForm() {
-		form = new OperationForm(service.findAllTrackers());
 		form.setWidth("25em");
 		form.addSaveListener(this::saveOperation); // <1>
 		form.addDeleteListener(this::deleteOperation); // <2>
 		form.addCloseListener(e -> closeEditor()); // <3>
-		updateFormEvents();
+		updateForm();
 	}
 
 	private void saveOperation(OperationForm.SaveEvent event) {
@@ -130,8 +129,9 @@ public class OplistView extends VerticalLayout {
 		grid.setItems(service.findOperations(/*filterText.getValue()*/));
 	}
 
-	private void updateFormEvents() {
+	private void updateForm() {
 		form.setEvents(service.findEvents());
+		form.setTrackers(service.findTrackers());
 	}
 
 	@EventListener
@@ -142,7 +142,7 @@ public class OplistView extends VerticalLayout {
 
 		ui.access(() -> {
 			updateList();
-			updateFormEvents();
+			updateForm();
 		});
 	}
 }
