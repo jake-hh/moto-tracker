@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Service
 public class MainService {
 
-	private final AppUserRepository userRepository;
 	private final VehicleRepository vehicleRepository;
 	private final OperationRepository operationRepository;
 	private final TrackerRepository trackerRepository;
@@ -25,14 +24,12 @@ public class MainService {
 	private final SecurityService securityService;
 
 	public MainService(
-			AppUserRepository userRepository,
 			VehicleRepository vehicleRepository,
 			OperationRepository operationRepository,
 			TrackerRepository trackerRepository,
 			EventRepository eventRepository,
 			SecurityService securityService
 	) {
-		this.userRepository = userRepository;
 		this.vehicleRepository = vehicleRepository;
 		this.operationRepository = operationRepository;
 		this.trackerRepository = trackerRepository;
@@ -44,21 +41,12 @@ public class MainService {
 		return LocalDate.now(ZoneId.systemDefault());
 	}
 
-	  /////////////////////
-	 // ---- USERS ---- //
-	/////////////////////
-
-	private AppUser findUser() {
-		String username = securityService.getAuthenticatedUser().getUsername();
-		return userRepository.findByUsername(username).orElseThrow();
-	}
-
 	  ////////////////////////
 	 // ---- VEHICLES ---- //
 	////////////////////////
 
 	public List<Vehicle> findVehicles() {
-		return vehicleRepository.findByOwner(findUser());
+		return vehicleRepository.findByOwner(securityService.getCurrentUser());
 	}
 
 	public boolean isVehicleUsed(@NotNull Vehicle vehicle) {
@@ -67,7 +55,7 @@ public class MainService {
 
 	public Vehicle createVehicle() {
 		var vehicle = new Vehicle();
-		vehicle.setOwner(findUser());
+		vehicle.setOwner(securityService.getCurrentUser());
 		return vehicle;
 	}
 

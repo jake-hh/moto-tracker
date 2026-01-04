@@ -44,7 +44,7 @@ public class MainLayout extends AppLayout {
 			LumoUtility.FontSize.LARGE,
 			LumoUtility.Margin.MEDIUM);
 
-		String u = securityService.getAuthenticatedUser().getUsername();
+		String u = securityService.getCurrentUsername();
 		Button logout = new Button("Log out " + u, e -> securityService.logout()); // <2>
 
 		var header = new HorizontalLayout(
