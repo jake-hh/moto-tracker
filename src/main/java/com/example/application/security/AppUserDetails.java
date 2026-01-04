@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.List;
 
 
+/* Security adapter (domain → Spring Security) */
+
 public class AppUserDetails implements UserDetails {
 
 	private final AppUser user;

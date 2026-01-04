@@ -6,6 +6,9 @@ import com.vaadin.flow.spring.security.AuthenticationContext;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+
+/* Current user access (Security → Domain) */
+
 @Component
 public class SecurityService {
 

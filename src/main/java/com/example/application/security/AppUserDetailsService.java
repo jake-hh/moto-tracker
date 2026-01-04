@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
+/* Authentication provider (DB → Security) */
+
 @Service
 public class AppUserDetailsService implements UserDetailsService {
 

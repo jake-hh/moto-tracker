@@ -16,6 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import static com.vaadin.flow.spring.security.VaadinSecurityConfigurer.vaadin;
 
 
+/* Security wiring & rules */
+
 @EnableWebSecurity // <1>
 @Configuration
 @Import(VaadinAwareSecurityContextHolderStrategyConfiguration.class)
