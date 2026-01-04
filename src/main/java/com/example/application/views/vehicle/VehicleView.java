@@ -132,6 +132,6 @@ public class VehicleView extends VerticalLayout {
 	}
 
 	private void updateList() {
-		grid.setItems(service.findAllVehicles());
+		grid.setItems(service.findVehicles());
 	}
 }

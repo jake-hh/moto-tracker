@@ -67,7 +67,7 @@ public class MainLayout extends AppLayout {
 
 	private void createDrawer() {
 		// Init Vehicle Box
-		vehicleBox.setItems(mainService.findAllVehicles());
+		vehicleBox.setItems(mainService.findVehicles());
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
 

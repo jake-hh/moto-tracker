@@ -2,6 +2,7 @@ package com.example.application.services;
 
 import com.example.application.Notify;
 import com.example.application.data.*;
+import com.example.application.security.SecurityService;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
@@ -16,21 +17,27 @@ import java.util.stream.Collectors;
 @Service
 public class MainService {
 
+	private final AppUserRepository userRepository;
 	private final VehicleRepository vehicleRepository;
 	private final OperationRepository operationRepository;
 	private final TrackerRepository trackerRepository;
 	private final EventRepository eventRepository;
+	private final SecurityService securityService;
 
 	public MainService(
+			AppUserRepository userRepository,
 			VehicleRepository vehicleRepository,
 			OperationRepository operationRepository,
 			TrackerRepository trackerRepository,
-			EventRepository eventRepository
+			EventRepository eventRepository,
+			SecurityService securityService
 	) {
+		this.userRepository = userRepository;
 		this.vehicleRepository = vehicleRepository;
 		this.operationRepository = operationRepository;
 		this.trackerRepository = trackerRepository;
 		this.eventRepository = eventRepository;
+		this.securityService = securityService;
 	}
 
 	public static LocalDate getDateToday() {
@@ -41,8 +48,10 @@ public class MainService {
 	 // ---- VEHICLES ---- //
 	////////////////////////
 
-	public List<Vehicle> findAllVehicles() {
-		return vehicleRepository.findAll();
+	public List<Vehicle> findVehicles() {
+		String username = securityService.getAuthenticatedUser().getUsername();
+		AppUser user = userRepository.findByUsername(username).orElseThrow();
+		return vehicleRepository.findByOwner(user);
 	}
 
 	public boolean isVehicleUsed(@NotNull Vehicle vehicle) {

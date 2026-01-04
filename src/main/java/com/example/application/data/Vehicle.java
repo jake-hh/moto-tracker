@@ -1,18 +1,22 @@
 package com.example.application.data;
-//import jakarta.persistence.ManyToMany;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
+
 @SuppressWarnings("unused")
 @Entity
 public class Vehicle extends AbstractEntity {
 
-	//@NotBlank
-	//@ManyToMany
-    //private User owner;
+	@NotBlank
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "owner_id")
+    private AppUser owner;
 
 	@NotBlank
     private String type; //osobowy PKV, dostawczy LKV, motorbike
