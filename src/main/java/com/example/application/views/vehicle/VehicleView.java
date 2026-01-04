@@ -85,9 +85,6 @@ public class VehicleView extends VerticalLayout {
 				"trackingDate"
 		);
 
-		grid.addColumn(vehicle -> "").setHeader("Last date").setKey("lastDate");
-		grid.addColumn(vehicle -> "").setHeader("Last mileage").setKey("lastMileage");
-
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
 		grid.asSingleSelect().addValueChangeListener(event ->
