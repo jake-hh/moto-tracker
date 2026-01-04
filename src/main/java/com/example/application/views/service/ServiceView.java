@@ -2,25 +2,28 @@ package com.example.application.views.service;
 
 import com.example.application.data.Event;
 import com.example.application.data.Tracker;
+import com.example.application.event.SelectedVehicleEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.event.EventListener;
 
 import java.util.List;
 
 
 @SpringComponent
-@Scope("prototype")
+@UIScope
 @PermitAll
 @Route(value = "services", layout = MainLayout.class)
 @PageTitle("Services | Moto Tracker")
@@ -62,7 +65,7 @@ public class ServiceView extends VerticalLayout {
 
 		eventList.removeAll();
 
-		for (Event event : service.findAllEvents().reversed()) {
+		for (Event event : service.findEvents().reversed()) {
 			eventList.add(new EventItem(event, this::renderEventList, trackers, service));
 		}
 
@@ -72,5 +75,14 @@ public class ServiceView extends VerticalLayout {
 	public void addEvent() {
 		service.createAndSaveEvent();
 		renderEventList();
+	}
+
+	@EventListener
+	public void onSelectedVehicle(SelectedVehicleEvent e) {
+		UI ui = UI.getCurrent();
+		if (ui == null) // event from another UI/session
+			return;
+
+		ui.access(this::renderEventList);
 	}
 }

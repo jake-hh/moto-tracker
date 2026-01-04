@@ -248,6 +248,11 @@ public class MainService {
 		return eventRepository.findAll();
 	}
 
+	public List<Event> findEvents() {
+		Vehicle selected = securityService.getCurrentUser().getSelectedVehicle();
+		return eventRepository.findByVehicle(selected);
+	}
+
 	// Get event with updated version
 	private Optional<Event> findEventById(Long id) {
 		if (id != null)
