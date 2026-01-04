@@ -133,9 +133,7 @@ public class VehicleView extends VerticalLayout {
 
 	private void addVehicle() {
 		grid.asSingleSelect().clear();
-		Vehicle vehicle = service.createVehicle();
-		vehicle.setTrackingDate(MainService.getDateToday());
-		editVehicle(vehicle);
+		editVehicle(service.createVehicle());
 	}
 
 	private void updateList() {

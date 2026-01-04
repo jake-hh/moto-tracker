@@ -76,6 +76,8 @@ public class MainService {
 	public Vehicle createVehicle() {
 		var vehicle = new Vehicle();
 		vehicle.setOwner(securityService.getCurrentUser());
+		vehicle.setTrackingDate(MainService.getDateToday());
+
 		return vehicle;
 	}
 
