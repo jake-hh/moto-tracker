@@ -10,12 +10,13 @@ public class Notify {
 		notif.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
 	}
 
-	public static void info(String msg) {
+	public static void debug(String msg) {
+		System.out.println(msg);
 		var notif = Notification.show(msg);
 		notif.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
 	}
 
-	public static void warn(String msg) {
+	public static void error(String msg) {
 		System.err.println(msg);
 		var notif = Notification.show(msg);
 		notif.addThemeVariants(NotificationVariant.LUMO_ERROR);

@@ -64,14 +64,14 @@ public class MainService {
 			vehicleRepository.delete(vehicle);
 			Notify.ok("Deleted event");
 		} catch (Exception e) {
-			Notify.warn("Failed to delete vehicle: " + e.getMessage());
+			Notify.error("Failed to delete vehicle: " + e.getMessage());
 			throw new RuntimeException("Could not delete vehicle", e);
 		}
 	}
 
 	public void saveVehicle(@NotNull Vehicle vehicle) {
 		if (vehicle == null) {
-			Notify.warn("Vehicle is null. Are you sure you have connected your form to the application?");
+			Notify.error("Vehicle is null. Are you sure you have connected your form to the application?");
 			return;
 		}
 
@@ -79,7 +79,7 @@ public class MainService {
 			vehicleRepository.save(vehicle);
 			Notify.ok("Saved vehicle");
 		} catch (Exception e) {
-			Notify.warn("Failed to save vehicle: " + e.getMessage());
+			Notify.error("Failed to save vehicle: " + e.getMessage());
 			throw new RuntimeException("Could not save vehicle", e);
 		}
 	}
@@ -93,7 +93,7 @@ public class MainService {
 	}
 
 	public List<Operation> findAllOperationsByEventId(Long eventId) {
-		//Notify.warn("fetching operations");
+		//Notify.error("fetching operations");
 		if (eventId == null)
 			return new ArrayList<>();
 		else
@@ -122,7 +122,7 @@ public class MainService {
 			operationRepository.delete(operation);
 			Notify.ok("Deleted operation");
 		} catch (Exception e) {
-			Notify.warn("Failed to delete operation: " + e.getMessage());
+			Notify.error("Failed to delete operation: " + e.getMessage());
 			throw new RuntimeException("Could not delete operation", e);
 		}
 	}
@@ -132,7 +132,7 @@ public class MainService {
 			operationRepository.deleteById(id);
 			Notify.ok("Deleted operation");
 		} catch (Exception e) {
-			Notify.warn("Failed to delete operation: " + e.getMessage());
+			Notify.error("Failed to delete operation: " + e.getMessage());
 			throw new RuntimeException("Could not delete operation", e);
 		}
 	}
@@ -141,17 +141,17 @@ public class MainService {
 		//Notify.info(operation.toString());
 
 		if (operation == null) {
-			Notify.warn("Operation is null. Are you sure you have connected your form to the application?");
+			Notify.error("Operation is null. Are you sure you have connected your form to the application?");
 		}
 		else if (operation.getEvent() == null) {
-			Notify.warn(operation + " must be linked to an Event before saving");
+			Notify.error(operation + " must be linked to an Event before saving");
 		}
 		else if (operation.getTracker() != null) {
 			try {
 				operationRepository.save(operation);
 				Notify.ok("Saved operation");
 			} catch (Exception e) {
-				Notify.warn("Failed to save operation: " + e.getMessage());
+				Notify.error("Failed to save operation: " + e.getMessage());
 				throw new RuntimeException("Could not save operation", e);
 			}
 		}
@@ -198,14 +198,14 @@ public class MainService {
 			trackerRepository.delete(tracker);
 			Notify.ok("Deleted event");
 		} catch (Exception e) {
-			Notify.warn("Failed to delete tracker: " + e.getMessage());
+			Notify.error("Failed to delete tracker: " + e.getMessage());
 			throw new RuntimeException("Could not delete tracker", e);
 		}
 	}
 
 	public void saveTracker(@NotNull Tracker tracker) {
 		if (tracker == null) {
-			Notify.warn("Tracker is null. Are you sure you have connected your form to the application?");
+			Notify.error("Tracker is null. Are you sure you have connected your form to the application?");
 			return;
 		}
 
@@ -213,7 +213,7 @@ public class MainService {
 			trackerRepository.save(tracker);
 			Notify.ok("Saved tracker");
 		} catch (Exception e) {
-			Notify.warn("Failed to save tracker: " + e.getMessage());
+			Notify.error("Failed to save tracker: " + e.getMessage());
 			throw new RuntimeException("Could not save tracker", e);
 		}
 	}
@@ -244,7 +244,7 @@ public class MainService {
 			eventRepository.delete(event);
 			Notify.ok("Deleted event");
 		} catch (Exception e) {
-			Notify.warn("Failed to delete event: " + e.getMessage());
+			Notify.error("Failed to delete event: " + e.getMessage());
 			throw new RuntimeException("Could not delete event", e);
 		}
 	}*/
@@ -254,7 +254,7 @@ public class MainService {
 			eventRepository.deleteById(id);
 			Notify.ok("Deleted event");
 		} catch (Exception e) {
-			Notify.warn("Failed to delete event: " + e.getMessage());
+			Notify.error("Failed to delete event: " + e.getMessage());
 			throw new RuntimeException("Could not delete event", e);
 		}
 	}
@@ -266,24 +266,24 @@ public class MainService {
 			eventRepository.deleteById(eventId);
 			Notify.ok("Deleted event with operations");
 		} catch (Exception e) {
-			Notify.warn("Failed to delete event with operations: " + e.getMessage());
+			Notify.error("Failed to delete event with operations: " + e.getMessage());
 			throw new RuntimeException("Could not delete event with operations", e);
 		}
 	}
 
 	public void saveEvent(@NotNull Event event) {
 		if (event == null) {
-			Notify.warn("Event is null. Are you sure you have connected your form to the application?");
+			Notify.error("Event is null. Are you sure you have connected your form to the application?");
 		}
 		else if (event.getDate() == null) {
-			Notify.warn(event + " needs a date before saving");
+			Notify.error(event + " needs a date before saving");
 		}
 		else {
 			try {
 				eventRepository.save(event);
 				Notify.ok("Saved event");
 			} catch (Exception e) {
-				Notify.warn("Failed to save event: " + e.getMessage());
+				Notify.error("Failed to save event: " + e.getMessage());
 				throw new RuntimeException("Could not save event", e);
 			}
 		}
