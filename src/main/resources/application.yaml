@@ -23,4 +23,6 @@ spring:
     # datasource:
     #     url: "jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE"
 
-server.port: "${PORT:8080}"
+server:
+    port: "${PORT:8080}"
+    servlet.session.persistent: false
