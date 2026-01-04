@@ -76,6 +76,9 @@ public class MainLayout extends AppLayout {
 		// Init Vehicle Box
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
+		vehicleBox.addValueChangeListener(e -> {
+				securityService.updateSelectedVehicle(e.getValue());
+		});
 		refreshVehicleBox();
 
 		// Create Edit Vehicles Button
@@ -105,6 +108,7 @@ public class MainLayout extends AppLayout {
 
 	public void refreshVehicleBox() {
 		vehicleBox.setItems(mainService.findVehicles());
+		mainService.findSelectedVehicle().ifPresent(vehicleBox::setValue);
 	}
 
 	@EventListener

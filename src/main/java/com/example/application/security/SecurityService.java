@@ -1,8 +1,12 @@
 package com.example.application.security;
 
+import com.example.application.Notify;
 import com.example.application.data.AppUser;
 import com.example.application.data.AppUserRepository;
+
+import com.example.application.data.Vehicle;
 import com.vaadin.flow.spring.security.AuthenticationContext;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +35,27 @@ public class SecurityService {
 		String username = getCurrentUsername();
 
 		return userRepository.findByUsername(username).orElseThrow();
+	}
+
+	public void updateSelectedVehicle(@NotNull Vehicle vehicle) {
+		AppUser user = getCurrentUser();
+		user.setSelectedVehicle(vehicle);
+		saveUser(user);
+	}
+
+	public void saveUser(@NotNull AppUser user) {
+		if (user == null) {
+			Notify.error("user is null. Are you sure you have connected your form to the application?");
+			return;
+		}
+
+		try {
+			userRepository.save(user);
+			Notify.ok("Saved user");
+		} catch (Exception e) {
+			Notify.error("Failed to save user: " + e.getMessage());
+			throw new RuntimeException("Could not save user", e);
+		}
 	}
 
 	public void logout() {
