@@ -1,6 +1,7 @@
 package com.example.application.views;
 
 import com.example.application.data.Vehicle;
+import com.example.application.event.VehicleChangedEvent;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
 import com.example.application.views.oplist.OplistView;
@@ -21,9 +22,15 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import org.springframework.context.event.EventListener;
 
+
+@SpringComponent
+@UIScope
 public class MainLayout extends AppLayout {
 	private final SecurityService securityService;
 	private final MainService mainService;
@@ -67,9 +74,9 @@ public class MainLayout extends AppLayout {
 
 	private void createDrawer() {
 		// Init Vehicle Box
-		vehicleBox.setItems(mainService.findVehicles());
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
+		refreshVehicleBox();
 
 		// Create Edit Vehicles Button
 		var editVehiclesBtn = new Button(new Icon(VaadinIcon.EDIT));
@@ -94,5 +101,18 @@ public class MainLayout extends AppLayout {
 				new RouterLink("Services", ServiceView.class),
 				new RouterLink("Trackers", TrackerView.class)
 		));
+	}
+
+	public void refreshVehicleBox() {
+		vehicleBox.setItems(mainService.findVehicles());
+	}
+
+	@EventListener
+	public void onVehicleChanged(VehicleChangedEvent e) {
+		UI ui = UI.getCurrent();
+		if (ui == null) // event from another UI/session
+			return;
+
+		ui.access(this::refreshVehicleBox);
 	}
 }

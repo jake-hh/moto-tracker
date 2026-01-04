@@ -1,6 +1,7 @@
 package com.example.application.views.vehicle;
 
 import com.example.application.data.Vehicle;
+import com.example.application.event.VehicleChangedEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
 
@@ -14,6 +15,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 
 import jakarta.annotation.security.PermitAll;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 
 
@@ -26,11 +28,15 @@ public class VehicleView extends VerticalLayout {
 
 	private final Grid<Vehicle> grid = new Grid<>(Vehicle.class, false);
 	private final VehicleForm form = new VehicleForm();
+
 	private final MainService service;
+	private final ApplicationEventPublisher events;
 
 
-	public VehicleView(MainService service) {
+	public VehicleView(MainService service, ApplicationEventPublisher events) {
 		this.service = service;
+		this.events = events;
+
 		addClassName("vehicle-view");
 		setSizeFull();
 		configureGrid();
@@ -61,6 +67,7 @@ public class VehicleView extends VerticalLayout {
 		service.saveVehicle(event.getVehicle());
 		updateList();
 		closeEditor();
+		events.publishEvent(new VehicleChangedEvent());
 	}
 
 	private void deleteVehicle(VehicleForm.DeleteEvent event) {
