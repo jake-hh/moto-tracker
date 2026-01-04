@@ -129,7 +129,7 @@ public class TrackerView extends VerticalLayout {
 
 	private void addTracker() {
 		grid.asSingleSelect().clear();
-		editTracker(new Tracker());
+		editTracker(service.createTracker());
 	}
 
 	private void updateList() {

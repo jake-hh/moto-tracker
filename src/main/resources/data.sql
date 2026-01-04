@@ -15,20 +15,20 @@ INSERT INTO "EVENT" (ID, VERSION, VEHICLE_ID, DATE_VALUE, MILEAGE) VALUES
 (403, 1, 303, DATE '2024-09-21', 50600),
 (404, 1, 303, DATE '2025-08-26', 51500);
 
-INSERT INTO "TRACKER" (ID, VERSION, NAME, INTERV_AMOUNT, INTERV_UNIT, RANGE) VALUES
-(501, 1, 'Oil change',         1, 3, 10000),
-(502, 1, 'Brake fluid change', 2, 3, 20000),
-(503, 1, 'Coolant',            3, 3, 30000),
-(504, 1, 'Chain cleaning',     1, 2, 700);
-INSERT INTO "TRACKER" (ID, VERSION, NAME) VALUES
-(505, 1, 'Brake pads'),
-(506, 1, 'Chain & sprockets'),
-(507, 1, 'Timing belt'),
-(508, 1, 'Spark plugs'),
-(509, 1, 'Air filter'),
-(510, 1, 'Tires'),
-(511, 1, 'Clutch'),
-(512, 1, 'Clutch cable');
+INSERT INTO "TRACKER" (ID, VERSION, VEHICLE_ID, NAME, INTERV_AMOUNT, INTERV_UNIT, RANGE) VALUES
+(501, 1, 303, 'Oil change',         1, 3, 10000),
+(502, 1, 303, 'Brake fluid change', 2, 3, 20000),
+(503, 1, 303, 'Coolant',            3, 3, 30000),
+(504, 1, 303, 'Chain cleaning',     1, 2, 700);
+INSERT INTO "TRACKER" (ID, VERSION, VEHICLE_ID, NAME) VALUES
+(505, 1, 303, 'Brake pads'),
+(506, 1, 303, 'Chain & sprockets'),
+(507, 1, 303, 'Timing belt'),
+(508, 1, 303, 'Spark plugs'),
+(509, 1, 303, 'Air filter'),
+(510, 1, 303, 'Tires'),
+(511, 1, 303, 'Clutch'),
+(512, 1, 303, 'Clutch cable');
 
 INSERT INTO "OPERATION" (ID, VERSION, EVENT_ID, TRACKER_ID) VALUES
 (601, 1, 401, 503),

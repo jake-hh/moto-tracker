@@ -220,6 +220,13 @@ public class MainService {
 		));
     }
 
+	public Tracker createTracker() {
+		var tracker = new Tracker();
+		tracker.setVehicle(securityService.getCurrentUser().getSelectedVehicle());
+
+		return tracker;
+	}
+
 	public void deleteTracker(@NotNull Tracker tracker) {
 		try {
 			trackerRepository.delete(tracker);

@@ -2,12 +2,17 @@ package com.example.application.data;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 // import java.time.Period;
 
 
 @Entity
 public class Tracker extends AbstractEntity {
+
+	@NotNull
+	@ManyToOne
+	private Vehicle vehicle;
 
 	@NotBlank
 	private String name;
@@ -28,6 +33,10 @@ public class Tracker extends AbstractEntity {
 		return "Tracker " + getName();
 	}
 
+	public Vehicle getVehicle() {
+		return vehicle;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -38,6 +47,10 @@ public class Tracker extends AbstractEntity {
 
 	public Integer getRange() {
 		return range;
+	}
+
+	public void setVehicle(Vehicle vehicle) {
+		this.vehicle = vehicle;
 	}
 
 	public void setName(String name) {
