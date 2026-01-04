@@ -21,17 +21,17 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 @SuppressWarnings("FieldCanBeLocal")
 public class VehicleForm extends FormLayout {
 
-	private final TextField type = new TextField("type");
-	private final TextField make = new TextField("make");
-	private final TextField model = new TextField("model");
-	private final TextField engine = new TextField("engine");
-	private final TextField colour = new TextField("colour");
-	private final TextField plate = new TextField("plate");
-	private final TextField vin = new TextField("vin");
+	private final TextField type = new TextField("Type");
+	private final TextField make = new TextField("Make");
+	private final TextField model = new TextField("Model");
+	private final TextField engine = new TextField("Engine");
+	private final TextField colour = new TextField("Colour");
+	private final TextField plate = new TextField("Plate");
+	private final TextField vin = new TextField("VIN number");
 
 	private final DatePicker productionDate = new DatePicker("Production date");
 	private final DatePicker registrationDate = new DatePicker("Registration date");
-	private final DatePicker trackingDate = new DatePicker("Tracking date");
+	private final DatePicker trackingDate = new DatePicker("Tracking since");
 
 	private final Button saveBtn = new Button("Save");
 	private final Button deleteBtn = new Button("Delete");

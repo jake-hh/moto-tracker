@@ -85,6 +85,10 @@ public class VehicleView extends VerticalLayout {
 				"trackingDate"
 		);
 
+		grid.getColumnByKey("productionDate").setHeader("Production date");
+		grid.getColumnByKey("registrationDate").setHeader("Registration date");
+		grid.getColumnByKey("trackingDate").setHeader("Tracking since");
+
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
 		grid.asSingleSelect().addValueChangeListener(event ->
