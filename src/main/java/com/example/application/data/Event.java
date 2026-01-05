@@ -22,6 +22,13 @@ public class Event extends AbstractEntity {
 	private Integer mileage;
 
 
+	public Event() { }
+
+	public Event(Vehicle vehicle, LocalDate date) {
+		this.vehicle = vehicle;
+		this.date = date;
+	}
+
 	@Override
 	public String toString() {
 		return "Event " + getDateStr() + " " + getMileage();

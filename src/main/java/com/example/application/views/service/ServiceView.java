@@ -73,8 +73,9 @@ public class ServiceView extends VerticalLayout {
 	}
 
 	public void addEvent() {
-		service.createAndSaveEvent();
-		renderEventList();
+		// TODO: disable add button if no vehicle is present
+		if (service.createAndSaveEvent())
+			renderEventList();
 	}
 
 	@EventListener

@@ -278,8 +278,9 @@ public class MainService {
 	}
 
 	public List<Event> findEvents() {
-		Vehicle selected = securityService.getCurrentUser().getSelectedVehicle();
-		return eventRepository.findByVehicle(selected);
+		return findSelectedVehicle()
+				.map(eventRepository::findByVehicle)
+				.orElse(List.of());
 	}
 
 	// Get event with updated version
@@ -327,12 +328,16 @@ public class MainService {
 		}
 	}
 
-	public void createAndSaveEvent() {
-		var event = new Event();
-		event.setVehicle(securityService.getCurrentUser().getSelectedVehicle());
-		event.setDate(getDateToday());
-
-		saveEvent(event);
+	public boolean createAndSaveEvent() {
+		return findSelectedVehicle()
+				.map(v -> {
+					saveEvent(new Event(v, getDateToday()));
+					return true;
+				})
+				.orElseGet(() -> {
+					Notify.error("No vehicles");
+					return false;
+				});
 	}
 
 	public void saveEvent(@NotNull Event event) {
