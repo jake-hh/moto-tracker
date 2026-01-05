@@ -201,17 +201,18 @@ public class MainService {
 	}
 
 	public List<Tracker> findTrackers(String filter) {
-		if (filter == null || filter.isEmpty()) {
+		if (filter == null || filter.isEmpty())
 			return findTrackers();
-		} else {
-			Vehicle selected = securityService.getCurrentUser().getSelectedVehicle();
-			return trackerRepository.searchByVehicleId(selected, filter);
-		}
+		else
+			return findSelectedVehicle()
+					.map(v -> trackerRepository.searchByVehicleId(v, filter))
+					.orElse(List.of());
 	}
 
 	public List<Tracker> findTrackers() {
-		Vehicle selected = securityService.getCurrentUser().getSelectedVehicle();
-		return trackerRepository.findByVehicle(selected);
+		return findSelectedVehicle()
+				.map(trackerRepository::findByVehicle)
+				.orElse(List.of());
 	}
 
 	public boolean isTrackerUsed(@NotNull Tracker tracker) {
@@ -234,9 +235,11 @@ public class MainService {
 		));
     }
 
-	public Tracker createTracker() {
-		var tracker = new Tracker();
-		tracker.setVehicle(securityService.getCurrentUser().getSelectedVehicle());
+	public Optional<Tracker> createTracker() {
+		var tracker = findSelectedVehicle().map(Tracker::new);
+
+		if (tracker.isEmpty())
+			Notify.error("No vehicles");
 
 		return tracker;
 	}

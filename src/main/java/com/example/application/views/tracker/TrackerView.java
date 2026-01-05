@@ -132,7 +132,9 @@ public class TrackerView extends VerticalLayout {
 
 	private void addTracker() {
 		grid.asSingleSelect().clear();
-		editTracker(service.createTracker());
+
+		// TODO: disable add button if no vehicle is present
+		service.createTracker().ifPresent(this::editTracker);
 	}
 
 	private void updateList() {

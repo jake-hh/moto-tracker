@@ -28,6 +28,12 @@ public class Tracker extends AbstractEntity {
 	private Integer range;
 
 
+	public Tracker() { }
+
+	public Tracker(Vehicle vehicle) {
+		this.vehicle = vehicle;
+	}
+
 	@Override
 	public String toString() {
 		return "Tracker " + getName();
