@@ -122,7 +122,10 @@ public class OplistView extends VerticalLayout {
 
 	private void addOperation() {
 		grid.asSingleSelect().clear();
-		editOperation(new Operation());
+
+		// TODO: disable add button if no vehicle is present
+		if (service.findSelectedVehicle().isPresent())
+			editOperation(new Operation());
 	}
 
 	private void updateList() {

@@ -115,8 +115,9 @@ public class MainService {
 	}
 
 	public List<Operation> findOperations() {
-		Vehicle vehicle = securityService.getCurrentUser().getSelectedVehicle();
-		return operationRepository.findByEvent_VehicleId(vehicle.getId());
+		return findSelectedVehicle()
+				.map(operationRepository::findByEvent_Vehicle)
+				.orElse(List.of());
 	}
 
 	public List<Operation> findAllOperationsByEventId(Long eventId) {
