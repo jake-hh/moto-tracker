@@ -43,6 +43,14 @@ public class Vehicle extends AbstractEntity {
 	@NotNull
 	private LocalDate trackingDate;
 
+
+	public Vehicle() { }
+
+	public Vehicle(AppUser owner, LocalDate trackingDate) {
+		this.owner = owner;
+		this.trackingDate = trackingDate;
+	}
+
 	@Override
 	public String toString() {
 		return "Vehicle of " + owner + " [ " + type + " " + make + " " + model + " " + engine + " " + colour + " " + plate + " " + trackingDate + " ]";
