@@ -59,8 +59,9 @@ public class VehicleForm extends FormLayout {
 		removeStatusLabel.addClassName("mt-helper-text");
 
 		binder.addStatusChangeListener(e -> {
-			saveBtn.setEnabled(binder.isValid());
-			addStatusLabel.setText(binder.isValid() ? "" : "Please fill in all required fields");
+			boolean isValid = binder.isValid();
+			saveBtn.setEnabled(isValid);
+			addStatusLabel.setText(isValid ? "" : "Please fill in all required fields");
 		});
 
 		add(
@@ -91,8 +92,6 @@ public class VehicleForm extends FormLayout {
 		saveBtn.addClickListener(event -> validateAndSave());
 		deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
 		closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
-
-		binder.addStatusChangeListener(e -> saveBtn.setEnabled(binder.isValid()));
 
 		return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
 	}
