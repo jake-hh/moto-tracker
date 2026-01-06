@@ -1,7 +1,7 @@
 package com.example.application.views.oplist;
 
 import com.example.application.data.Operation;
-import com.example.application.event.VehicleSelectedEvent;
+import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
 

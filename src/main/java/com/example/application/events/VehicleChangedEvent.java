@@ -1,4 +1,4 @@
-package com.example.application.event;
+package com.example.application.events;
 
 import com.example.application.views.vehicle.VehicleView;
 

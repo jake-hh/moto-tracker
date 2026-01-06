@@ -1,7 +1,7 @@
 package com.example.application.views.vehicle;
 
 import com.example.application.data.Vehicle;
-import com.example.application.event.VehicleChangedEvent;
+import com.example.application.events.VehicleChangedEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
 
