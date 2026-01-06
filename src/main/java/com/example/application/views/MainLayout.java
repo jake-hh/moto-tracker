@@ -28,8 +28,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import org.springframework.context.event.EventListener;
-
 
 @SpringComponent
 @UIScope
@@ -40,14 +38,20 @@ public class MainLayout extends AppLayout {
 
 	public MainLayout(
 			SecurityService securityService,
-			MainService mainService
+			MainService mainService,
+			VehicleView vehicleView
 	) {
 		this.securityService = securityService;
 		this.mainService = mainService;
 		this.vehicleBox = new ComboBox<>("Vehicle");
+		vehicleView.addVehicleChangedListener(this::onVehicleChanged);
 
 		createHeader();
 		createDrawer();
+	}
+
+	private void onVehicleChanged(VehicleChangedEvent e) {
+		refreshVehicleBox();
 	}
 
 	private void createHeader() {
@@ -120,14 +124,5 @@ public class MainLayout extends AppLayout {
 
 	public void addVehicleSelectedListener(ComponentEventListener<VehicleSelectedEvent> listener) {
 		addListener(VehicleSelectedEvent.class, listener);
-	}
-
-	@EventListener
-	public void onVehicleChanged(VehicleChangedEvent e) {
-		UI ui = UI.getCurrent();
-		if (ui == null) // event from another UI/session
-			return;
-
-		ui.access(this::refreshVehicleBox);
 	}
 }

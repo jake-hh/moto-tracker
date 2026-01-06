@@ -6,6 +6,7 @@ import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -13,14 +14,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Scope;
 
 
 @SpringComponent
-@Scope("prototype")
+@UIScope
 @PermitAll
 @Route(value = "vehicles", layout = MainLayout.class)
 @PageTitle("Vehicles | Moto Vehicle")
@@ -30,12 +30,10 @@ public class VehicleView extends VerticalLayout {
 	private final VehicleForm form = new VehicleForm();
 
 	private final MainService service;
-	private final ApplicationEventPublisher events;
 
 
-	public VehicleView(MainService service, ApplicationEventPublisher events) {
+	public VehicleView(MainService service) {
 		this.service = service;
-		this.events = events;
 
 		addClassName("vehicle-view");
 		setSizeFull();
@@ -67,13 +65,14 @@ public class VehicleView extends VerticalLayout {
 		service.saveVehicle(event.getVehicle());
 		updateList();
 		closeEditor();
-		events.publishEvent(new VehicleChangedEvent());
+		fireEvent(new VehicleChangedEvent(this));
 	}
 
 	private void deleteVehicle(VehicleForm.DeleteEvent event) {
 		service.deleteVehicle(event.getVehicle());
 		updateList();
 		closeEditor();
+		fireEvent(new VehicleChangedEvent(this));
 	}
 
 	private void configureGrid() {
@@ -138,5 +137,9 @@ public class VehicleView extends VerticalLayout {
 
 	private void updateList() {
 		grid.setItems(service.findVehicles());
+	}
+
+	public void addVehicleChangedListener(ComponentEventListener<VehicleChangedEvent> listener) {
+		addListener(VehicleChangedEvent.class, listener);
 	}
 }
