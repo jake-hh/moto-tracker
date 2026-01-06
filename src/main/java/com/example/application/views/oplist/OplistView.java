@@ -1,12 +1,11 @@
 package com.example.application.views.oplist;
 
 import com.example.application.data.Operation;
-import com.example.application.event.SelectedVehicleEvent;
+import com.example.application.event.VehicleSelectedEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -19,7 +18,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
-import org.springframework.context.event.EventListener;
 
 
 @SpringComponent
@@ -34,8 +32,10 @@ public class OplistView extends VerticalLayout {
 	private final OperationForm form = new OperationForm();
 	// TextField filterText = new TextField();
 
-	public OplistView(MainService service) {
+	public OplistView(MainService service, MainLayout layout) {
 		this.service = service;
+		layout.addVehicleSelectedListener(this::onVehicleSelected);
+
 		addClassName("oplist-view");
 		setSizeFull();
 		configureGrid();
@@ -44,6 +44,11 @@ public class OplistView extends VerticalLayout {
 		add(getToolbar(), getContent());
 		updateList();
 		closeEditor();
+	}
+
+	private void onVehicleSelected(VehicleSelectedEvent e) {
+		updateList();
+		updateForm();
 	}
 
 	private HorizontalLayout getContent() {
@@ -135,17 +140,5 @@ public class OplistView extends VerticalLayout {
 	private void updateForm() {
 		form.setEvents(service.findEvents());
 		form.setTrackers(service.findTrackers());
-	}
-
-	@EventListener
-	public void onSelectedVehicle(SelectedVehicleEvent e) {
-		UI ui = UI.getCurrent();
-		if (ui == null) // event from another UI/session
-			return;
-
-		ui.access(() -> {
-			updateList();
-			updateForm();
-		});
 	}
 }

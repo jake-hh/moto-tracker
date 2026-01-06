@@ -1,0 +1,21 @@
+package com.example.application.event;
+
+import com.example.application.data.Vehicle;
+import com.example.application.views.MainLayout;
+
+import com.vaadin.flow.component.ComponentEvent;
+
+
+public class VehicleSelectedEvent extends ComponentEvent<MainLayout> {
+
+	private final Vehicle selectedVehicle;
+
+	public VehicleSelectedEvent(MainLayout source, Vehicle selectedVehicle) {
+		super(source, false); // false = not from client
+		this.selectedVehicle = selectedVehicle;
+	}
+
+	public Vehicle getSelectedVehicle() {
+		return selectedVehicle;
+	}
+}

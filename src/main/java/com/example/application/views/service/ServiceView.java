@@ -2,12 +2,11 @@ package com.example.application.views.service;
 
 import com.example.application.data.Event;
 import com.example.application.data.Tracker;
-import com.example.application.event.SelectedVehicleEvent;
+import com.example.application.event.VehicleSelectedEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,7 +16,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
-import org.springframework.context.event.EventListener;
 
 import java.util.List;
 
@@ -32,8 +30,10 @@ public class ServiceView extends VerticalLayout {
 	private VerticalLayout eventList;
 	private final MainService service;
 
-	public ServiceView(MainService service) {
+	public ServiceView(MainService service, MainLayout layout) {
 		this.service = service;
+		layout.addVehicleSelectedListener(this::onVehicleSelected);
+
 		addClassName("service-view");
 		//setPadding(true);
 		//setSpacing(true);
@@ -41,6 +41,10 @@ public class ServiceView extends VerticalLayout {
 
 		createEventList();
 		add(getToolbar(), eventList);
+	}
+
+	private void onVehicleSelected(VehicleSelectedEvent e) {
+		renderEventList();
 	}
 
 	private Component getToolbar() {
@@ -76,14 +80,5 @@ public class ServiceView extends VerticalLayout {
 		// TODO: disable add button if no vehicle is present
 		if (service.createAndSaveEvent())
 			renderEventList();
-	}
-
-	@EventListener
-	public void onSelectedVehicle(SelectedVehicleEvent e) {
-		UI ui = UI.getCurrent();
-		if (ui == null) // event from another UI/session
-			return;
-
-		ui.access(this::renderEventList);
 	}
 }

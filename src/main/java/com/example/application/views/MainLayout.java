@@ -1,7 +1,7 @@
 package com.example.application.views;
 
 import com.example.application.data.Vehicle;
-import com.example.application.event.SelectedVehicleEvent;
+import com.example.application.event.VehicleSelectedEvent;
 import com.example.application.event.VehicleChangedEvent;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
@@ -10,6 +10,7 @@ import com.example.application.views.service.ServiceView;
 import com.example.application.views.tracker.TrackerView;
 import com.example.application.views.vehicle.VehicleView;
 
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -27,7 +28,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 
 
@@ -36,17 +36,14 @@ import org.springframework.context.event.EventListener;
 public class MainLayout extends AppLayout {
 	private final SecurityService securityService;
 	private final MainService mainService;
-	private final ApplicationEventPublisher events;
 	private final ComboBox<Vehicle> vehicleBox;
 
 	public MainLayout(
 			SecurityService securityService,
-			MainService mainService,
-			ApplicationEventPublisher events
+			MainService mainService
 	) {
 		this.securityService = securityService;
 		this.mainService = mainService;
-		this.events = events;
 		this.vehicleBox = new ComboBox<>("Vehicle");
 
 		createHeader();
@@ -87,7 +84,7 @@ public class MainLayout extends AppLayout {
 		vehicleBox.addValueChangeListener(e -> {
 				Vehicle vehicle = e.getValue();
 				securityService.updateSelectedVehicle(vehicle);
-				events.publishEvent(new SelectedVehicleEvent(vehicle));
+				fireEvent(new VehicleSelectedEvent(this, vehicle));
 		});
 		refreshVehicleBox();
 
@@ -119,6 +116,10 @@ public class MainLayout extends AppLayout {
 	public void refreshVehicleBox() {
 		vehicleBox.setItems(mainService.findVehicles());
 		mainService.findSelectedVehicle().ifPresent(vehicleBox::setValue);
+	}
+
+	public void addVehicleSelectedListener(ComponentEventListener<VehicleSelectedEvent> listener) {
+		addListener(VehicleSelectedEvent.class, listener);
 	}
 
 	@EventListener
