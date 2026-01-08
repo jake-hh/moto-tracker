@@ -119,7 +119,7 @@ public class MainService {
 	public List<Operation> findAllOperationsByEventId(Long eventId) {
 		//Notify.error("fetching operations");
 		if (eventId == null)
-			return new ArrayList<>();
+			return List.of();
 		else
 			return operationRepository.findByEvent_Id(eventId);
 	}
