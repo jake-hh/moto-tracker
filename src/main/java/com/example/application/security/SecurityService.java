@@ -4,7 +4,6 @@ import com.example.application.Notify;
 import com.example.application.data.AppUser;
 import com.example.application.data.AppUserRepository;
 
-import com.example.application.data.Vehicle;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,12 +34,6 @@ public class SecurityService {
 		String username = getCurrentUsername();
 
 		return userRepository.findByUsername(username).orElseThrow();
-	}
-
-	public void updateSelectedVehicle(@NotNull Vehicle vehicle) {
-		AppUser user = getCurrentUser();
-		user.setSelectedVehicle(vehicle);
-		saveUser(user);
 	}
 
 	public void saveUser(@NotNull AppUser user) {

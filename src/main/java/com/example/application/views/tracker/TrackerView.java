@@ -4,6 +4,7 @@ import com.example.application.data.Tracker;
 import com.example.application.data.Pair;
 import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
+import com.example.application.services.UserSettingsService;
 import com.example.application.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
@@ -37,11 +38,18 @@ public class TrackerView extends VerticalLayout {
 	private final Grid<Tracker> grid = new Grid<>(Tracker.class, false);
 	private final TextField filterText = new TextField();
 	private final TrackerForm form = new TrackerForm();
-	private final MainService service;
+
+	private final MainService mainService;
+	private final UserSettingsService settingsService;
 
 
-	public TrackerView(MainService service, MainLayout layout) {
-		this.service = service;
+	public TrackerView(
+			MainService mainService,
+			UserSettingsService settingsService,
+			MainLayout layout
+	) {
+		this.mainService = mainService;
+		this.settingsService = settingsService;
 		layout.addVehicleSelectedListener(this::onVehicleSelected);
 
 		addClassName("tracker-view");
@@ -75,13 +83,13 @@ public class TrackerView extends VerticalLayout {
 	}
 
 	private void saveTracker(TrackerForm.SaveEvent event) {
-		service.saveTracker(event.getTracker());
+		mainService.saveTracker(event.getTracker());
 		updateList();
 		closeEditor();
 	}
 
 	private void deleteTracker(TrackerForm.DeleteEvent event) {
-		service.deleteTracker(event.getTracker());
+		mainService.deleteTracker(event.getTracker());
 		updateList();
 		closeEditor();
 	}
@@ -124,7 +132,7 @@ public class TrackerView extends VerticalLayout {
 		form.setVisible(true);
 		addClassName("tracker-editing");
 
-		boolean used = tracker.getId() != null && service.isTrackerUsed(tracker);
+		boolean used = tracker.getId() != null && mainService.isTrackerUsed(tracker);
 		form.setDeleteEnabled(!used);
 	}
 
@@ -138,12 +146,17 @@ public class TrackerView extends VerticalLayout {
 		grid.asSingleSelect().clear();
 
 		// TODO: disable add button if no vehicle is present
-		service.createTracker().ifPresent(this::editTracker);
+		settingsService.getSelectedVehicle()
+				.flatMap(mainService::createTrackerForVehicle)
+				.ifPresent(this::editTracker);
 	}
 
 	private void updateList() {
-		List<Tracker> trackers = service.findTrackers(filterText.getValue());
-		Map<Long, Pair<LocalDate, Integer>> lastEventDataMap = service.findLastEventDataForTrackers(trackers);
+		List<Tracker> trackers = settingsService.getSelectedVehicle()
+				.map(vehicle -> mainService.findTrackersByVehicle(vehicle, filterText.getValue()))
+				.orElse(List.of());
+
+		Map<Long, Pair<LocalDate, Integer>> lastEventDataMap = mainService.findLastEventDataForTrackers(trackers);
 
 		grid.setItems(trackers);
 

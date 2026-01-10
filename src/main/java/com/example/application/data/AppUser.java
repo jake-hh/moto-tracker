@@ -2,7 +2,6 @@ package com.example.application.data;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 
 @SuppressWarnings("unused")
@@ -20,9 +19,6 @@ public class AppUser extends AbstractEntity {
 	private String firstName;
 
 	private String lastName;
-
-	@ManyToOne
-	private Vehicle selectedVehicle;
 
 
 	@Override
@@ -46,10 +42,6 @@ public class AppUser extends AbstractEntity {
 		return lastName;
 	}
 
-	public Vehicle getSelectedVehicle() {
-		return selectedVehicle;
-	}
-
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -64,9 +56,5 @@ public class AppUser extends AbstractEntity {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	public void setSelectedVehicle(Vehicle selectedVehicle) {
-		this.selectedVehicle = selectedVehicle;
 	}
 }

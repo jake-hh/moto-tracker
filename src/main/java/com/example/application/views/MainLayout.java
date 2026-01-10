@@ -5,6 +5,7 @@ import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.events.VehicleChangedEvent;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
+import com.example.application.services.UserSettingsService;
 import com.example.application.views.oplist.OplistView;
 import com.example.application.views.service.ServiceView;
 import com.example.application.views.tracker.TrackerView;
@@ -33,17 +34,21 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @UIScope
 public class MainLayout extends AppLayout {
 	private final SecurityService securityService;
+	private final UserSettingsService settingsService;
 	private final MainService mainService;
 	private final ComboBox<Vehicle> vehicleBox;
 
 	public MainLayout(
 			SecurityService securityService,
+			UserSettingsService settingsService,
 			MainService mainService,
 			VehicleView vehicleView
 	) {
 		this.securityService = securityService;
+		this.settingsService = settingsService;
 		this.mainService = mainService;
 		this.vehicleBox = new ComboBox<>("Vehicle");
+
 		vehicleView.addVehicleChangedListener(this::onVehicleChanged);
 
 		createHeader();
@@ -77,8 +82,7 @@ public class MainLayout extends AppLayout {
 			LumoUtility.Padding.Horizontal.MEDIUM
 		);
 
-		addToNavbar(header); 
-
+		addToNavbar(header);
 	}
 
 	private void createDrawer() {
@@ -87,7 +91,7 @@ public class MainLayout extends AppLayout {
 		vehicleBox.setWidthFull();
 		vehicleBox.addValueChangeListener(e -> {
 				Vehicle vehicle = e.getValue();
-				securityService.updateSelectedVehicle(vehicle);
+				settingsService.updateSelectedVehicle(vehicle);
 				fireEvent(new VehicleSelectedEvent(this, vehicle));
 		});
 		refreshVehicleBox();
@@ -119,7 +123,7 @@ public class MainLayout extends AppLayout {
 
 	public void refreshVehicleBox() {
 		vehicleBox.setItems(mainService.findVehicles());
-		mainService.findSelectedVehicle().ifPresent(vehicleBox::setValue);
+		settingsService.getSelectedVehicle().ifPresent(vehicleBox::setValue);
 	}
 
 	public void addVehicleSelectedListener(ComponentEventListener<VehicleSelectedEvent> listener) {

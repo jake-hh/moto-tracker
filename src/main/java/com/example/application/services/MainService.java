@@ -49,13 +49,7 @@ public class MainService {
 		return vehicleRepository.findByOwner(securityService.getCurrentUser());
 	}
 
-	public Optional<Vehicle> findSelectedVehicle() {
-		AppUser user = securityService.getCurrentUser();
-
-		return selectDefaultVehicleIfNull(user, user.getSelectedVehicle());
-	}
-
-	private Optional<Vehicle> selectDefaultVehicleIfNull(AppUser user, Vehicle vehicle) {
+	/*private Optional<Vehicle> selectDefaultVehicleIfNull(AppUser user, Vehicle vehicle) {
 		if (vehicle == null) {
 			List<Vehicle> vehicles = vehicleRepository.findByOwner(user);
 
@@ -67,7 +61,7 @@ public class MainService {
 		}
 
 		return Optional.ofNullable(vehicle);
-	}
+	}*/
 
 	public boolean isVehicleUsed(@NotNull Vehicle vehicle) {
 		return eventRepository.existsByVehicle(vehicle);
@@ -110,10 +104,11 @@ public class MainService {
 		return operationRepository.findAll();
 	}
 
-	public List<Operation> findOperations() {
-		return findSelectedVehicle()
-				.map(operationRepository::findByEvent_Vehicle)
-				.orElse(List.of());
+	public List<Operation> findOperationsByVehicle(Vehicle vehicle) {
+		if (vehicle != null)
+			return operationRepository.findByEvent_Vehicle(vehicle);
+		else
+			return List.of();
 	}
 
 	public List<Operation> findAllOperationsByEventId(Long eventId) {
@@ -197,19 +192,20 @@ public class MainService {
 		return trackerRepository.findAll();
 	}
 
-	public List<Tracker> findTrackers(String filter) {
+	public List<Tracker> findTrackersByVehicle(Vehicle vehicle, String filter) {
 		if (filter == null || filter.isEmpty())
-			return findTrackers();
+			return findTrackersByVehicle(vehicle);
+		else if (vehicle != null)
+			return trackerRepository.searchByVehicleId(vehicle, filter);
 		else
-			return findSelectedVehicle()
-					.map(v -> trackerRepository.searchByVehicleId(v, filter))
-					.orElse(List.of());
+			return List.of();
 	}
 
-	public List<Tracker> findTrackers() {
-		return findSelectedVehicle()
-				.map(trackerRepository::findByVehicle)
-				.orElse(List.of());
+	public List<Tracker> findTrackersByVehicle(Vehicle vehicle) {
+		if (vehicle != null)
+			return trackerRepository.findByVehicle(vehicle);
+		else
+			return List.of();
 	}
 
 	public boolean isTrackerUsed(@NotNull Tracker tracker) {
@@ -232,13 +228,13 @@ public class MainService {
 		));
     }
 
-	public Optional<Tracker> createTracker() {
-		var tracker = findSelectedVehicle().map(Tracker::new);
-
-		if (tracker.isEmpty())
-			Notify.error("No vehicles");
-
-		return tracker;
+	public Optional<Tracker> createTrackerForVehicle(Vehicle vehicle) {
+		if (vehicle != null)
+			return Optional.of(new Tracker(vehicle));
+		else {
+			Notify.error("No vehicle has been selected");
+			return Optional.empty();
+		}
 	}
 
 	public void deleteTracker(@NotNull Tracker tracker) {
@@ -274,10 +270,11 @@ public class MainService {
 		return eventRepository.findAll();
 	}
 
-	public List<Event> findEvents() {
-		return findSelectedVehicle()
-				.map(eventRepository::findByVehicle)
-				.orElse(List.of());
+	public List<Event> findEventsByVehicle(Vehicle vehicle) {
+		if (vehicle != null)
+			return eventRepository.findByVehicle(vehicle);
+		else
+			return List.of();
 	}
 
 	// Get event with updated version
@@ -325,16 +322,11 @@ public class MainService {
 		}
 	}
 
-	public boolean createAndSaveEvent() {
-		return findSelectedVehicle()
-				.map(v -> {
-					saveEvent(new Event(v, getDateToday()));
-					return true;
-				})
-				.orElseGet(() -> {
-					Notify.error("No vehicles");
-					return false;
-				});
+	public void createAndSaveEventForVehicle(Vehicle vehicle) {
+		if (vehicle != null)
+			saveEvent(new Event(vehicle, getDateToday()));
+		else
+			Notify.error("No vehicle has been selected");
 	}
 
 	public void saveEvent(@NotNull Event event) {
