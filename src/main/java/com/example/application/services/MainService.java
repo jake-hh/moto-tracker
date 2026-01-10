@@ -111,7 +111,7 @@ public class MainService {
 			return List.of();
 	}
 
-	public List<Operation> findAllOperationsByEventId(Long eventId) {
+	public List<Operation> findOperationsByEventId(Long eventId) {
 		//Notify.error("fetching operations");
 		if (eventId == null)
 			return List.of();
@@ -196,7 +196,7 @@ public class MainService {
 		if (filter == null || filter.isEmpty())
 			return findTrackersByVehicle(vehicle);
 		else if (vehicle != null)
-			return trackerRepository.searchByVehicleId(vehicle, filter);
+			return trackerRepository.searchByVehicle(vehicle, filter);
 		else
 			return List.of();
 	}

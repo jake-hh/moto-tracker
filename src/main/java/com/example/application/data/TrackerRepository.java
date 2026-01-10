@@ -16,7 +16,7 @@ public interface TrackerRepository extends JpaRepository<Tracker, Long> {
 	@Query("select t from Tracker t " +
 			"where lower(t.name) like lower(concat('%', :searchTerm, '%')) " +
 			"and t.vehicle = :vehicle")
-	List<Tracker> searchByVehicleId(
+	List<Tracker> searchByVehicle(
 			@Param("vehicle") Vehicle vehicle,
 			@Param("searchTerm") String searchTerm
 	);
