@@ -91,7 +91,7 @@ public class MainService {
 		try {
 			getSettingsService().unselectDeletedVehicle(vehicle, this);
 			vehicleRepository.delete(vehicle);
-			Notify.ok("Deleted event");
+			Notify.ok("Deleted vehicle");
 		} catch (Exception e) {
 			Notify.error("Failed to delete vehicle: " + e.getMessage());
 			throw new RuntimeException("Could not delete vehicle", e);
@@ -265,7 +265,7 @@ public class MainService {
 	public void deleteTracker(@NotNull Tracker tracker) {
 		try {
 			trackerRepository.delete(tracker);
-			Notify.ok("Deleted event");
+			Notify.ok("Deleted tracker");
 		} catch (Exception e) {
 			Notify.error("Failed to delete tracker: " + e.getMessage());
 			throw new RuntimeException("Could not delete tracker", e);
