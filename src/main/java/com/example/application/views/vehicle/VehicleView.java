@@ -23,7 +23,7 @@ import jakarta.annotation.security.PermitAll;
 @UIScope
 @PermitAll
 @Route(value = "vehicles", layout = MainLayout.class)
-@PageTitle("Vehicles | Moto Vehicle")
+@PageTitle("Vehicles | Moto Tracker")
 public class VehicleView extends VerticalLayout {
 
 	private final Grid<Vehicle> grid = new Grid<>(Vehicle.class, false);
