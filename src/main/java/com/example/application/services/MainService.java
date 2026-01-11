@@ -5,6 +5,7 @@ import com.example.application.data.*;
 import com.example.application.security.SecurityService;
 
 import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,30 +16,45 @@ import java.util.stream.Collectors;
 
 
 @Service
+@Transactional
 public class MainService {
 
 	private final VehicleRepository vehicleRepository;
 	private final OperationRepository operationRepository;
 	private final TrackerRepository trackerRepository;
 	private final EventRepository eventRepository;
+
 	private final SecurityService securityService;
+	private final ObjectProvider<UserSettingsService> settingsProvider;
 
 	public MainService(
 			VehicleRepository vehicleRepository,
 			OperationRepository operationRepository,
 			TrackerRepository trackerRepository,
 			EventRepository eventRepository,
-			SecurityService securityService
+
+			SecurityService securityService,
+			ObjectProvider<UserSettingsService> settingsProvider
 	) {
 		this.vehicleRepository = vehicleRepository;
 		this.operationRepository = operationRepository;
 		this.trackerRepository = trackerRepository;
 		this.eventRepository = eventRepository;
+
 		this.securityService = securityService;
+		this.settingsProvider = settingsProvider;
 	}
 
 	public static LocalDate getDateToday() {
 		return LocalDate.now(ZoneId.systemDefault());
+	}
+
+	private UserSettingsService getSettingsService() {
+		return settingsProvider.getObject();
+	}
+
+	private Optional<Vehicle> getSelectedVehicle() {
+		return getSettingsService().getSelectedVehicle();
 	}
 
 	  ////////////////////////
@@ -104,11 +120,10 @@ public class MainService {
 		return operationRepository.findAll();
 	}
 
-	public List<Operation> findOperationsByVehicle(Vehicle vehicle) {
-		if (vehicle != null)
-			return operationRepository.findByEvent_Vehicle(vehicle);
-		else
-			return List.of();
+	public List<Operation> findOperations() {
+		return getSelectedVehicle()
+				.map(operationRepository::findByEvent_Vehicle)
+				.orElse(List.of());
 	}
 
 	public List<Operation> findOperationsByEventId(Long eventId) {
@@ -134,6 +149,15 @@ public class MainService {
 
 	public int findOperationCountByEventId(@NotNull Long id) {
 		return operationRepository.countByEvent_Id(id);
+	}
+
+	public Optional<Operation> createOperation() {
+		if (getSelectedVehicle().isPresent())
+			return Optional.of(new Operation());
+		else {
+			Notify.error("No vehicle has been selected");
+			return Optional.empty();
+		}
 	}
 
 	public void deleteOperation(@NotNull Operation operation) {
@@ -192,20 +216,19 @@ public class MainService {
 		return trackerRepository.findAll();
 	}
 
-	public List<Tracker> findTrackersByVehicle(Vehicle vehicle, String filter) {
+	public List<Tracker> findTrackers(String filter) {
 		if (filter == null || filter.isEmpty())
-			return findTrackersByVehicle(vehicle);
-		else if (vehicle != null)
-			return trackerRepository.searchByVehicle(vehicle, filter);
+			return findTrackers();
 		else
-			return List.of();
+			return getSelectedVehicle()
+					.map(v -> trackerRepository.searchByVehicle(v, filter))
+					.orElse(List.of());
 	}
 
-	public List<Tracker> findTrackersByVehicle(Vehicle vehicle) {
-		if (vehicle != null)
-			return trackerRepository.findByVehicle(vehicle);
-		else
-			return List.of();
+	public List<Tracker> findTrackers() {
+		return getSelectedVehicle()
+				.map(trackerRepository::findByVehicle)
+				.orElse(List.of());
 	}
 
 	public boolean isTrackerUsed(@NotNull Tracker tracker) {
@@ -228,13 +251,13 @@ public class MainService {
 		));
     }
 
-	public Optional<Tracker> createTrackerForVehicle(Vehicle vehicle) {
-		if (vehicle != null)
-			return Optional.of(new Tracker(vehicle));
-		else {
+	public Optional<Tracker> createTracker() {
+		var tracker = getSelectedVehicle().map(Tracker::new);
+
+		if (tracker.isEmpty())
 			Notify.error("No vehicle has been selected");
-			return Optional.empty();
-		}
+
+		return tracker;
 	}
 
 	public void deleteTracker(@NotNull Tracker tracker) {
@@ -270,11 +293,10 @@ public class MainService {
 		return eventRepository.findAll();
 	}
 
-	public List<Event> findEventsByVehicle(Vehicle vehicle) {
-		if (vehicle != null)
-			return eventRepository.findByVehicle(vehicle);
-		else
-			return List.of();
+	public List<Event> findEvents() {
+		return getSelectedVehicle()
+				.map(eventRepository::findByVehicle)
+				.orElse(List.of());
 	}
 
 	// Get event with updated version
@@ -322,11 +344,14 @@ public class MainService {
 		}
 	}
 
-	public void createAndSaveEventForVehicle(Vehicle vehicle) {
-		if (vehicle != null)
-			saveEvent(new Event(vehicle, getDateToday()));
-		else
-			Notify.error("No vehicle has been selected");
+	public boolean createAndSaveEvent() {
+		Optional<Vehicle> vehicle = getSelectedVehicle();
+
+		vehicle.ifPresentOrElse(
+				v -> saveEvent(new Event(v, getDateToday())),
+				() -> Notify.error("No vehicle has been selected"));
+
+		return vehicle.isPresent();
 	}
 
 	public void saveEvent(@NotNull Event event) {

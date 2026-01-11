@@ -4,7 +4,6 @@ import com.example.application.data.Event;
 import com.example.application.data.Tracker;
 import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
-import com.example.application.services.UserSettingsService;
 import com.example.application.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
@@ -29,16 +28,10 @@ import java.util.List;
 public class ServiceView extends VerticalLayout {
 
 	private VerticalLayout eventList;
-	private final MainService mainService;
-	private final UserSettingsService settingsService;
+	private final MainService service;
 
-	public ServiceView(
-			MainService mainService,
-			UserSettingsService settingsService,
-			MainLayout layout
-	) {
-		this.mainService = mainService;
-		this.settingsService = settingsService;
+	public ServiceView(MainService service, MainLayout layout) {
+		this.service = service;
 		layout.addVehicleSelectedListener(this::onVehicleSelected);
 
 		addClassName("service-view");
@@ -72,29 +65,20 @@ public class ServiceView extends VerticalLayout {
 	}
 
 	public void renderEventList() {
-		List<Tracker> trackers = settingsService.getSelectedVehicle()
-				.map(mainService::findTrackersByVehicle)
-				.orElse(List.of());
-
-		List<Event> events = settingsService.getSelectedVehicle()
-				.map(mainService::findEventsByVehicle)
-				.map(List::reversed)
-				.orElse(List.of());
+		List<Tracker> trackers = service.findTrackers();
+		List<Event> events = service.findEvents().reversed();
 
 		eventList.removeAll();
 
 		for (Event event : events)
-			eventList.add(new EventItem(event, this::renderEventList, trackers, mainService));
+			eventList.add(new EventItem(event, this::renderEventList, trackers, service));
 
 		eventList.addClassNames("service-event-item");
 	}
 
 	public void addEvent() {
 		// TODO: disable add button if no vehicle is present
-		settingsService.getSelectedVehicle()
-				.ifPresent(vehicle -> {
-					mainService.createAndSaveEventForVehicle(vehicle);
-					renderEventList();
-				});
+		if (service.createAndSaveEvent())
+			renderEventList();
 	}
 }

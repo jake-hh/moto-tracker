@@ -6,12 +6,12 @@ import com.example.application.security.SecurityService;
 
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 
-@Component
+@Service
 @UIScope
 public class UserSettingsService {
 

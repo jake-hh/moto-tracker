@@ -3,7 +3,6 @@ package com.example.application.views.oplist;
 import com.example.application.data.Operation;
 import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
-import com.example.application.services.UserSettingsService;
 import com.example.application.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
@@ -20,8 +19,6 @@ import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
 
-import java.util.List;
-
 
 @SpringComponent
 @UIScope
@@ -30,19 +27,13 @@ import java.util.List;
 @PageTitle("Operations | Moto Tracker")
 public class OplistView extends VerticalLayout {
 
-	private final MainService mainService;
-	private final UserSettingsService settingsService;
+	private final MainService service;
 	private final Grid<Operation> grid = new Grid<>(Operation.class, false);
 	private final OperationForm form = new OperationForm();
 	// TextField filterText = new TextField();
 
-	public OplistView(
-			MainService mainService,
-			UserSettingsService settingsService,
-			MainLayout layout
-	) {
-		this.mainService = mainService;
-		this.settingsService = settingsService;
+	public OplistView(MainService service, MainLayout layout) {
+		this.service = service;
 		layout.addVehicleSelectedListener(this::onVehicleSelected);
 
 		addClassName("oplist-view");
@@ -78,13 +69,13 @@ public class OplistView extends VerticalLayout {
 	}
 
 	private void saveOperation(OperationForm.SaveEvent event) {
-		mainService.saveOperation(event.getOperation());
+		service.saveOperation(event.getOperation());
 		updateList();
 		closeEditor();
 	}
 
 	private void deleteOperation(OperationForm.DeleteEvent event) {
-		mainService.deleteOperation(event.getOperation());
+		service.deleteOperation(event.getOperation());
 		updateList();
 		closeEditor();
 	}
@@ -138,29 +129,15 @@ public class OplistView extends VerticalLayout {
 		grid.asSingleSelect().clear();
 
 		// TODO: disable add button if no vehicle is present
-		if (settingsService.getSelectedVehicle().isPresent())
-			editOperation(new Operation());
+		service.createOperation().ifPresent(this::editOperation);
 	}
 
 	private void updateList() {
-		grid.setItems(
-				settingsService.getSelectedVehicle()
-						.map(mainService::findOperationsByVehicle /*filterText.getValue()*/)
-						.orElse(List.of())
-		);
+		grid.setItems(service.findOperations(/*filterText.getValue()*/));
 	}
 
 	private void updateForm() {
-		form.setEvents(
-				settingsService.getSelectedVehicle()
-						.map(mainService::findEventsByVehicle)
-						.orElse(List.of())
-		);
-
-		form.setTrackers(
-				settingsService.getSelectedVehicle()
-						.map(mainService::findTrackersByVehicle)
-						.orElse(List.of())
-		);
+		form.setEvents(service.findEvents());
+		form.setTrackers(service.findTrackers());
 	}
 }
