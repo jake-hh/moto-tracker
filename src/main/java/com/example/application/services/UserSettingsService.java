@@ -8,6 +8,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -37,7 +38,22 @@ public class UserSettingsService {
 
 	}
 
-	public void updateSelectedVehicle(@NotNull Vehicle vehicle) {
+	public void setSelectedVehicleIfEmpty(@NotNull Vehicle vehicle) {
+		if (settings.getSelectedVehicle() == null)
+			updateSelectedVehicle(vehicle);
+	}
+
+	public void unselectDeletedVehicle(@NotNull Vehicle deleted, @NotNull MainService mainService) {
+		Vehicle selected = settings.getSelectedVehicle();
+
+		if (selected == null || deleted.getId().equals(selected.getId())) {
+			List<Vehicle> vehicles = mainService.findVehicles();
+			vehicles.remove(deleted);
+			updateSelectedVehicle(vehicles.isEmpty() ? null : vehicles.getFirst());
+		}
+	}
+
+	public void updateSelectedVehicle(Vehicle vehicle) {
 		settings.setSelectedVehicle(vehicle);
 		save(settings);
 	}

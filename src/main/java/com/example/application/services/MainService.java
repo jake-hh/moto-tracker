@@ -89,6 +89,7 @@ public class MainService {
 
 	public void deleteVehicle(@NotNull Vehicle vehicle) {
 		try {
+			getSettingsService().unselectDeletedVehicle(vehicle, this);
 			vehicleRepository.delete(vehicle);
 			Notify.ok("Deleted event");
 		} catch (Exception e) {
@@ -110,6 +111,7 @@ public class MainService {
 			Notify.error("Failed to save vehicle: " + e.getMessage());
 			throw new RuntimeException("Could not save vehicle", e);
 		}
+		getSettingsService().setSelectedVehicleIfEmpty(vehicle);
 	}
 
 	  //////////////////////////
