@@ -90,6 +90,8 @@ public class MainLayout extends AppLayout {
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
 		vehicleBox.addValueChangeListener(e -> {
+				if (!e.isFromClient()) return;
+
 				Vehicle vehicle = e.getValue();
 				settingsService.updateSelectedVehicle(vehicle);
 				fireEvent(new VehicleSelectedEvent(this, vehicle));
