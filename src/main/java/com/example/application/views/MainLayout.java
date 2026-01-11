@@ -12,6 +12,7 @@ import com.example.application.views.tracker.TrackerView;
 import com.example.application.views.vehicle.VehicleView;
 
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -36,7 +37,7 @@ public class MainLayout extends AppLayout {
 	private final SecurityService securityService;
 	private final UserSettingsService settingsService;
 	private final MainService mainService;
-	private final ComboBox<Vehicle> vehicleBox;
+	private final ComboBox<Vehicle> vehicleBox = new ComboBox<>("Vehicle");
 
 	public MainLayout(
 			SecurityService securityService,
@@ -47,7 +48,6 @@ public class MainLayout extends AppLayout {
 		this.securityService = securityService;
 		this.settingsService = settingsService;
 		this.mainService = mainService;
-		this.vehicleBox = new ComboBox<>("Vehicle");
 
 		vehicleView.addVehicleChangedListener(this::onVehicleChanged);
 
@@ -55,31 +55,40 @@ public class MainLayout extends AppLayout {
 		createDrawer();
 	}
 
-	private void onVehicleChanged(VehicleChangedEvent e) {
+	private void onVehicleChanged(VehicleChangedEvent change) {
 		refreshVehicleBox();
+	}
+
+	private void onVehicleBoxChange(ValueChangeEvent<Vehicle> change) {
+		if (!change.isFromClient()) return;
+
+		Vehicle vehicle = change.getValue();
+		settingsService.updateSelectedVehicle(vehicle);
+		fireEvent(new VehicleSelectedEvent(this, vehicle));
+	}
+
+	public void refreshVehicleBox() {
+		vehicleBox.setItems(mainService.findVehicles());
+		settingsService.getSelectedVehicle().ifPresent(vehicleBox::setValue);
 	}
 
 	private void createHeader() {
 		H1 logo = new H1("Moto Tracker");
 		logo.addClassNames(
-			LumoUtility.FontSize.LARGE,
-			LumoUtility.Margin.MEDIUM);
-
-		String u = securityService.getCurrentUsername();
-		Button logout = new Button("Log out " + u, e -> securityService.logout()); // <2>
-
-		var header = new HorizontalLayout(
-				new DrawerToggle(),
-				logo,
-				logout
+				LumoUtility.FontSize.LARGE,
+				LumoUtility.Margin.MEDIUM
 		);
 
+		String u = securityService.getCurrentUsername();
+		Button logout = new Button("Log out " + u, click -> securityService.logout()); // <2>
+
+		var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 		header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 		header.expand(logo); // <4>
 		header.setWidthFull();
 		header.addClassNames(
-			LumoUtility.Padding.Vertical.NONE,
-			LumoUtility.Padding.Horizontal.MEDIUM
+				LumoUtility.Padding.Vertical.NONE,
+				LumoUtility.Padding.Horizontal.MEDIUM
 		);
 
 		addToNavbar(header);
@@ -89,13 +98,7 @@ public class MainLayout extends AppLayout {
 		// Init Vehicle Box
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
-		vehicleBox.addValueChangeListener(e -> {
-				if (!e.isFromClient()) return;
-
-				Vehicle vehicle = e.getValue();
-				settingsService.updateSelectedVehicle(vehicle);
-				fireEvent(new VehicleSelectedEvent(this, vehicle));
-		});
+		vehicleBox.addValueChangeListener(this::onVehicleBoxChange);
 		refreshVehicleBox();
 
 		// Create Edit Vehicles Button
@@ -106,7 +109,7 @@ public class MainLayout extends AppLayout {
 				ButtonVariant.LUMO_WARNING
 		);
 
-		editVehiclesBtn.addClickListener(e -> UI.getCurrent().navigate(VehicleView.class));
+		editVehiclesBtn.addClickListener(click -> UI.getCurrent().navigate(VehicleView.class));
 
 		// Combine in Vehicle Layout
 		var vehicleLayout = new HorizontalLayout(vehicleBox, editVehiclesBtn);
@@ -121,11 +124,6 @@ public class MainLayout extends AppLayout {
 				new RouterLink("Services", ServiceView.class),
 				new RouterLink("Trackers", TrackerView.class)
 		));
-	}
-
-	public void refreshVehicleBox() {
-		vehicleBox.setItems(mainService.findVehicles());
-		settingsService.getSelectedVehicle().ifPresent(vehicleBox::setValue);
 	}
 
 	public void addVehicleSelectedListener(ComponentEventListener<VehicleSelectedEvent> listener) {
