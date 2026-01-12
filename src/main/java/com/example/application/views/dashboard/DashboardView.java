@@ -15,7 +15,6 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -69,8 +68,8 @@ public class DashboardView extends VerticalLayout {
 		grid.setSizeFull();
 		grid.setColumns("name", "interval", "range");
 
-		grid.addColumn(tracker -> "").setHeader("Last date").setKey("lastDate");
-		grid.addColumn(tracker -> "").setHeader("Last mileage").setKey("lastMileage");
+		grid.addColumn(tracker -> "").setKey("date");
+		grid.addColumn(tracker -> "").setKey("mileage");
 
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 	}
@@ -117,10 +116,23 @@ public class DashboardView extends VerticalLayout {
 
 		grid.setItems(trackers);
 
-		grid.getColumnByKey("lastDate")
-				.setRenderer(new TextRenderer<>(data::getLastDateString));
+		if (settingsService.getDashboardMode().equals(DashboardMode.LAST_SERVICE)) {
+			grid.getColumnByKey("date")
+					.setHeader("Last date")
+					.setRenderer(data.render(data::getLastDate));
 
-		grid.getColumnByKey("lastMileage")
-				.setRenderer(new TextRenderer<>(data::getLastMileageString));
+			grid.getColumnByKey("mileage")
+					.setHeader("Last mileage")
+					.setRenderer(data.render(data::getLastMileage));
+		}
+		else {
+			grid.getColumnByKey("date")
+					.setHeader("Next date")
+					.setRenderer(data.render(data::getNextDate));
+
+			grid.getColumnByKey("mileage")
+					.setHeader("Next mileage")
+					.setRenderer(data.render(data::getNextMileage));
+		}
 	}
 }

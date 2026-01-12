@@ -13,7 +13,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -89,8 +88,8 @@ public class TrackerView extends VerticalLayout {
 		grid.setSizeFull();
 		grid.setColumns("name", "interval", "range");
 
-		grid.addColumn(tracker -> "").setHeader("Last date").setKey("lastDate");
-		grid.addColumn(tracker -> "").setHeader("Last mileage").setKey("lastMileage");
+		grid.addColumn(tracker -> "").setHeader("Last date").setKey("date");
+		grid.addColumn(tracker -> "").setHeader("Last mileage").setKey("mileage");
 
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
@@ -145,10 +144,10 @@ public class TrackerView extends VerticalLayout {
 
 		grid.setItems(trackers);
 
-		grid.getColumnByKey("lastDate")
-				.setRenderer(new TextRenderer<>(data::getLastDateString));
+		grid.getColumnByKey("date")
+				.setRenderer(data.render(data::getLastDate));
 
-		grid.getColumnByKey("lastMileage")
-				.setRenderer(new TextRenderer<>(data::getLastMileageString));
+		grid.getColumnByKey("mileage")
+				.setRenderer(data.render(data::getLastMileage));
 	}
 }
