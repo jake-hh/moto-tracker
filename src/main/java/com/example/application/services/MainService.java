@@ -65,20 +65,6 @@ public class MainService {
 		return vehicleRepository.findByOwner(securityService.getCurrentUser());
 	}
 
-	/*private Optional<Vehicle> selectDefaultVehicleIfNull(AppUser user, Vehicle vehicle) {
-		if (vehicle == null) {
-			List<Vehicle> vehicles = vehicleRepository.findByOwner(user);
-
-			if (!vehicles.isEmpty()) {
-				vehicle = vehicles.getFirst();
-				user.setSelectedVehicle(vehicle);
-				securityService.saveUser(user);
-			}
-		}
-
-		return Optional.ofNullable(vehicle);
-	}*/
-
 	public boolean isVehicleUsed(@NotNull Vehicle vehicle) {
 		return eventRepository.existsByVehicle(vehicle);
 	}

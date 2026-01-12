@@ -31,9 +31,6 @@ public class UserSettingsService {
 	}
 
 	public Optional<Vehicle> getSelectedVehicle() {
-		// TODO: Instead of checking for default vehicle it when fetching - select it and save in db when saving a new vehicle in VehicleForm
-		//return selectDefaultVehicleIfNull(settings.getSelectedVehicle());
-
 		return Optional.ofNullable(settings.getSelectedVehicle());
 
 	}
