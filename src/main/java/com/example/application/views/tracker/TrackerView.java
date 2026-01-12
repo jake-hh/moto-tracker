@@ -30,7 +30,7 @@ import java.util.Optional;
 @SpringComponent
 @UIScope
 @PermitAll
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "trackers", layout = MainLayout.class)
 @PageTitle("Trackers | Moto Tracker")
 public class TrackerView extends VerticalLayout {
 

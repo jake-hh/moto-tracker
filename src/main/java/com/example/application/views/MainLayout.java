@@ -120,6 +120,7 @@ public class MainLayout extends AppLayout {
 
 		addToDrawer(new VerticalLayout(
 				vehicleLayout,
+				new RouterLink("Dashboard", DashboardView.class),
 				new RouterLink("Operations", OplistView.class),
 				new RouterLink("Services", ServiceView.class),
 				new RouterLink("Trackers", TrackerView.class)

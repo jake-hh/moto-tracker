@@ -32,7 +32,11 @@ public class UserSettingsService {
 
 	public Optional<Vehicle> getSelectedVehicle() {
 		return Optional.ofNullable(settings.getSelectedVehicle());
+	}
 
+	public DashboardMode getDashboardMode() {
+		return Optional.ofNullable(settings.getDashboardMode())
+				.orElse(DashboardMode.LAST_SERVICE);
 	}
 
 	public void setSelectedVehicleIfEmpty(@NotNull Vehicle vehicle) {
@@ -55,6 +59,11 @@ public class UserSettingsService {
 		save(settings);
 	}
 
+	public void updateDashboardMode(DashboardMode dashboardMode) {
+		settings.setDashboardMode(dashboardMode);
+		save(settings);
+	}
+
 	private void save(@NotNull AppUserSettings settings) {
 		if (settings == null) {
 			Notify.error("settings is null. Are you sure you have connected your form to the application?");
@@ -63,6 +72,7 @@ public class UserSettingsService {
 
 		try {
 			this.settings = repository.save(settings);
+			// Notify.ok("Saved settings");
 		} catch (Exception e) {
 			Notify.error("Failed to save settings: " + e.getMessage());
 			throw new RuntimeException("Could not save user", e);

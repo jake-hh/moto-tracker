@@ -14,6 +14,8 @@ public class AppUserSettings extends AbstractEntity {
 	@ManyToOne
 	private Vehicle selectedVehicle;
 
+	@Enumerated(EnumType.STRING)
+	private DashboardMode dashboardMode;
 
 	public AppUserSettings() { }
 
@@ -29,11 +31,19 @@ public class AppUserSettings extends AbstractEntity {
 		return selectedVehicle;
 	}
 
+	public DashboardMode getDashboardMode() {
+		return dashboardMode;
+	}
+
 	public void setUser(AppUser user) {
 		this.user = user;
 	}
 
 	public void setSelectedVehicle(Vehicle selectedVehicle) {
 		this.selectedVehicle = selectedVehicle;
+	}
+
+	public void setDashboardMode(DashboardMode dashboardMode) {
+		this.dashboardMode = dashboardMode;
 	}
 }
