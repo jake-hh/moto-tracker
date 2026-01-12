@@ -226,10 +226,13 @@ public class MainService {
 
 	public EventData findLastEventDataForTrackers(@NotNull List<Tracker> trackers) {
 		Map<Long, Pair<LocalDate, Integer>> dataMap;
+		Optional<Event> firstEvent;
 
-        if (trackers.isEmpty())
+        if (trackers.isEmpty()) {
 			dataMap = Collections.emptyMap();
-		else
+			firstEvent = Optional.empty();
+        }
+		else {
 			dataMap = operationRepository.findLatestEventDatesAndMileagesForTrackers(trackers)
 					.stream()
 					.collect(
@@ -238,8 +241,10 @@ public class MainService {
 								row -> (Long) row[0],
 								row -> new Pair<>((LocalDate) row[1], (Integer) row[2])
 						));
+			firstEvent = eventRepository.findFirstByVehicleAndDateIsNotNullOrderByDateAsc(trackers.getFirst().getVehicle());
+        }
 
-		return new EventData(dataMap);
+		return new EventData(dataMap, firstEvent);
     }
 
 	public Optional<Tracker> createTracker() {

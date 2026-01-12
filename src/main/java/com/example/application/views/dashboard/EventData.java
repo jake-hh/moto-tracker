@@ -1,8 +1,6 @@
 package com.example.application.views.dashboard;
 
-import com.example.application.data.BasicInterval;
-import com.example.application.data.Pair;
-import com.example.application.data.Tracker;
+import com.example.application.data.*;
 import com.vaadin.flow.data.renderer.TextRenderer;
 
 import java.time.LocalDate;
@@ -11,7 +9,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 
-public record EventData(Map<Long, Pair<LocalDate, Integer>> dataMap) {
+public record EventData(Map<Long, Pair<LocalDate, Integer>> dataMap, Optional<Event> firstEvent) {
 
 	private Optional<Pair<LocalDate, Integer>> getPair(Tracker tracker) {
 		return Optional.ofNullable(dataMap.get(tracker.getId()));
@@ -26,20 +24,20 @@ public record EventData(Map<Long, Pair<LocalDate, Integer>> dataMap) {
 	}
 
 	public Optional<LocalDate> getNextDate(Tracker tracker) {
-		return Optional.ofNullable(tracker.getInterval())
-				.map(BasicInterval::toPeriod)
-				.flatMap(interval ->
-						getLastDate(tracker) //.orElse(MainService.getDateToday())
-								.map(lastDate -> lastDate.plus(interval))
-				);
+		return getLastDate(tracker)
+				.or(() -> firstEvent.map(Event::getDate))
+				.flatMap(date ->
+						Optional.ofNullable(tracker.getInterval())
+								.map(BasicInterval::toPeriod)
+								.map(date::plus));
 	}
 
 	public Optional<Integer> getNextMileage(Tracker tracker) {
-		return Optional.ofNullable(tracker.getRange())
-				.flatMap(range ->
-						getLastMileage(tracker) //.orElse(0)
-								.map(lastMileage -> lastMileage + range)
-				);
+		return getLastMileage(tracker)
+				.or(() -> firstEvent.map(Event::getMileage))
+				.flatMap(mileage ->
+						Optional.ofNullable(tracker.getRange())
+								.map(range -> mileage + range));
 	}
 
 	public <T> TextRenderer<Tracker> render(Function<Tracker, Optional<T>> convert) {
