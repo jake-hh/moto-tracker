@@ -6,6 +6,7 @@ import com.example.application.events.VehicleChangedEvent;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
+import com.example.application.views.dashboard.DashboardView;
 import com.example.application.views.oplist.OplistView;
 import com.example.application.views.service.ServiceView;
 import com.example.application.views.tracker.TrackerView;

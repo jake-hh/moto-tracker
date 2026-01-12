@@ -3,7 +3,7 @@ package com.example.application.services;
 import com.example.application.Notify;
 import com.example.application.data.*;
 import com.example.application.security.SecurityService;
-import com.example.application.views.EventData;
+import com.example.application.views.dashboard.EventData;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.ObjectProvider;

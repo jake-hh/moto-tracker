@@ -1,4 +1,4 @@
-package com.example.application.views;
+package com.example.application.views.dashboard;
 
 import com.example.application.data.DashboardMode;
 import com.example.application.data.Tracker;
@@ -6,6 +6,7 @@ import com.example.application.data.Vehicle;
 import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
+import com.example.application.views.MainLayout;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;

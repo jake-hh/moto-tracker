@@ -1,4 +1,4 @@
-package com.example.application.views;
+package com.example.application.views.dashboard;
 
 import com.example.application.data.Pair;
 import com.example.application.data.Tracker;

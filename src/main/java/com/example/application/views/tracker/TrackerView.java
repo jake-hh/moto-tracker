@@ -4,7 +4,7 @@ import com.example.application.data.Tracker;
 import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
-import com.example.application.views.EventData;
+import com.example.application.views.dashboard.EventData;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
