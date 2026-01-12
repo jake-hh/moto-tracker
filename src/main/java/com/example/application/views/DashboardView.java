@@ -2,7 +2,6 @@ package com.example.application.views;
 
 import com.example.application.data.DashboardMode;
 import com.example.application.data.Tracker;
-import com.example.application.data.Pair;
 import com.example.application.data.Vehicle;
 import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
@@ -23,10 +22,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 
 @SpringComponent
@@ -116,31 +112,14 @@ public class DashboardView extends VerticalLayout {
 
 	private void updateList() {
 		List<Tracker> trackers = mainService.findTrackers();
-
-		Map<Long, Pair<LocalDate, Integer>> lastEventDataMap = mainService.findLastEventDataForTrackers(trackers);
+		EventData data = mainService.findLastEventDataForTrackers(trackers);
 
 		grid.setItems(trackers);
 
-		// Replace column renderer dynamically
-		grid.getColumnByKey("lastDate").setRenderer(new TextRenderer<>(t -> {
+		grid.getColumnByKey("lastDate")
+				.setRenderer(new TextRenderer<>(data::getLastDateString));
 
-			Pair<LocalDate, Integer> pair = lastEventDataMap.get(t.getId());
-			// System.out.println("is null: " + (pair == null));
-
-			return Optional.ofNullable(pair)
-					.map(x -> x.first().toString())
-					.orElse("-");
-		}));
-
-		// Replace column renderer dynamically
-		grid.getColumnByKey("lastMileage").setRenderer(new TextRenderer<>(t -> {
-
-			Pair<LocalDate, Integer> pair = lastEventDataMap.get(t.getId());
-			// System.out.println("is null: " + (pair == null));
-
-			return Optional.ofNullable(pair)
-					.map(x -> x.second().toString())
-					.orElse("-");
-		}));
+		grid.getColumnByKey("lastMileage")
+				.setRenderer(new TextRenderer<>(data::getLastMileageString));
 	}
 }

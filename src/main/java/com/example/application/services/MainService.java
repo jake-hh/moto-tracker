@@ -3,6 +3,7 @@ package com.example.application.services;
 import com.example.application.Notify;
 import com.example.application.data.*;
 import com.example.application.security.SecurityService;
+import com.example.application.views.EventData;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.ObjectProvider;
@@ -223,20 +224,22 @@ public class MainService {
 		return operationRepository.existsByTracker(tracker);
 	}
 
-	public Map<Long, Pair<LocalDate, Integer>> findLastEventDataForTrackers(@NotNull List<Tracker> trackers) {
-        if (trackers.isEmpty()) {
-			return Collections.emptyMap();
-		}
+	public EventData findLastEventDataForTrackers(@NotNull List<Tracker> trackers) {
+		Map<Long, Pair<LocalDate, Integer>> dataMap;
 
-        List<Object[]> results = operationRepository.findLatestEventDatesAndMileagesForTrackers(trackers);
+        if (trackers.isEmpty())
+			dataMap = Collections.emptyMap();
+		else
+			dataMap = operationRepository.findLatestEventDatesAndMileagesForTrackers(trackers)
+					.stream()
+					.collect(
+						Collectors.toMap(
+								// [0]=tracker.id, [1]=date, [2]=mileage
+								row -> (Long) row[0],
+								row -> new Pair<>((LocalDate) row[1], (Integer) row[2])
+						));
 
-		return results
-			.stream()
-			.collect(
-				Collectors.toMap(
-					row -> (Long) row[0],
-					row -> new Pair<>((LocalDate) row[1], (Integer) row[2])  // [0]=tracker.id, [1]=date, [2]=mileage
-		));
+		return new EventData(dataMap);
     }
 
 	public Optional<Tracker> createTracker() {

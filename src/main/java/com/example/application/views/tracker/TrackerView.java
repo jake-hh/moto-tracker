@@ -1,10 +1,10 @@
 package com.example.application.views.tracker;
 
 import com.example.application.data.Tracker;
-import com.example.application.data.Pair;
 import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;
+import com.example.application.views.EventData;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -21,10 +21,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 
 @SpringComponent
@@ -143,32 +140,15 @@ public class TrackerView extends VerticalLayout {
 	}
 
 	private void updateList() {
-		List<Tracker> trackers = service.findTrackers(filterText.getValue());
-
-		Map<Long, Pair<LocalDate, Integer>> lastEventDataMap = service.findLastEventDataForTrackers(trackers);
+		List<Tracker> trackers = service.findTrackers();
+		EventData data = service.findLastEventDataForTrackers(trackers);
 
 		grid.setItems(trackers);
 
-		// Replace column renderer dynamically
-		grid.getColumnByKey("lastDate").setRenderer(new TextRenderer<>(t -> {
+		grid.getColumnByKey("lastDate")
+				.setRenderer(new TextRenderer<>(data::getLastDateString));
 
-			Pair<LocalDate, Integer> pair = lastEventDataMap.get(t.getId());
-			// System.out.println("is null: " + (pair == null));
-
-			return Optional.ofNullable(pair)
-				.map(x -> x.first().toString())
-				.orElse("-");
-		}));
-
-		// Replace column renderer dynamically
-		grid.getColumnByKey("lastMileage").setRenderer(new TextRenderer<>(t -> {
-
-			Pair<LocalDate, Integer> pair = lastEventDataMap.get(t.getId());
-			// System.out.println("is null: " + (pair == null));
-
-			return Optional.ofNullable(pair)
-				.map(x -> x.second().toString())
-				.orElse("-");
-		}));
+		grid.getColumnByKey("lastMileage")
+				.setRenderer(new TextRenderer<>(data::getLastMileageString));
 	}
 }
