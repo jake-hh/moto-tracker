@@ -136,11 +136,11 @@ public class DashboardView extends VerticalLayout {
 		}
 		else if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.NEXT_SERVICE_RELATIVE)) {
 			grid.getColumnByKey("date")
-					.setHeader("Next")
+					.setHeader("Time left")
 					.setRenderer(data.render(data::getNextDateRelative));
 
 			grid.getColumnByKey("mileage")
-					.setHeader("Distance")
+					.setHeader("Distance left")
 					.setRenderer(data.render(data::getNextMileageRelative));
 		}
 	}
