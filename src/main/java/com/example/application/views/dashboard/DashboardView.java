@@ -76,7 +76,7 @@ public class DashboardView extends VerticalLayout {
 
 	private HorizontalLayout getToolbar() {
 		modeSelect.setLabel("Dashboard mode");
-		modeSelect.setItems(DashboardMode.LAST_SERVICE, DashboardMode.NEXT_SERVICE);
+		modeSelect.setItems(DashboardMode.values());
 		modeSelect.setItemLabelGenerator(DashboardMode::getName);
 		modeSelect.addValueChangeListener(this::onModeSelectChange);
 
@@ -125,7 +125,7 @@ public class DashboardView extends VerticalLayout {
 					.setHeader("Last mileage")
 					.setRenderer(data.render(data::getLastMileage));
 		}
-		else {
+		else if (settingsService.getDashboardMode().equals(DashboardMode.NEXT_SERVICE)) {
 			grid.getColumnByKey("date")
 					.setHeader("Next date")
 					.setRenderer(data.render(data::getNextDate));
@@ -133,6 +133,15 @@ public class DashboardView extends VerticalLayout {
 			grid.getColumnByKey("mileage")
 					.setHeader("Next mileage")
 					.setRenderer(data.render(data::getNextMileage));
+		}
+		else if (settingsService.getDashboardMode().equals(DashboardMode.NEXT_SERVICE_RELATIVE)) {
+			grid.getColumnByKey("date")
+					.setHeader("Next")
+					.setRenderer(data.render(data::getNextDateRelative));
+
+			grid.getColumnByKey("mileage")
+					.setHeader("Distance")
+					.setRenderer(data.render(data::getNextMileageRelative));
 		}
 	}
 }

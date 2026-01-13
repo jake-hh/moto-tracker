@@ -241,10 +241,12 @@ public class MainService {
 
 	public EventData findLastEventDataForTrackers(@NotNull List<Tracker> trackers) {
 		Map<Long, Pair<LocalDate, Integer>> dataMap;
+		Vehicle vehicle;
 		Optional<Event> firstEvent;
 
         if (trackers.isEmpty()) {
 			dataMap = Collections.emptyMap();
+			vehicle = null;
 			firstEvent = Optional.empty();
         }
 		else {
@@ -256,10 +258,11 @@ public class MainService {
 								row -> (Long) row[0],
 								row -> new Pair<>((LocalDate) row[1], (Integer) row[2])
 						));
-			firstEvent = eventRepository.findFirstByVehicleAndDateIsNotNullOrderByDateAsc(trackers.getFirst().getVehicle());
+			vehicle = trackers.getFirst().getVehicle();
+			firstEvent = eventRepository.findFirstByVehicleAndDateIsNotNullOrderByDateAsc(vehicle);
         }
 
-		return new EventData(dataMap, firstEvent);
+		return new EventData(dataMap, vehicle, firstEvent);
     }
 
 	public Optional<Tracker> createTracker() {

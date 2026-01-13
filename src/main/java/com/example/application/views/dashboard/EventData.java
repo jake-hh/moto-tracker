@@ -1,15 +1,17 @@
 package com.example.application.views.dashboard;
 
 import com.example.application.data.*;
+import com.example.application.services.MainService;
 import com.vaadin.flow.data.renderer.TextRenderer;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
 
-public record EventData(Map<Long, Pair<LocalDate, Integer>> dataMap, Optional<Event> firstEvent) {
+public record EventData(Map<Long, Pair<LocalDate, Integer>> dataMap, Vehicle vehicle, Optional<Event> firstEvent) {
 
 	private Optional<Pair<LocalDate, Integer>> getPair(Tracker tracker) {
 		return Optional.ofNullable(dataMap.get(tracker.getId()));
@@ -38,6 +40,14 @@ public record EventData(Map<Long, Pair<LocalDate, Integer>> dataMap, Optional<Ev
 				.flatMap(mileage ->
 						Optional.ofNullable(tracker.getRange())
 								.map(range -> mileage + range));
+	}
+
+	public Optional<Period> getNextDateRelative(Tracker tracker) {
+		return getNextDate(tracker).map(nextDate -> Period.between(MainService.getDateToday(), nextDate));
+	}
+
+	public Optional<Integer> getNextMileageRelative(Tracker tracker) {
+		return getNextMileage(tracker).map(nextMileage -> nextMileage - vehicle.getMileage());
 	}
 
 	public <T> TextRenderer<Tracker> render(Function<Tracker, Optional<T>> convert) {
