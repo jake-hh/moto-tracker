@@ -77,7 +77,7 @@ public class DashboardView extends VerticalLayout {
 	private HorizontalLayout getToolbar() {
 		formatSelect.setLabel("Service format");
 		formatSelect.setItems(DashboardEventFormat.values());
-		formatSelect.setItemLabelGenerator(DashboardEventFormat::getName);
+		formatSelect.setItemLabelGenerator(DashboardEventFormat::getLabel);
 		formatSelect.addValueChangeListener(this::onFormatSelectChange);
 
 		var toolbar = new HorizontalLayout(formatSelect);

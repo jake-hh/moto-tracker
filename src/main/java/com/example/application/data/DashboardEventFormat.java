@@ -6,13 +6,13 @@ public enum DashboardEventFormat {
 	NEXT_SERVICE("Next service"),
 	NEXT_SERVICE_RELATIVE("Next service (relative)");
 
-	private final String name;
+	private final String label;
 
-	DashboardEventFormat(String displayName) {
-		this.name = displayName;
+	DashboardEventFormat(String label) {
+		this.label = label;
 	}
 
-	public String getName() {
-		return name;
+	public String getLabel() {
+		return label;
 	}
 }
