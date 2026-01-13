@@ -10,6 +10,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -28,6 +29,7 @@ public class VehicleForm extends FormLayout {
 	private final TextField colour = new TextField("Colour");
 	private final TextField plate = new TextField("Plate");
 	private final TextField vin = new TextField("VIN number");
+	private final IntegerField mileage = new IntegerField("Mileage");
 
 	private final DatePicker productionDate = new DatePicker("Production date");
 	private final DatePicker registrationDate = new DatePicker("Registration date");
@@ -52,6 +54,18 @@ public class VehicleForm extends FormLayout {
 		colour.setValueChangeMode(ValueChangeMode.EAGER);
 		plate.setValueChangeMode(ValueChangeMode.EAGER);
 		vin.setValueChangeMode(ValueChangeMode.EAGER);
+		mileage.setValueChangeMode(ValueChangeMode.EAGER);
+
+		mileage.setStepButtonsVisible(true);
+		mileage.setStep(100);
+		mileage.setSuffixComponent(new Span("km"));
+		//mileageField.setHelperText("km");
+
+		mileage.setI18n(new IntegerField.IntegerFieldI18n()
+				.setBadInputErrorMessage("Invalid number format")
+				.setStepErrorMessage("Number must be a multiple of 100"));
+
+		mileage.addValueChangeListener(e -> binder.validate());
 
 		trackingDate.addValueChangeListener(e -> binder.validate());
 
@@ -72,6 +86,7 @@ public class VehicleForm extends FormLayout {
 			colour,
 			plate,
 			vin,
+			mileage,
 			productionDate,
 			registrationDate,
 			trackingDate,
@@ -138,7 +153,6 @@ public class VehicleForm extends FormLayout {
 		DeleteEvent(VehicleForm source, Vehicle vehicle) {
 			super(source, vehicle);
 		}
-
 	}
 
 	public static class CloseEvent extends VehicleFormEvent {

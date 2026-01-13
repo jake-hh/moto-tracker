@@ -36,6 +36,8 @@ public class Vehicle extends AbstractEntity {
 
     private String vin;
 
+	private Integer mileage;
+
     private LocalDate productionDate;
 
 	private LocalDate registrationDate;
@@ -53,7 +55,7 @@ public class Vehicle extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "Vehicle of " + owner + " [ " + type + " " + make + " " + model + " " + engine + " " + colour + " " + plate + " " + trackingDate + " ]";
+		return "Vehicle of " + owner + " [ " + type + " " + make + " " + model + " " + engine + " " + colour + " " + plate + " " + mileage + " " + trackingDate + " ]";
 	}
 
 	public String toStringShort() {
@@ -90,6 +92,10 @@ public class Vehicle extends AbstractEntity {
 
 	public String getVin() {
 		return vin;
+	}
+
+	public Integer getMileage() {
+		return mileage;
 	}
 
 	public LocalDate getProductionDate() {
@@ -134,6 +140,10 @@ public class Vehicle extends AbstractEntity {
 
 	public void setVin(String vin) {
 		this.vin = vin;
+	}
+
+	public void setMileage(Integer mileage) {
+		this.mileage = mileage;
 	}
 
 	public void setProductionDate(LocalDate productionDate) {

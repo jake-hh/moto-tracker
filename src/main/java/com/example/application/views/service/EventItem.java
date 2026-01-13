@@ -106,6 +106,7 @@ public class EventItem extends HorizontalLayout {
 	}
 
 	private IntegerField createMileageField() {
+		// TODO: create MileageField component
 		var mileageField = new IntegerField("Mileage");
 		controller.getMileage().ifPresent(mileageField::setValue);
 
@@ -129,6 +130,7 @@ public class EventItem extends HorizontalLayout {
 	}
 
 	private DatePicker createDateField() {
+		// TODO: create DateField component
 		var dateField = new DatePicker("Date");
 		controller.getDate().ifPresent(dateField::setValue);
 
@@ -145,6 +147,7 @@ public class EventItem extends HorizontalLayout {
 				.setBadInputErrorMessage("Invalid date format")
 				.setMaxErrorMessage("Future dates aren’t allowed"));
 
+		// FIXME: binder.validate() instead of this crap (?)
 		dateField.addValueChangeListener(dateEv -> {
 			LocalDate date = dateEv.getValue();
 

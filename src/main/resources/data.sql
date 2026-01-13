@@ -3,11 +3,11 @@ INSERT INTO "APP_USER" (ID, VERSION, USERNAME, PASSWORD_HASH) VALUES
 (102, 1, 'user', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW'),
 (103, 1, 'guest', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW');
 
-INSERT INTO "VEHICLE" (ID, VERSION, OWNER_ID, TYPE, MAKE, MODEL, ENGINE, COLOUR, TRACKING_DATE) VALUES
-(301, 1, 102, 'Car',       'Opel',   'Astra', '1.6 CDTI', 'Brown',  DATE '2026-01-01'),
-(302, 1, 102, 'Car',       'Skoda',  'Fabia', '1.4 TDI',  'Red',    DATE '2026-01-01'),
-(303, 1, 102, 'Motorbike', 'Yamaha', 'R125',  '125cc',    'Black',  DATE '2023-06-21'),
-(304, 1, 102, 'Moped',     'Romet',  'ZXT50', '50cc',     'Yellow', DATE '2023-01-01');
+INSERT INTO "VEHICLE" (ID, VERSION, OWNER_ID, TYPE, MAKE, MODEL, ENGINE, COLOUR, MILEAGE, TRACKING_DATE) VALUES
+(301, 1, 102, 'Car',       'Opel',   'Astra', '1.6 CDTI', 'Brown', 100_000, DATE '2026-01-01'),
+(302, 1, 102, 'Car',       'Skoda',  'Fabia', '1.4 TDI',  'Red',   600_000, DATE '2026-01-01'),
+(303, 1, 102, 'Motorbike', 'Yamaha', 'R125',  '125cc',    'Black',  53_000, DATE '2023-06-21'),
+(304, 1, 102, 'Moped',     'Romet',  'ZXT50', '50cc',     'Yellow', 15_000, DATE '2023-01-01');
 
 INSERT INTO "APP_USER_SETTINGS" (ID, VERSION, USER_ID, SELECTED_VEHICLE_ID) VALUES
 (201, 1, 102, 303);
