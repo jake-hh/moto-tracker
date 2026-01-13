@@ -34,9 +34,9 @@ public class UserSettingsService {
 		return Optional.ofNullable(settings.getSelectedVehicle());
 	}
 
-	public DashboardMode getDashboardMode() {
-		return Optional.ofNullable(settings.getDashboardMode())
-				.orElse(DashboardMode.LAST_SERVICE);
+	public DashboardEventFormat getDashboardEventFormat() {
+		return Optional.ofNullable(settings.getDashboardEventFormat())
+				.orElse(DashboardEventFormat.LAST_SERVICE);
 	}
 
 	public void setSelectedVehicleIfEmpty(@NotNull Vehicle vehicle) {
@@ -59,8 +59,8 @@ public class UserSettingsService {
 		save(settings);
 	}
 
-	public void updateDashboardMode(DashboardMode dashboardMode) {
-		settings.setDashboardMode(dashboardMode);
+	public void updateDashboardEventFormat(DashboardEventFormat format) {
+		settings.setDashboardEventFormat(format);
 		save(settings);
 	}
 

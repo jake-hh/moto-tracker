@@ -1,15 +1,14 @@
 package com.example.application.data;
 
 
-public enum DashboardMode {
-
+public enum DashboardEventFormat {
 	LAST_SERVICE("Last service"),
 	NEXT_SERVICE("Next service"),
 	NEXT_SERVICE_RELATIVE("Next service (relative)");
 
 	private final String name;
 
-	DashboardMode(String displayName) {
+	DashboardEventFormat(String displayName) {
 		this.name = displayName;
 	}
 

@@ -1,6 +1,6 @@
 package com.example.application.views.dashboard;
 
-import com.example.application.data.DashboardMode;
+import com.example.application.data.DashboardEventFormat;
 import com.example.application.data.Tracker;
 import com.example.application.data.Vehicle;
 import com.example.application.events.VehicleSelectedEvent;
@@ -34,7 +34,7 @@ public class DashboardView extends VerticalLayout {
 
 	private final Grid<Tracker> grid = new Grid<>(Tracker.class, false);
 	private final VerticalLayout header = new VerticalLayout();
-	private final RadioButtonGroup<DashboardMode> modeSelect = new RadioButtonGroup<>();
+	private final RadioButtonGroup<DashboardEventFormat> formatSelect = new RadioButtonGroup<>();
 
 	private final MainService mainService;
 	private final UserSettingsService settingsService;
@@ -75,26 +75,26 @@ public class DashboardView extends VerticalLayout {
 	}
 
 	private HorizontalLayout getToolbar() {
-		modeSelect.setLabel("Dashboard mode");
-		modeSelect.setItems(DashboardMode.values());
-		modeSelect.setItemLabelGenerator(DashboardMode::getName);
-		modeSelect.addValueChangeListener(this::onModeSelectChange);
+		formatSelect.setLabel("Service format");
+		formatSelect.setItems(DashboardEventFormat.values());
+		formatSelect.setItemLabelGenerator(DashboardEventFormat::getName);
+		formatSelect.addValueChangeListener(this::onFormatSelectChange);
 
-		var toolbar = new HorizontalLayout(modeSelect);
+		var toolbar = new HorizontalLayout(formatSelect);
 		toolbar.addClassName("dashboard-toolbar");
 		return toolbar;
 	}
 
-	private void onModeSelectChange(ValueChangeEvent<DashboardMode> change) {
+	private void onFormatSelectChange(ValueChangeEvent<DashboardEventFormat> change) {
 		if (!change.isFromClient()) return;
 
-		settingsService.updateDashboardMode(change.getValue());
+		settingsService.updateDashboardEventFormat(change.getValue());
 		updateHeader();
 		updateList();
 	}
 
 	private void update() {
-		modeSelect.setValue(settingsService.getDashboardMode());
+		formatSelect.setValue(settingsService.getDashboardEventFormat());
 		updateHeader();
 		updateList();
 	}
@@ -116,7 +116,7 @@ public class DashboardView extends VerticalLayout {
 
 		grid.setItems(trackers);
 
-		if (settingsService.getDashboardMode().equals(DashboardMode.LAST_SERVICE)) {
+		if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.LAST_SERVICE)) {
 			grid.getColumnByKey("date")
 					.setHeader("Last date")
 					.setRenderer(data.render(data::getLastDate));
@@ -125,7 +125,7 @@ public class DashboardView extends VerticalLayout {
 					.setHeader("Last mileage")
 					.setRenderer(data.render(data::getLastMileage));
 		}
-		else if (settingsService.getDashboardMode().equals(DashboardMode.NEXT_SERVICE)) {
+		else if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.NEXT_SERVICE)) {
 			grid.getColumnByKey("date")
 					.setHeader("Next date")
 					.setRenderer(data.render(data::getNextDate));
@@ -134,7 +134,7 @@ public class DashboardView extends VerticalLayout {
 					.setHeader("Next mileage")
 					.setRenderer(data.render(data::getNextMileage));
 		}
-		else if (settingsService.getDashboardMode().equals(DashboardMode.NEXT_SERVICE_RELATIVE)) {
+		else if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.NEXT_SERVICE_RELATIVE)) {
 			grid.getColumnByKey("date")
 					.setHeader("Next")
 					.setRenderer(data.render(data::getNextDateRelative));

@@ -15,7 +15,8 @@ public class AppUserSettings extends AbstractEntity {
 	private Vehicle selectedVehicle;
 
 	@Enumerated(EnumType.STRING)
-	private DashboardMode dashboardMode;
+	private DashboardEventFormat dashboardEventFormat;
+
 
 	public AppUserSettings() { }
 
@@ -31,8 +32,8 @@ public class AppUserSettings extends AbstractEntity {
 		return selectedVehicle;
 	}
 
-	public DashboardMode getDashboardMode() {
-		return dashboardMode;
+	public DashboardEventFormat getDashboardEventFormat() {
+		return dashboardEventFormat;
 	}
 
 	public void setUser(AppUser user) {
@@ -43,7 +44,7 @@ public class AppUserSettings extends AbstractEntity {
 		this.selectedVehicle = selectedVehicle;
 	}
 
-	public void setDashboardMode(DashboardMode dashboardMode) {
-		this.dashboardMode = dashboardMode;
+	public void setDashboardEventFormat(DashboardEventFormat format) {
+		this.dashboardEventFormat = format;
 	}
 }
