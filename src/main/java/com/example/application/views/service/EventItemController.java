@@ -5,6 +5,8 @@ import com.example.application.data.Operation;
 import com.example.application.data.Tracker;
 import com.example.application.services.MainService;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -54,9 +56,12 @@ public class EventItemController {
 		return Optional.ofNullable(event.getDate());
 	}
 
+	@Transactional
 	public void updateMileage(Integer mileage) {
 		Event event = service.findUpdatedEvent(this.event);
 		event.setMileage(mileage);
+
+		service.bumpVehicleMileage(event);
 		service.saveEvent(event);
 		this.event = event;
 	}

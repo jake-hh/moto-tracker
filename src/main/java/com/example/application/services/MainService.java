@@ -74,6 +74,21 @@ public class MainService {
 		return new Vehicle(securityService.getCurrentUser(), getDateToday());
 	}
 
+	public void bumpVehicleMileage(Event event) {
+		Vehicle vehicle = event.getVehicle();
+
+		if (vehicle.getMileage() == null || vehicle.getMileage() < event.getMileage()) {
+			vehicle.setMileage(event.getMileage());
+			try {
+				vehicleRepository.save(vehicle);
+				Notify.ok("Updated vehicle mileage");
+			} catch (Exception e) {
+				Notify.error("Failed to update vehicle mileage: " + e.getMessage());
+				throw new RuntimeException("Could not update vehicle mileage", e);
+			}
+		}
+	}
+
 	public void deleteVehicle(@NotNull Vehicle vehicle) {
 		try {
 			getSettingsService().unselectDeletedVehicle(vehicle, this);
