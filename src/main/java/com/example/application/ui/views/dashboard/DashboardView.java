@@ -9,6 +9,7 @@ import com.example.application.services.UserSettingsService;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.format.HumanDistanceFormatter;
 import com.example.application.ui.format.HumanTimeFormatter;
+import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.grid.Grid;
@@ -122,29 +123,29 @@ public class DashboardView extends VerticalLayout {
 		if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.LAST_SERVICE)) {
 			grid.getColumnByKey("date")
 					.setHeader("Last date")
-					.setRenderer(data.render(data::getDateStatus, data::getLastDate));
+					.setRenderer(TrackerDataRenderer.render(data::getDateStatus, data::getLastDate));
 
 			grid.getColumnByKey("mileage")
 					.setHeader("Last mileage")
-					.setRenderer(data.render(data::getMileageStatus, data::getLastMileage));
+					.setRenderer(TrackerDataRenderer.render(data::getMileageStatus, data::getLastMileage));
 		}
 		else if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.NEXT_SERVICE)) {
 			grid.getColumnByKey("date")
 					.setHeader("Next date")
-					.setRenderer(data.render(data::getDateStatus, data::getNextDate));
+					.setRenderer(TrackerDataRenderer.render(data::getDateStatus, data::getNextDate));
 
 			grid.getColumnByKey("mileage")
 					.setHeader("Next mileage")
-					.setRenderer(data.render(data::getMileageStatus, data::getNextMileage));
+					.setRenderer(TrackerDataRenderer.render(data::getMileageStatus, data::getNextMileage));
 		}
 		else if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.NEXT_SERVICE_RELATIVE)) {
 			grid.getColumnByKey("date")
 					.setHeader("Time left")
-					.setRenderer(data.render(data::getDateStatus, data::getNextDateRelativeDays, HumanTimeFormatter::formatRounded));
+					.setRenderer(TrackerDataRenderer.render(data::getDateStatus, data::getNextDateRelativeDays, HumanTimeFormatter::formatRounded));
 
 			grid.getColumnByKey("mileage")
 					.setHeader("Distance left")
-					.setRenderer(data.render(data::getMileageStatus, data::getNextMileageRelative, HumanDistanceFormatter::format));
+					.setRenderer(TrackerDataRenderer.render(data::getMileageStatus, data::getNextMileageRelative, HumanDistanceFormatter::format));
 		}
 	}
 }

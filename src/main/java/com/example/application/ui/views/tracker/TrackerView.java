@@ -4,6 +4,7 @@ import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
 import com.example.application.services.model.EventData;
 import com.example.application.ui.events.VehicleSelectedEvent;
+import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
@@ -145,9 +146,9 @@ public class TrackerView extends VerticalLayout {
 		grid.setItems(trackers);
 
 		grid.getColumnByKey("date")
-				.setRenderer(data.render(data::getDateStatus, data::getLastDate));
+				.setRenderer(TrackerDataRenderer.render(data::getDateStatus, data::getLastDate));
 
 		grid.getColumnByKey("mileage")
-				.setRenderer(data.render(data::getMileageStatus, data::getLastMileage));
+				.setRenderer(TrackerDataRenderer.render(data::getMileageStatus, data::getLastMileage));
 	}
 }
