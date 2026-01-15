@@ -5,7 +5,7 @@ import com.example.application.services.MainService;
 import com.vaadin.flow.data.renderer.TextRenderer;
 
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -42,12 +42,22 @@ public record EventData(Map<Long, Pair<LocalDate, Integer>> dataMap, Vehicle veh
 								.map(range -> mileage + range));
 	}
 
-	public Optional<Period> getNextDateRelative(Tracker tracker) {
-		return getNextDate(tracker).map(nextDate -> Period.between(MainService.getDateToday(), nextDate));
+	//public Optional<Period> getNextDateRelativePeriod(Tracker tracker) {
+	//	return getNextDate(tracker).map(nextDate -> Period.between(MainService.getDateToday(), nextDate));
+	//}
+
+	public Optional<Long> getNextDateRelativeDays(Tracker tracker) {
+		return getNextDate(tracker).map(nextDate -> MainService.getDateToday().until(nextDate, ChronoUnit.DAYS));
 	}
 
 	public Optional<Integer> getNextMileageRelative(Tracker tracker) {
 		return getNextMileage(tracker).map(nextMileage -> nextMileage - vehicle.getMileage());
+	}
+
+	public TextRenderer<Tracker> renderFromStr(Function<Tracker, Optional<String>> convert) {
+		return new TextRenderer<>(tracker ->
+				convert.apply(tracker).orElse("")
+		);
 	}
 
 	public <T> TextRenderer<Tracker> render(Function<Tracker, Optional<T>> convert) {
