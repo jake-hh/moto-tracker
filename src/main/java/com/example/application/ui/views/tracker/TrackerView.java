@@ -2,7 +2,7 @@ package com.example.application.ui.views.tracker;
 
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
-import com.example.application.services.model.EventData;
+import com.example.application.services.model.TrackerData;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
@@ -141,7 +141,7 @@ public class TrackerView extends VerticalLayout {
 
 	private void updateList() {
 		List<Tracker> trackers = service.findTrackers();
-		EventData data = service.findLastEventDataForTrackers(trackers);
+		TrackerData data = service.loadDataForTrackers(trackers);
 
 		grid.setItems(trackers);
 

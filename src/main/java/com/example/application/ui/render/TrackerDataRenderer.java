@@ -1,7 +1,7 @@
 package com.example.application.ui.render;
 
 import com.example.application.data.entity.Tracker;
-import com.example.application.services.model.EventData;
+import com.example.application.services.model.TrackerData;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -15,15 +15,15 @@ import java.util.function.Function;
 
 public class TrackerDataRenderer {
 
-	public static <T> ComponentRenderer<HorizontalLayout, Tracker> render(Function<Tracker, EventData.Status> statusLoader, Function<Tracker, Optional<T>> dataLoader) {
+	public static <T> ComponentRenderer<HorizontalLayout, Tracker> render(Function<Tracker, TrackerData.Status> statusLoader, Function<Tracker, Optional<T>> dataLoader) {
 		return render(statusLoader, dataLoader, String::valueOf);
 	}
 
-	public static <T> ComponentRenderer<HorizontalLayout, Tracker> render(Function<Tracker, EventData.Status> statusLoader, Function<Tracker, Optional<T>> dataLoader, Function<T, String> dataFormatter) {
+	public static <T> ComponentRenderer<HorizontalLayout, Tracker> render(Function<Tracker, TrackerData.Status> statusLoader, Function<Tracker, Optional<T>> dataLoader, Function<T, String> dataFormatter) {
 		return new ComponentRenderer<>(tracker -> {
 
 			Optional<String> str = dataLoader.apply(tracker).map(dataFormatter);
-			EventData.Status status = statusLoader.apply(tracker);
+			TrackerData.Status status = statusLoader.apply(tracker);
 
 			String color;
 			Icon icon;

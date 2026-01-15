@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 
-public record EventData(Map<Long, Pair<LocalDate, Integer>> dataMap, Vehicle vehicle, Optional<Event> firstEvent) {
+public record TrackerData(Map<Long, Pair<LocalDate, Integer>> dataMap, Vehicle vehicle, Optional<Event> firstEvent) {
 
 	public enum Status {
 		OK,

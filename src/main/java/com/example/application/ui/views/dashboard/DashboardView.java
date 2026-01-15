@@ -3,7 +3,7 @@ package com.example.application.ui.views.dashboard;
 import com.example.application.data.DashboardEventFormat;
 import com.example.application.data.entity.Tracker;
 import com.example.application.data.entity.Vehicle;
-import com.example.application.services.model.EventData;
+import com.example.application.services.model.TrackerData;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
 import com.example.application.ui.events.VehicleSelectedEvent;
@@ -116,7 +116,7 @@ public class DashboardView extends VerticalLayout {
 
 	private void updateList() {
 		List<Tracker> trackers = mainService.findTrackers();
-		EventData data = mainService.findLastEventDataForTrackers(trackers);
+		TrackerData data = mainService.loadDataForTrackers(trackers);
 
 		grid.setItems(trackers);
 

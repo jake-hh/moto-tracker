@@ -4,7 +4,7 @@ import com.example.application.data.Pair;
 import com.example.application.data.entity.*;
 import com.example.application.data.repo.*;
 import com.example.application.security.SecurityService;
-import com.example.application.services.model.EventData;
+import com.example.application.services.model.TrackerData;
 import com.example.application.ui.Notify;
 
 import jakarta.validation.constraints.NotNull;
@@ -241,7 +241,7 @@ public class MainService {
 		return operationRepository.existsByTracker(tracker);
 	}
 
-	public EventData findLastEventDataForTrackers(@NotNull List<Tracker> trackers) {
+	public TrackerData loadDataForTrackers(@NotNull List<Tracker> trackers) {
 		Map<Long, Pair<LocalDate, Integer>> dataMap;
 		Vehicle vehicle;
 		Optional<Event> firstEvent;
@@ -264,7 +264,7 @@ public class MainService {
 			firstEvent = eventRepository.findFirstByVehicleAndDateIsNotNullOrderByDateAsc(vehicle);
         }
 
-		return new EventData(dataMap, vehicle, firstEvent);
+		return new TrackerData(dataMap, vehicle, firstEvent);
     }
 
 	public Optional<Tracker> createTracker() {
