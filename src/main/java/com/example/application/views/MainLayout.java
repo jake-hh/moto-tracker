@@ -1,6 +1,6 @@
 package com.example.application.views;
 
-import com.example.application.data.Vehicle;
+import com.example.application.data.entity.Vehicle;
 import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.events.VehicleChangedEvent;
 import com.example.application.security.SecurityService;

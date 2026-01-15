@@ -1,6 +1,6 @@
 package com.example.application.security;
 
-import com.example.application.data.AppUserRepository;
+import com.example.application.data.repo.AppUserRepository;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

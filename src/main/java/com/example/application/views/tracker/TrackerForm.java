@@ -1,6 +1,6 @@
 package com.example.application.views.tracker;
 
-import com.example.application.data.Tracker;
+import com.example.application.data.entity.Tracker;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;

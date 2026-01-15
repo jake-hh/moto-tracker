@@ -1,7 +1,7 @@
 package com.example.application.views.service;
 
-import com.example.application.data.Event;
-import com.example.application.data.Tracker;
+import com.example.application.data.entity.Event;
+import com.example.application.data.entity.Tracker;
 import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
 import com.example.application.views.MainLayout;

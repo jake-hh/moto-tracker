@@ -1,4 +1,7 @@
-package com.example.application.data;
+package com.example.application.data.repo;
+
+import com.example.application.data.entity.Tracker;
+import com.example.application.data.entity.Vehicle;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

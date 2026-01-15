@@ -1,8 +1,6 @@
 package com.example.application.views.oplist;
 
-import com.example.application.data.Tracker;
-import com.example.application.data.Operation;
-import com.example.application.data.Event;
+import com.example.application.data.entity.*;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;

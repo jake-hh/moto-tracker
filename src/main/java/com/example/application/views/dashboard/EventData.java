@@ -1,6 +1,8 @@
 package com.example.application.views.dashboard;
 
-import com.example.application.data.*;
+import com.example.application.data.Pair;
+import com.example.application.data.BasicInterval;
+import com.example.application.data.entity.*;
 import com.example.application.services.MainService;
 
 import com.vaadin.flow.component.html.Span;

@@ -1,8 +1,9 @@
-package com.example.application.data;
+package com.example.application.data.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
+
 
 @SuppressWarnings("unused")
 @Entity

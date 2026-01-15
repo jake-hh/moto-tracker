@@ -1,8 +1,6 @@
 package com.example.application.views.service;
 
-import com.example.application.data.Event;
-import com.example.application.data.Operation;
-import com.example.application.data.Tracker;
+import com.example.application.data.entity.*;
 import com.example.application.services.MainService;
 
 import org.springframework.transaction.annotation.Transactional;

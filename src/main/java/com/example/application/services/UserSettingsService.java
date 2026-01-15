@@ -1,7 +1,9 @@
 package com.example.application.services;
 
 import com.example.application.Notify;
-import com.example.application.data.*;
+import com.example.application.data.DashboardEventFormat;
+import com.example.application.data.entity.*;
+import com.example.application.data.repo.AppUserSettingsRepository;
 import com.example.application.security.SecurityService;
 
 import com.vaadin.flow.spring.annotation.UIScope;

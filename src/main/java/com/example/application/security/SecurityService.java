@@ -1,8 +1,8 @@
 package com.example.application.security;
 
 import com.example.application.Notify;
-import com.example.application.data.AppUser;
-import com.example.application.data.AppUserRepository;
+import com.example.application.data.entity.AppUser;
+import com.example.application.data.repo.AppUserRepository;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import jakarta.validation.constraints.NotNull;

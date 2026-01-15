@@ -1,6 +1,6 @@
 package com.example.application.views.service;
 
-import com.example.application.data.Operation;
+import com.example.application.data.entity.Operation;
 
 import jakarta.annotation.Nullable;
 import java.util.ArrayList;
