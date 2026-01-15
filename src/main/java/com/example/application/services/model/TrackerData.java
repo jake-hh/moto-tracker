@@ -13,13 +13,6 @@ import java.util.Optional;
 
 public record TrackerData(Map<Long, Pair<LocalDate, Integer>> dataMap, Vehicle vehicle, Optional<Event> firstEvent) {
 
-	public enum Status {
-		OK,
-		APPROACHING,
-		OVERDUE,
-		UNKNOWN
-	}
-
 	private Optional<Pair<LocalDate, Integer>> getPair(Tracker tracker) {
 		return Optional.ofNullable(dataMap.get(tracker.getId()));
 	}
@@ -49,41 +42,11 @@ public record TrackerData(Map<Long, Pair<LocalDate, Integer>> dataMap, Vehicle v
 								.map(range -> mileage + range));
 	}
 
-	//public Optional<Period> getNextDateRelativePeriod(Tracker tracker) {
-	//	return getNextDate(tracker).map(nextDate -> Period.between(MainService.getDateToday(), nextDate));
-	//}
-
-	public Optional<Long> getNextDateRelativeDays(Tracker tracker) {
-		return getNextDate(tracker).map(nextDate -> Time.today().until(nextDate, ChronoUnit.DAYS));
+	public Long calculateRemainingDays(LocalDate nextDate) {
+		return Time.today().until(nextDate, ChronoUnit.DAYS);
 	}
 
-	public Optional<Integer> getNextMileageRelative(Tracker tracker) {
-		return getNextMileage(tracker).map(nextMileage -> nextMileage - vehicle.getMileage());
-	}
-
-	public Status getDateStatus(Tracker tracker) {
-		Optional<Long> days = getNextDateRelativeDays(tracker);
-
-		if (days.isEmpty())
-			return Status.UNKNOWN;
-		if (days.get() < 0)
-			return Status.OVERDUE;
-		if (days.get() < Time.DAYS_IN_MONTH * 3)
-			return Status.APPROACHING;
-		else
-			return Status.OK;
-	}
-
-	public Status getMileageStatus(Tracker tracker) {
-		Optional<Integer> distance = getNextMileageRelative(tracker);
-
-		if (distance.isEmpty())
-			return Status.UNKNOWN;
-		if (distance.get() < 0)
-			return Status.OVERDUE;
-		if (distance.get() < 5000)
-			return Status.APPROACHING;
-		else
-			return Status.OK;
+	public Integer calculateRemainingDistance(Integer nextMileage) {
+		return nextMileage - vehicle.getMileage();
 	}
 }

@@ -7,8 +7,6 @@ import com.example.application.services.model.TrackerData;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
 import com.example.application.ui.events.VehicleSelectedEvent;
-import com.example.application.ui.format.HumanDistanceFormatter;
-import com.example.application.ui.format.HumanTimeFormatter;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
@@ -114,38 +112,36 @@ public class DashboardView extends VerticalLayout {
 		);
 	}
 
+	private String getDateColumnHeader(DashboardEventFormat format) {
+		return switch (format) {
+			case LAST_SERVICE -> "Last date";
+			case NEXT_SERVICE -> "Next date";
+			case NEXT_SERVICE_RELATIVE -> "Remaining time";
+		};
+	}
+
+	private String getMileageColumnHeader(DashboardEventFormat format) {
+		return switch (format) {
+			case LAST_SERVICE -> "Last mileage";
+			case NEXT_SERVICE -> "Next mileage";
+			case NEXT_SERVICE_RELATIVE -> "Remaining distance";
+		};
+	}
+
 	private void updateList() {
+		DashboardEventFormat format = settingsService.getDashboardEventFormat();
 		List<Tracker> trackers = mainService.findTrackers();
 		TrackerData data = mainService.loadDataForTrackers(trackers);
 
 		grid.setItems(trackers);
 
-		if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.LAST_SERVICE)) {
-			grid.getColumnByKey("date")
-					.setHeader("Last date")
-					.setRenderer(TrackerDataRenderer.render(data::getDateStatus, data::getLastDate));
+		grid.getColumnByKey("date")
+				.setHeader(getDateColumnHeader(format))
+				.setRenderer(TrackerDataRenderer.renderDate(data, format));
 
-			grid.getColumnByKey("mileage")
-					.setHeader("Last mileage")
-					.setRenderer(TrackerDataRenderer.render(data::getMileageStatus, data::getLastMileage));
-		}
-		else if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.NEXT_SERVICE)) {
-			grid.getColumnByKey("date")
-					.setHeader("Next date")
-					.setRenderer(TrackerDataRenderer.render(data::getDateStatus, data::getNextDate));
+		grid.getColumnByKey("mileage")
+				.setHeader(getMileageColumnHeader(format))
+				.setRenderer(TrackerDataRenderer.renderMileage(data, format));
 
-			grid.getColumnByKey("mileage")
-					.setHeader("Next mileage")
-					.setRenderer(TrackerDataRenderer.render(data::getMileageStatus, data::getNextMileage));
-		}
-		else if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.NEXT_SERVICE_RELATIVE)) {
-			grid.getColumnByKey("date")
-					.setHeader("Time left")
-					.setRenderer(TrackerDataRenderer.render(data::getDateStatus, data::getNextDateRelativeDays, HumanTimeFormatter::formatRounded));
-
-			grid.getColumnByKey("mileage")
-					.setHeader("Distance left")
-					.setRenderer(TrackerDataRenderer.render(data::getMileageStatus, data::getNextMileageRelative, HumanDistanceFormatter::format));
-		}
 	}
 }

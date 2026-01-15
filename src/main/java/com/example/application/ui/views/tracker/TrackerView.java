@@ -1,5 +1,6 @@
 package com.example.application.ui.views.tracker;
 
+import com.example.application.data.DashboardEventFormat;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
 import com.example.application.services.model.TrackerData;
@@ -146,9 +147,9 @@ public class TrackerView extends VerticalLayout {
 		grid.setItems(trackers);
 
 		grid.getColumnByKey("date")
-				.setRenderer(TrackerDataRenderer.render(data::getDateStatus, data::getLastDate));
+				.setRenderer(TrackerDataRenderer.renderDate(data, DashboardEventFormat.LAST_SERVICE));
 
 		grid.getColumnByKey("mileage")
-				.setRenderer(TrackerDataRenderer.render(data::getMileageStatus, data::getLastMileage));
+				.setRenderer(TrackerDataRenderer.renderMileage(data, DashboardEventFormat.LAST_SERVICE));
 	}
 }
