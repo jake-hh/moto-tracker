@@ -1,4 +1,4 @@
-package com.example.application.views.service;
+package com.example.application.ui.views.service;
 
 import com.example.application.data.entity.Tracker;
 

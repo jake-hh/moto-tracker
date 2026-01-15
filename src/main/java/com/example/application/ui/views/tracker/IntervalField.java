@@ -1,7 +1,8 @@
-package com.example.application.views.tracker;
+package com.example.application.ui.views.tracker;
 
 import com.example.application.data.BasicInterval;
 import com.example.application.data.BasicInterval.Unit;
+
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;

@@ -1,4 +1,4 @@
-package com.example.application.views.tracker;
+package com.example.application.ui.views.tracker;
 
 import com.example.application.data.entity.Tracker;
 

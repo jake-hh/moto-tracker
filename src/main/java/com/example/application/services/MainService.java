@@ -1,11 +1,11 @@
 package com.example.application.services;
 
-import com.example.application.Notify;
 import com.example.application.data.Pair;
 import com.example.application.data.entity.*;
 import com.example.application.data.repo.*;
 import com.example.application.security.SecurityService;
-import com.example.application.views.dashboard.EventData;
+import com.example.application.services.model.EventData;
+import com.example.application.ui.Notify;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.ObjectProvider;

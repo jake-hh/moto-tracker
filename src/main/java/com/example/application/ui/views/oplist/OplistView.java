@@ -1,9 +1,9 @@
-package com.example.application.views.oplist;
+package com.example.application.ui.views.oplist;
 
 import com.example.application.data.entity.Operation;
-import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
-import com.example.application.views.MainLayout;
+import com.example.application.ui.events.VehicleSelectedEvent;
+import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;

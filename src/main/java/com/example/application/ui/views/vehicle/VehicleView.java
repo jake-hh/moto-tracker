@@ -1,9 +1,9 @@
-package com.example.application.views.vehicle;
+package com.example.application.ui.views.vehicle;
 
 import com.example.application.data.entity.Vehicle;
-import com.example.application.events.VehicleChangedEvent;
 import com.example.application.services.MainService;
-import com.example.application.views.MainLayout;
+import com.example.application.ui.events.VehicleChangedEvent;
+import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;

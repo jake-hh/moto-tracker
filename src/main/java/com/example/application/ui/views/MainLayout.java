@@ -1,16 +1,16 @@
-package com.example.application.views;
+package com.example.application.ui.views;
 
 import com.example.application.data.entity.Vehicle;
-import com.example.application.events.VehicleSelectedEvent;
-import com.example.application.events.VehicleChangedEvent;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
-import com.example.application.views.dashboard.DashboardView;
-import com.example.application.views.oplist.OplistView;
-import com.example.application.views.service.ServiceView;
-import com.example.application.views.tracker.TrackerView;
-import com.example.application.views.vehicle.VehicleView;
+import com.example.application.ui.events.VehicleSelectedEvent;
+import com.example.application.ui.events.VehicleChangedEvent;
+import com.example.application.ui.views.dashboard.DashboardView;
+import com.example.application.ui.views.oplist.OplistView;
+import com.example.application.ui.views.service.ServiceView;
+import com.example.application.ui.views.tracker.TrackerView;
+import com.example.application.ui.views.vehicle.VehicleView;
 
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;

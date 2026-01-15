@@ -1,8 +1,8 @@
-package com.example.application.views.service;
+package com.example.application.ui.views.service;
 
 import com.example.application.data.entity.*;
 import com.example.application.services.MainService;
-import com.example.application.views.service.OperationRowsBuilder.*;
+import com.example.application.ui.views.service.OperationRowsBuilder.*;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;

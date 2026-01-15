@@ -1,6 +1,6 @@
 package com.example.application.security;
 
-import com.example.application.views.LoginView;
+import com.example.application.ui.views.LoginView;
 
 import com.vaadin.flow.spring.security.VaadinAwareSecurityContextHolderStrategyConfiguration;
 import org.springframework.context.annotation.Bean;

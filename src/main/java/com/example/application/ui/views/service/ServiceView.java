@@ -1,10 +1,10 @@
-package com.example.application.views.service;
+package com.example.application.ui.views.service;
 
 import com.example.application.data.entity.Event;
 import com.example.application.data.entity.Tracker;
-import com.example.application.events.VehicleSelectedEvent;
 import com.example.application.services.MainService;
-import com.example.application.views.MainLayout;
+import com.example.application.ui.events.VehicleSelectedEvent;
+import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;

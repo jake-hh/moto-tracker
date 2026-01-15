@@ -1,4 +1,4 @@
-package com.example.application.views.oplist;
+package com.example.application.ui.views.oplist;
 
 import com.example.application.data.entity.*;
 

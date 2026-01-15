@@ -1,7 +1,7 @@
-package com.example.application.views.dashboard;
-
+package com.example.application.ui.format;
 
 import java.util.Locale;
+
 
 public final class HumanDistanceFormatter {
 

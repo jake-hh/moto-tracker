@@ -1,6 +1,6 @@
-package com.example.application.events;
+package com.example.application.ui.events;
 
-import com.example.application.views.vehicle.VehicleView;
+import com.example.application.ui.views.vehicle.VehicleView;
 
 import com.vaadin.flow.component.ComponentEvent;
 

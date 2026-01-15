@@ -1,4 +1,4 @@
-package com.example.application;
+package com.example.application.ui;
 
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;

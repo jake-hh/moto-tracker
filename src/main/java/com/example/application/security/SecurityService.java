@@ -1,6 +1,6 @@
 package com.example.application.security;
 
-import com.example.application.Notify;
+import com.example.application.ui.Notify;
 import com.example.application.data.entity.AppUser;
 import com.example.application.data.repo.AppUserRepository;
 

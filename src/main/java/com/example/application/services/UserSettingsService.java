@@ -1,10 +1,10 @@
 package com.example.application.services;
 
-import com.example.application.Notify;
 import com.example.application.data.DashboardEventFormat;
 import com.example.application.data.entity.*;
 import com.example.application.data.repo.AppUserSettingsRepository;
 import com.example.application.security.SecurityService;
+import com.example.application.ui.Notify;
 
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.validation.constraints.NotNull;

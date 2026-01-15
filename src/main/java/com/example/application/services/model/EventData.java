@@ -1,4 +1,4 @@
-package com.example.application.views.dashboard;
+package com.example.application.services.model;
 
 import com.example.application.data.Pair;
 import com.example.application.data.BasicInterval;

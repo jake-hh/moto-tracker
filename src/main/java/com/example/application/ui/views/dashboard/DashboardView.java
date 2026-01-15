@@ -1,12 +1,15 @@
-package com.example.application.views.dashboard;
+package com.example.application.ui.views.dashboard;
 
 import com.example.application.data.DashboardEventFormat;
 import com.example.application.data.entity.Tracker;
 import com.example.application.data.entity.Vehicle;
-import com.example.application.events.VehicleSelectedEvent;
+import com.example.application.services.model.EventData;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
-import com.example.application.views.MainLayout;
+import com.example.application.ui.events.VehicleSelectedEvent;
+import com.example.application.ui.format.HumanDistanceFormatter;
+import com.example.application.ui.format.HumanTimeFormatter;
+import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;

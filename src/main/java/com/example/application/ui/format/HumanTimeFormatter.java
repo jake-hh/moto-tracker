@@ -1,4 +1,4 @@
-package com.example.application.views.dashboard;
+package com.example.application.ui.format;
 
 
 public final class HumanTimeFormatter {
