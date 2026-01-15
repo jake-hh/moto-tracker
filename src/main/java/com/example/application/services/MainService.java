@@ -6,6 +6,7 @@ import com.example.application.data.repo.*;
 import com.example.application.security.SecurityService;
 import com.example.application.services.model.TrackerData;
 import com.example.application.ui.Notify;
+import com.example.application.util.Time;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.ObjectProvider;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,10 +48,6 @@ public class MainService {
 		this.settingsProvider = settingsProvider;
 	}
 
-	public static LocalDate getDateToday() {
-		return LocalDate.now(ZoneId.systemDefault());
-	}
-
 	private UserSettingsService getSettingsService() {
 		return settingsProvider.getObject();
 	}
@@ -73,7 +69,7 @@ public class MainService {
 	}
 
 	public Vehicle createVehicle() {
-		return new Vehicle(securityService.getCurrentUser(), getDateToday());
+		return new Vehicle(securityService.getCurrentUser(), Time.today());
 	}
 
 	public void bumpVehicleMileage(Event event) {
@@ -364,7 +360,7 @@ public class MainService {
 		Optional<Vehicle> vehicle = getSelectedVehicle();
 
 		vehicle.ifPresentOrElse(
-				v -> saveEvent(new Event(v, getDateToday())),
+				v -> saveEvent(new Event(v, Time.today())),
 				() -> Notify.error("No vehicle has been selected"));
 
 		return vehicle.isPresent();

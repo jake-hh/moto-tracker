@@ -3,7 +3,7 @@ package com.example.application.services.model;
 import com.example.application.data.Pair;
 import com.example.application.data.BasicInterval;
 import com.example.application.data.entity.*;
-import com.example.application.services.MainService;
+import com.example.application.util.Time;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -54,7 +54,7 @@ public record TrackerData(Map<Long, Pair<LocalDate, Integer>> dataMap, Vehicle v
 	//}
 
 	public Optional<Long> getNextDateRelativeDays(Tracker tracker) {
-		return getNextDate(tracker).map(nextDate -> MainService.getDateToday().until(nextDate, ChronoUnit.DAYS));
+		return getNextDate(tracker).map(nextDate -> Time.today().until(nextDate, ChronoUnit.DAYS));
 	}
 
 	public Optional<Integer> getNextMileageRelative(Tracker tracker) {
@@ -68,7 +68,7 @@ public record TrackerData(Map<Long, Pair<LocalDate, Integer>> dataMap, Vehicle v
 			return Status.UNKNOWN;
 		if (days.get() < 0)
 			return Status.OVERDUE;
-		if (days.get() < 90)
+		if (days.get() < Time.DAYS_IN_MONTH * 3)
 			return Status.APPROACHING;
 		else
 			return Status.OK;

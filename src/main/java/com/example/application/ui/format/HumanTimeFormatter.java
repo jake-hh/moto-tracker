@@ -1,11 +1,9 @@
 package com.example.application.ui.format;
 
+import com.example.application.util.Time;
+
 
 public final class HumanTimeFormatter {
-
-	private static final int DAYS_IN_YEAR = 365;
-	private static final int DAYS_IN_MONTH = 30;
-	private static final int DAYS_IN_WEEK = 7;
 
 	public static String formatRounded(long days) {
 		if (days == 0)
@@ -14,14 +12,14 @@ public final class HumanTimeFormatter {
 		else if (days == 1)
 			return "tomorrow";
 
-		if (Math.abs(days) >= DAYS_IN_YEAR)
-			return format(round(days, DAYS_IN_YEAR), "year");
+		if (Math.abs(days) >= Time.DAYS_IN_YEAR)
+			return format(round(days, Time.DAYS_IN_YEAR), "year");
 
-		if (Math.abs(days) >= DAYS_IN_MONTH)
-			return format(round(days, DAYS_IN_MONTH), "month");
+		if (Math.abs(days) >= Time.DAYS_IN_MONTH)
+			return format(round(days, Time.DAYS_IN_MONTH), "month");
 
-		if (Math.abs(days) >= DAYS_IN_WEEK)
-			return format(round(days, DAYS_IN_WEEK), "week");
+		if (Math.abs(days) >= Time.DAYS_IN_WEEK)
+			return format(round(days, Time.DAYS_IN_WEEK), "week");
 
 		return format(days, "day");
 	}
