@@ -145,9 +145,9 @@ public class TrackerView extends VerticalLayout {
 		grid.setItems(trackers);
 
 		grid.getColumnByKey("date")
-				.setRenderer(data.render(data::getLastDate));
+				.setRenderer(data.render(data::getDateStatus, data::getLastDate));
 
 		grid.getColumnByKey("mileage")
-				.setRenderer(data.render(data::getLastMileage));
+				.setRenderer(data.render(data::getMileageStatus, data::getLastMileage));
 	}
 }

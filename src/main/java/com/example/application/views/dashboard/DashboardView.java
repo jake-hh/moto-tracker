@@ -119,37 +119,29 @@ public class DashboardView extends VerticalLayout {
 		if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.LAST_SERVICE)) {
 			grid.getColumnByKey("date")
 					.setHeader("Last date")
-					.setRenderer(data.render(data::getLastDate));
+					.setRenderer(data.render(data::getDateStatus, data::getLastDate));
 
 			grid.getColumnByKey("mileage")
 					.setHeader("Last mileage")
-					.setRenderer(data.render(data::getLastMileage));
+					.setRenderer(data.render(data::getMileageStatus, data::getLastMileage));
 		}
 		else if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.NEXT_SERVICE)) {
 			grid.getColumnByKey("date")
 					.setHeader("Next date")
-					.setRenderer(data.render(data::getNextDate));
+					.setRenderer(data.render(data::getDateStatus, data::getNextDate));
 
 			grid.getColumnByKey("mileage")
 					.setHeader("Next mileage")
-					.setRenderer(data.render(data::getNextMileage));
+					.setRenderer(data.render(data::getMileageStatus, data::getNextMileage));
 		}
 		else if (settingsService.getDashboardEventFormat().equals(DashboardEventFormat.NEXT_SERVICE_RELATIVE)) {
 			grid.getColumnByKey("date")
 					.setHeader("Time left")
-					.setRenderer(data.renderFromStr(tracker ->
-							data.getNextDateRelativeDays(tracker)
-									.map(HumanTimeFormatter::formatRounded)
-					));
-					//.setRenderer(data.render(data::getNextDateRelative));
+					.setRenderer(data.render(data::getDateStatus, data::getNextDateRelativeDays, HumanTimeFormatter::formatRounded));
 
 			grid.getColumnByKey("mileage")
 					.setHeader("Distance left")
-					.setRenderer(data.renderFromStr(tracker ->
-							data.getNextMileageRelative(tracker)
-									.map(HumanDistanceFormatter::format)
-					));
-					//.setRenderer(data.render(data::getNextMileageRelative));
+					.setRenderer(data.render(data::getMileageStatus, data::getNextMileageRelative, HumanDistanceFormatter::format));
 		}
 	}
 }
