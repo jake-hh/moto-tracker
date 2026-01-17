@@ -36,7 +36,7 @@ public class OplistView extends VerticalLayout {
 		this.service = service;
 		layout.addVehicleSelectedListener(this::onVehicleSelected);
 
-		addClassName("oplist-view");
+		addClassName("view");
 		setSizeFull();
 		configureGrid();
 		configureForm();
@@ -55,7 +55,7 @@ public class OplistView extends VerticalLayout {
 		HorizontalLayout content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
 		content.setFlexGrow(1, form);
-		content.addClassNames("oplist-content");
+		content.addClassNames("content");
 		content.setSizeFull();
 		return content;
 	}
@@ -81,7 +81,7 @@ public class OplistView extends VerticalLayout {
 	}
 
 	private void configureGrid() {
-		grid.addClassNames("oplist-grid");
+		grid.addClassNames("grid");
 		grid.setSizeFull();
 		// grid.setColumns("firstName", "lastName", "email");
 		grid.addColumn(operation -> operation.getEvent().getDateStr()).setHeader("Date");
@@ -105,7 +105,7 @@ public class OplistView extends VerticalLayout {
 		addOperationButton.addClickListener(click -> addOperation());
 
 		var toolbar = new HorizontalLayout(/*filterText, */addOperationButton);
-		toolbar.addClassName("oplist-toolbar");
+		toolbar.addClassName("toolbar");
 		return toolbar;
 	}
 
@@ -115,7 +115,7 @@ public class OplistView extends VerticalLayout {
 		} else {
 			form.setOperation(operation);
 			form.setVisible(true);
-			addClassName("oplist-editing");
+			addClassName("editing");
 		}
 	}
 

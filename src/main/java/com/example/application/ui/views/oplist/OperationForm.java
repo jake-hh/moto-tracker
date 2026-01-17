@@ -29,7 +29,7 @@ public class OperationForm extends FormLayout {
 	private final Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
 
 	public OperationForm() {
-		addClassName("operation-form");
+		addClassName("form");
 		binder.bindInstanceFields(this);
 
 		tracker.setItemLabelGenerator(Tracker::getName);

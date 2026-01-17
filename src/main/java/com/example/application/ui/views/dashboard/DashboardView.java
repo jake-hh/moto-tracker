@@ -51,7 +51,7 @@ public class DashboardView extends VerticalLayout {
 		this.settingsService = settingsService;
 		layout.addVehicleSelectedListener(this::onVehicleSelected);
 
-		addClassName("dashboard-view");
+		addClassName("view");
 		setSizeFull();
 		configureGrid();
 
@@ -66,7 +66,7 @@ public class DashboardView extends VerticalLayout {
 	}
 
 	private void configureGrid() {
-		grid.addClassNames("dashboard-grid");
+		grid.addClassNames("grid");
 		grid.setSizeFull();
 		grid.setColumns("name", "interval", "range");
 
@@ -83,7 +83,7 @@ public class DashboardView extends VerticalLayout {
 		formatSelect.addValueChangeListener(this::onFormatSelectChange);
 
 		var toolbar = new HorizontalLayout(formatSelect);
-		toolbar.addClassName("dashboard-toolbar");
+		toolbar.addClassName("toolbar");
 		return toolbar;
 	}
 

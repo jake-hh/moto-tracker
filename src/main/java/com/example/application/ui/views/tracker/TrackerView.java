@@ -43,7 +43,7 @@ public class TrackerView extends VerticalLayout {
 		this.service = service;
 		layout.addVehicleSelectedListener(this::onVehicleSelected);
 
-		addClassName("tracker-view");
+		addClassName("view");
 		setSizeFull();
 		configureGrid();
 		configureForm();
@@ -61,7 +61,7 @@ public class TrackerView extends VerticalLayout {
 		HorizontalLayout content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
 		content.setFlexGrow(1, form);
-		content.addClassNames("tracker-content");
+		content.addClassNames("content");
 		content.setSizeFull();
 		return content;
 	}
@@ -86,7 +86,7 @@ public class TrackerView extends VerticalLayout {
 	}
 
 	private void configureGrid() {
-		grid.addClassNames("tracker-grid");
+		grid.addClassNames("grid");
 		grid.setSizeFull();
 		grid.setColumns("name", "interval", "range");
 
@@ -109,7 +109,7 @@ public class TrackerView extends VerticalLayout {
 		addTrackerButton.addClickListener(click -> addTracker());
 
 		var toolbar = new HorizontalLayout(filterText, addTrackerButton);
-		toolbar.addClassName("tracker-toolbar");
+		toolbar.addClassName("toolbar");
 		return toolbar;
 	}
 
@@ -121,7 +121,7 @@ public class TrackerView extends VerticalLayout {
 
 		form.setTracker(tracker);
 		form.setVisible(true);
-		addClassName("tracker-editing");
+		addClassName("editing");
 
 		boolean used = tracker.getId() != null && service.isTrackerUsed(tracker);
 		form.setDeleteEnabled(!used);

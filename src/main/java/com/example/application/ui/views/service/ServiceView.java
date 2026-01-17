@@ -34,7 +34,7 @@ public class ServiceView extends VerticalLayout {
 		this.service = service;
 		layout.addVehicleSelectedListener(this::onVehicleSelected);
 
-		addClassName("service-view");
+		addClassName("view");
 		//setPadding(true);
 		//setSpacing(true);
 		setSizeFull();
@@ -52,13 +52,13 @@ public class ServiceView extends VerticalLayout {
 		addEventButton.addClickListener(click -> addEvent());
 
 		var toolbar = new HorizontalLayout(addEventButton);
-		toolbar.addClassName("service-toolbar");
+		toolbar.addClassName("toolbar");
 		return toolbar;
 	}
 
 	private void createEventList() {
 		eventList = new VerticalLayout();
-		eventList.addClassName("service-event-list");
+		eventList.addClassName("event-list");
 		eventList.setSizeFull();
 
 		renderEventList();
@@ -73,7 +73,7 @@ public class ServiceView extends VerticalLayout {
 		for (Event event : events)
 			eventList.add(new EventItem(event, this::renderEventList, trackers, service));
 
-		eventList.addClassNames("service-event-item");
+		eventList.addClassNames("event-item");
 	}
 
 	public void addEvent() {

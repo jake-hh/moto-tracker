@@ -44,7 +44,7 @@ public class VehicleForm extends FormLayout {
 	private final Binder<Vehicle> binder = new BeanValidationBinder<>(Vehicle.class);
 
 	public VehicleForm() {
-		addClassName("vehicle-form");
+		addClassName("form");
 		binder.bindInstanceFields(this);
 
 		type.setValueChangeMode(ValueChangeMode.EAGER);

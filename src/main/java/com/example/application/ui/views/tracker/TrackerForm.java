@@ -33,7 +33,7 @@ public class TrackerForm extends FormLayout {
 	private final Binder<Tracker> binder = new BeanValidationBinder<>(Tracker.class);
 
 	public TrackerForm() {
-		addClassName("tracker-form");
+		addClassName("form");
 		binder.bindInstanceFields(this);
 
 		binder.forField(intervalField)

@@ -35,7 +35,7 @@ public class VehicleView extends VerticalLayout {
 	public VehicleView(MainService service) {
 		this.service = service;
 
-		addClassName("vehicle-view");
+		addClassName("view");
 		setSizeFull();
 		configureGrid();
 		configureForm();
@@ -49,7 +49,7 @@ public class VehicleView extends VerticalLayout {
 		HorizontalLayout content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
 		content.setFlexGrow(1, form);
-		content.addClassNames("vehicle-content");
+		content.addClassNames("content");
 		content.setSizeFull();
 		return content;
 	}
@@ -76,7 +76,7 @@ public class VehicleView extends VerticalLayout {
 	}
 
 	private void configureGrid() {
-		grid.addClassNames("vehicle-grid");
+		grid.addClassNames("grid");
 		grid.setSizeFull();
 		grid.setColumns(
 				"type",
@@ -106,7 +106,7 @@ public class VehicleView extends VerticalLayout {
 		addVehicleButton.addClickListener(click -> addVehicle());
 
 		var toolbar = new HorizontalLayout(addVehicleButton);
-		toolbar.addClassName("vehicle-toolbar");
+		toolbar.addClassName("toolbar");
 		return toolbar;
 	}
 
@@ -118,7 +118,7 @@ public class VehicleView extends VerticalLayout {
 
 		form.setVehicle(vehicle);
 		form.setVisible(true);
-		addClassName("vehicle-editing");
+		addClassName("editing");
 
 		boolean used = vehicle.getId() != null && service.isVehicleUsed(vehicle);
 		form.setDeleteEnabled(!used);
