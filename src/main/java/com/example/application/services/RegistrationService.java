@@ -23,7 +23,7 @@ public class RegistrationService {
 	}
 
 	@Transactional
-	public void register(String username, String rawPassword) {
+	public void register(String username, String rawPassword, String firstName, String lastName) {
 
 		if (userRepository.existsByUsername(username)) {
 			throw new IllegalStateException("Username already exists");
@@ -32,6 +32,8 @@ public class RegistrationService {
 		AppUser user = new AppUser();
 		user.setUsername(username);
 		user.setPasswordHash(passwordEncoder.encode(rawPassword));
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
 
 		userRepository.save(user);
 	}

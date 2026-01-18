@@ -23,6 +23,8 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 public class RegisterView extends VerticalLayout {
 
 	private final TextField username = new TextField("Username");
+	private final TextField firstName = new TextField("First name");
+	private final TextField lastName = new TextField("First name");
 	private final PasswordField password = new PasswordField("Password");
 	private final PasswordField pConfirm = new PasswordField("Confirm password");
 
@@ -53,7 +55,7 @@ public class RegisterView extends VerticalLayout {
 		register.setWidthFull();
 		register.getStyle().set("margin-top", "var(--lumo-space-l");
 
-		form.add(header, username, password, pConfirm, register);
+		form.add(header, username, firstName, lastName, password, pConfirm, register);
 		card.add(form);
 		add(title, card);
 	}
@@ -68,7 +70,9 @@ public class RegisterView extends VerticalLayout {
 		try {
 			registrationService.register(
 					username.getValue(),
-					password.getValue()
+					password.getValue(),
+					firstName.getValue(),
+					lastName.getValue()
 			);
 
 			Notify.ok("Account created");
