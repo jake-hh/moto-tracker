@@ -11,7 +11,9 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -29,6 +31,7 @@ public class RegisterView extends VerticalLayout {
 	private final TextField username = new TextField("Username");
 	private final TextField firstName = new TextField("First name");
 	private final TextField lastName = new TextField("First name");
+	private final EmailField email = new EmailField("E-mail address");
 	private final PasswordField password = new PasswordField("Password");
 	private final PasswordField pConfirm = new PasswordField("Confirm password");
 
@@ -55,6 +58,15 @@ public class RegisterView extends VerticalLayout {
 
 		var header = new H2("Create account");
 
+		firstName.setClearButtonVisible(true);
+		lastName.setClearButtonVisible(true);
+
+		email.setClearButtonVisible(true);
+		email.setPrefixComponent(VaadinIcon.ENVELOPE.create());
+
+		password.setPrefixComponent(VaadinIcon.KEY.create());
+		pConfirm.setPrefixComponent(VaadinIcon.KEY.create());
+
 		bindFields2AppUser();
 
 		Button register = new Button("Register", this::validateAndSave);
@@ -65,7 +77,7 @@ public class RegisterView extends VerticalLayout {
 		var loginLink = new RouterLink("Back to login page", LoginView.class);
 		loginLink.addClassName("mt-footer-link");
 
-		form.add(header, username, firstName, lastName, password, pConfirm, register);
+		form.add(header, username, firstName, lastName, email, password, pConfirm, register);
 		card.add(form);
 		add(title, card, loginLink);
 	}
@@ -80,13 +92,17 @@ public class RegisterView extends VerticalLayout {
 
 		binder.forField(firstName)
 				.withValidator(AppUserPolicy::isAlphabetic, "Name must be alphabetic")
-				.withValidator(AppUserPolicy::isNameLongEnough, "Name is too short")
+				.withValidator(AppUserPolicy::isNameEmptyOrLongEnough, "Name is too short")
 				.bind(AppUser::getFirstName, AppUser::setFirstName);
 
 		binder.forField(lastName)
 				.withValidator(AppUserPolicy::isAlphabetic, "Name must be alphabetic")
-				.withValidator(AppUserPolicy::isNameLongEnough, "Name is too short")
+				.withValidator(AppUserPolicy::isNameEmptyOrLongEnough, "Name is too short")
 				.bind(AppUser::getLastName, AppUser::setLastName);
+
+		binder.forField(email)
+				.withValidator(AppUserPolicy::isEmailEmptyOrValid, "Enter a valid email address")
+				.bind(AppUser::getEmail, AppUser::setEmail);
 
 		binder.forField(password)
 				.asRequired("Password is required")

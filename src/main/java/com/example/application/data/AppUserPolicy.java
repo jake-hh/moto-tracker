@@ -12,6 +12,9 @@ public class AppUserPolicy {
 	private static final Pattern USERNAME_PATTERN =
 			Pattern.compile("^[a-z][a-z0-9-]*$");
 
+	private static final Pattern EMAIL_PATTERN =
+			Pattern.compile("^[\\w-.]+@[\\w-]+\\.[a-zA-Z]{2,}$");
+
 
 	public static boolean isUsernameLongEnough(String s) {
 		return s != null && s.length() >= MIN_USERNAME_LENGTH;
@@ -21,12 +24,16 @@ public class AppUserPolicy {
 		return s != null && USERNAME_PATTERN.matcher(s).matches();
 	}
 
-	public static boolean isNameLongEnough(String s) {
+	public static boolean isNameEmptyOrLongEnough(String s) {
 		return s == null || s.isEmpty() || s.length() >= MIN_NAME_LENGTH;
 	}
 
 	public static boolean isAlphabetic(String s) {
 		return s.chars().allMatch(Character::isLetter);
+	}
+
+	public static boolean isEmailEmptyOrValid(String s) {
+		return s == null || s.isEmpty() || EMAIL_PATTERN.matcher(s).matches();
 	}
 
 	public static boolean isPasswordLongEnough(String s) {

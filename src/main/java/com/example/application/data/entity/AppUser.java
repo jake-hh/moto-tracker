@@ -21,6 +21,8 @@ public class AppUser extends AbstractEntity {
 
 	private String lastName;
 
+	private String email;
+
 
 	@Override
 	public String toString() {
@@ -43,6 +45,10 @@ public class AppUser extends AbstractEntity {
 		return lastName;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -57,5 +63,9 @@ public class AppUser extends AbstractEntity {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }
