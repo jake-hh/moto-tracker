@@ -3,14 +3,11 @@ package com.example.application.ui.views;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 
-@Route("login")
+@Route("login") 
 @PageTitle("Login | Moto Tracker")
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
@@ -26,8 +23,12 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		login.setAction("login");
 		login.setForgotPasswordButtonVisible(false);
 
+		var register = new RouterLink("Register Account", RegisterView.class);
+		register.addClassName("mt-footer-link");
+
 		add(new H1("Moto Tracker"));
 		add(login);
+		add(register);
 	}
 
 	@Override
