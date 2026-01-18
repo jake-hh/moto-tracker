@@ -9,7 +9,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-@Route("login") 
+
+@Route("login")
 @PageTitle("Login | Moto Tracker")
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
@@ -23,6 +24,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		setJustifyContentMode(JustifyContentMode.CENTER);
 
 		login.setAction("login");
+		login.setForgotPasswordButtonVisible(false);
 
 		add(new H1("Moto Tracker"));
 		add(login);
