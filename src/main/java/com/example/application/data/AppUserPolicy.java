@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 public class AppUserPolicy {
 
+	private static final int MAX_LENGTH = 24;
 	private static final int MIN_USERNAME_LENGTH = 5;
 	private static final int MIN_NAME_LENGTH = 2;
 	private static final int MIN_PASSWORD_LENGTH = 8;
@@ -15,6 +16,10 @@ public class AppUserPolicy {
 	private static final Pattern EMAIL_PATTERN =
 			Pattern.compile("^[\\w-.]+@[\\w-]+\\.[a-zA-Z]{2,}$");
 
+
+	public static boolean isEmptyOrNotTooLong(String s) {
+		return s == null || s.length() <= MAX_LENGTH;
+	}
 
 	public static boolean isUsernameLongEnough(String s) {
 		return s != null && s.length() >= MIN_USERNAME_LENGTH;

@@ -87,21 +87,25 @@ public class RegisterView extends VerticalLayout {
 				.asRequired("Username is required")
 				.withValidator(AppUserPolicy::isValidUsername, "Username must contain lowercase alphanumeric or dash and begin with a lowercase letter")
 				.withValidator(AppUserPolicy::isUsernameLongEnough, "Username is too short")
+				.withValidator(AppUserPolicy::isEmptyOrNotTooLong, "Username is too long")
 				.withValidator(registrationService::isUsernameAvailable, "Username is already taken")
 				.bind(AppUser::getUsername, AppUser::setUsername);
 
 		binder.forField(firstName)
 				.withValidator(AppUserPolicy::isAlphabetic, "Name must be alphabetic")
 				.withValidator(AppUserPolicy::isNameEmptyOrLongEnough, "Name is too short")
+				.withValidator(AppUserPolicy::isEmptyOrNotTooLong, "Name is too long")
 				.bind(AppUser::getFirstName, AppUser::setFirstName);
 
 		binder.forField(lastName)
 				.withValidator(AppUserPolicy::isAlphabetic, "Name must be alphabetic")
 				.withValidator(AppUserPolicy::isNameEmptyOrLongEnough, "Name is too short")
+				.withValidator(AppUserPolicy::isEmptyOrNotTooLong, "Name is too long")
 				.bind(AppUser::getLastName, AppUser::setLastName);
 
 		binder.forField(email)
-				.withValidator(AppUserPolicy::isEmailEmptyOrValid, "Enter a valid email address")
+				.withValidator(AppUserPolicy::isEmailEmptyOrValid, "Enter a valid e-mail address")
+				.withValidator(AppUserPolicy::isEmptyOrNotTooLong, "E-mail is too long")
 				.bind(AppUser::getEmail, AppUser::setEmail);
 
 		binder.forField(password)
@@ -110,6 +114,7 @@ public class RegisterView extends VerticalLayout {
 				.withValidator(AppUserPolicy::hasUppercase, "Password must contain uppercase")
 				.withValidator(AppUserPolicy::hasLowercase, "Password must contain lowercase")
 				.withValidator(AppUserPolicy::hasDigit, "Password must contain digit")
+				.withValidator(AppUserPolicy::isEmptyOrNotTooLong, "Password is too long")
 				.bind(AppUser::getPasswordHash, AppUser::setPasswordHash);
 
 		binder.forField(pConfirm)
@@ -121,7 +126,7 @@ public class RegisterView extends VerticalLayout {
 	private void validateAndSave(ClickEvent<Button> click) {
 		var user = new AppUser();
 
-		if (binder.writeBeanIfValid(user)) { // validates and marks fields
+		if (binder.writeBeanIfValid(user)) { // validates and reads fields
 			try {
 				registrationService.register(user);
 				getUI().ifPresent(ui -> ui.navigate("login"));
