@@ -1,5 +1,6 @@
 package com.example.application.ui.views;
 
+import com.example.application.data.AppUserPolicy;
 import com.example.application.data.entity.AppUser;
 import com.example.application.services.RegistrationService;
 import com.example.application.ui.Notify;
@@ -54,26 +55,7 @@ public class RegisterView extends VerticalLayout {
 
 		var header = new H2("Create account");
 
-		// Bind fields to AppUser
-		binder.forField(username)
-				.asRequired("Username is required")
-				.withValidator(registrationService::validateUsername, "Username is already taken")
-				.bind(AppUser::getUsername, AppUser::setUsername);
-
-		binder.forField(firstName)
-				.bind(AppUser::getFirstName, AppUser::setFirstName);
-
-		binder.forField(lastName)
-				.bind(AppUser::getLastName, AppUser::setLastName);
-
-		binder.forField(password)
-				.asRequired("Password is required")
-				.bind(AppUser::getPasswordHash, AppUser::setPasswordHash);
-
-		binder.forField(pConfirm)
-				.asRequired("Please confirm password")
-				.withValidator(pc -> password.getValue().equals(pc), "Passwords do not match")
-				.bind(u -> "", (u, v) -> {});
+		bindFields2AppUser();
 
 		Button register = new Button("Register", this::validateAndSave);
 		register.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -86,6 +68,38 @@ public class RegisterView extends VerticalLayout {
 		form.add(header, username, firstName, lastName, password, pConfirm, register);
 		card.add(form);
 		add(title, card, loginLink);
+	}
+
+	private void bindFields2AppUser() {
+		binder.forField(username)
+				.asRequired("Username is required")
+				.withValidator(AppUserPolicy::isValidUsername, "Username must contain lowercase alphanumeric or dash and begin with a lowercase letter")
+				.withValidator(AppUserPolicy::isUsernameLongEnough, "Username is too short")
+				.withValidator(registrationService::isUsernameAvailable, "Username is already taken")
+				.bind(AppUser::getUsername, AppUser::setUsername);
+
+		binder.forField(firstName)
+				.withValidator(AppUserPolicy::isAlphabetic, "Name must be alphabetic")
+				.withValidator(AppUserPolicy::isNameLongEnough, "Name is too short")
+				.bind(AppUser::getFirstName, AppUser::setFirstName);
+
+		binder.forField(lastName)
+				.withValidator(AppUserPolicy::isAlphabetic, "Name must be alphabetic")
+				.withValidator(AppUserPolicy::isNameLongEnough, "Name is too short")
+				.bind(AppUser::getLastName, AppUser::setLastName);
+
+		binder.forField(password)
+				.asRequired("Password is required")
+				.withValidator(AppUserPolicy::isPasswordLongEnough, "Password is too short")
+				.withValidator(AppUserPolicy::hasUppercase, "Password must contain uppercase")
+				.withValidator(AppUserPolicy::hasLowercase, "Password must contain lowercase")
+				.withValidator(AppUserPolicy::hasDigit, "Password must contain digit")
+				.bind(AppUser::getPasswordHash, AppUser::setPasswordHash);
+
+		binder.forField(pConfirm)
+				.asRequired("Please confirm password")
+				.withValidator(pc -> password.getValue().equals(pc), "Passwords do not match")
+				.bind(u -> "", (u, v) -> {});
 	}
 
 	private void validateAndSave(ClickEvent<Button> click) {

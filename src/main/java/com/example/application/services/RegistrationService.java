@@ -25,7 +25,9 @@ public class RegistrationService {
 
 	@Transactional
 	public void register(AppUser user) {
-		if (userRepository.existsByUsername(user.getUsername()))
+		// TODO: Add service validation for all fields
+
+		if (!isUsernameAvailable(user.getUsername()))
 			throw new IllegalStateException("Username already exists");
 
 		user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
@@ -33,5 +35,9 @@ public class RegistrationService {
 
 		userRepository.save(user);
 		Notify.ok("Account created");
+	}
+
+	public boolean isUsernameAvailable(String username) {
+		return !userRepository.existsByUsername(username);
 	}
 }
