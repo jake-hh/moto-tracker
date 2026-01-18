@@ -14,6 +14,7 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 
@@ -55,9 +56,12 @@ public class RegisterView extends VerticalLayout {
 		register.setWidthFull();
 		register.getStyle().set("margin-top", "var(--lumo-space-l");
 
+		var loginLink = new RouterLink("Back to login page", LoginView.class);
+		loginLink.addClassName("mt-footer-link");
+
 		form.add(header, username, firstName, lastName, password, pConfirm, register);
 		card.add(form);
-		add(title, card);
+		add(title, card, loginLink);
 	}
 
 	private void onRegisterClick(ClickEvent<Button> click) {
