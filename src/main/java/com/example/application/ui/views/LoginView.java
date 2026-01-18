@@ -12,7 +12,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
-	private final LoginForm login = new LoginForm(); 
+	private final LoginForm loginForm = new LoginForm();
 
 	public LoginView(){
 		addClassName("view");
@@ -20,25 +20,26 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		setAlignItems(Alignment.CENTER);
 		setJustifyContentMode(JustifyContentMode.CENTER);
 
-		login.setAction("login");
-		login.setForgotPasswordButtonVisible(false);
+		var title = new H1("Moto Tracker");
 
-		var register = new RouterLink("Register Account", RegisterView.class);
-		register.addClassName("mt-footer-link");
+		loginForm.setAction("login");
+		loginForm.setForgotPasswordButtonVisible(false);
 
-		add(new H1("Moto Tracker"));
-		add(login);
-		add(register);
+		var registerLink = new RouterLink("Register Account", RegisterView.class);
+		registerLink.addClassName("mt-footer-link");
+
+		add(title, loginForm, registerLink);
 	}
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
 		// inform the user about an authentication error
-		if(beforeEnterEvent.getLocation()  
-		.getQueryParameters()
-		.getParameters()
-		.containsKey("error")) {
-			login.setError(true);
+		if (beforeEnterEvent.getLocation()
+				.getQueryParameters()
+				.getParameters()
+				.containsKey("error")
+		) {
+			loginForm.setError(true);
 		}
 	}
 }
