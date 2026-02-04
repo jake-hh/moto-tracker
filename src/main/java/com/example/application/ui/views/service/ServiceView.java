@@ -3,8 +3,10 @@ package com.example.application.ui.views.service;
 import com.example.application.data.entity.Event;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
+import com.example.application.ui.events.TrackerChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.views.MainLayout;
+import com.example.application.ui.views.tracker.TrackerView;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -30,9 +32,14 @@ public class ServiceView extends VerticalLayout {
 	private VerticalLayout eventList;
 	private final MainService service;
 
-	public ServiceView(MainService service, MainLayout layout) {
+	public ServiceView(
+			MainService service,
+			MainLayout mainLayout,
+			TrackerView trackerView
+	) {
 		this.service = service;
-		layout.addVehicleSelectedListener(this::onVehicleSelected);
+		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
+		trackerView.addTrackerChangedListener(this::onTrackerChanged);
 
 		addClassName("view");
 		//setPadding(true);
@@ -44,6 +51,10 @@ public class ServiceView extends VerticalLayout {
 	}
 
 	private void onVehicleSelected(VehicleSelectedEvent e) {
+		renderEventList();
+	}
+
+	private void onTrackerChanged(TrackerChangedEvent e) {
 		renderEventList();
 	}
 

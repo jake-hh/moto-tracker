@@ -2,8 +2,10 @@ package com.example.application.ui.views.oplist;
 
 import com.example.application.data.entity.Operation;
 import com.example.application.services.MainService;
+import com.example.application.ui.events.TrackerChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.views.MainLayout;
+import com.example.application.ui.views.tracker.TrackerView;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -32,9 +34,14 @@ public class OplistView extends VerticalLayout {
 	private final OperationForm form = new OperationForm();
 	// TextField filterText = new TextField();
 
-	public OplistView(MainService service, MainLayout layout) {
+	public OplistView(
+			MainService service,
+			MainLayout mainLayout,
+			TrackerView trackerView
+	) {
 		this.service = service;
-		layout.addVehicleSelectedListener(this::onVehicleSelected);
+		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
+		trackerView.addTrackerChangedListener(this::onTrackerChanged);
 
 		addClassName("view");
 		setSizeFull();
@@ -47,6 +54,11 @@ public class OplistView extends VerticalLayout {
 	}
 
 	private void onVehicleSelected(VehicleSelectedEvent e) {
+		updateList();
+		updateForm();
+	}
+
+	private void onTrackerChanged(TrackerChangedEvent e) {
 		updateList();
 		updateForm();
 	}
