@@ -31,6 +31,7 @@ public class ServiceView extends VerticalLayout {
 
 	private VerticalLayout eventList;
 	private final MainService service;
+	private final MainLayout mainLayout;
 
 	public ServiceView(
 			MainService service,
@@ -38,6 +39,8 @@ public class ServiceView extends VerticalLayout {
 			TrackerView trackerView
 	) {
 		this.service = service;
+		this.mainLayout = mainLayout;
+
 		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
 		trackerView.addTrackerChangedListener(this::onTrackerChanged);
 
@@ -82,14 +85,16 @@ public class ServiceView extends VerticalLayout {
 		eventList.removeAll();
 
 		for (Event event : events)
-			eventList.add(new EventItem(event, this::renderEventList, trackers, service));
+			eventList.add(new EventItem(event, this::renderEventList, mainLayout::fireEventChangedEvent, trackers, service));
 
 		eventList.addClassNames("event-item");
 	}
 
 	public void addEvent() {
 		// TODO: disable add button if no vehicle is present
-		if (service.createAndSaveEvent())
+		if (service.createAndSaveEvent()) {
 			renderEventList();
+			mainLayout.fireEventChangedEvent();
+		}
 	}
 }

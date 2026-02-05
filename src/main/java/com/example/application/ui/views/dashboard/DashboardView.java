@@ -6,6 +6,7 @@ import com.example.application.data.entity.Vehicle;
 import com.example.application.services.model.TrackerData;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
+import com.example.application.ui.events.EventChangedEvent;
 import com.example.application.ui.events.TrackerChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.render.TrackerDataRenderer;
@@ -54,6 +55,7 @@ public class DashboardView extends VerticalLayout {
 		this.settingsService = settingsService;
 		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
 		trackerView.addTrackerChangedListener(this::onTrackerChanged);
+		mainLayout.addEventChangedListener(this::onEventChanged);
 
 		addClassName("view");
 		setSizeFull();
@@ -70,6 +72,10 @@ public class DashboardView extends VerticalLayout {
 	}
 
 	private void onTrackerChanged(TrackerChangedEvent e) {
+		update();
+	}
+
+	private void onEventChanged(EventChangedEvent e) {
 		update();
 	}
 

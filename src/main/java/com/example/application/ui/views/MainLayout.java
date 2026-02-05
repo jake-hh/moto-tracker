@@ -4,6 +4,7 @@ import com.example.application.data.entity.Vehicle;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
+import com.example.application.ui.events.EventChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.events.VehicleChangedEvent;
 import com.example.application.ui.views.dashboard.DashboardView;
@@ -128,7 +129,15 @@ public class MainLayout extends AppLayout {
 		));
 	}
 
+	public void fireEventChangedEvent() {
+		fireEvent(new EventChangedEvent(this));
+	}
+
 	public void addVehicleSelectedListener(ComponentEventListener<VehicleSelectedEvent> listener) {
 		addListener(VehicleSelectedEvent.class, listener);
+	}
+
+	public void addEventChangedListener(ComponentEventListener<EventChangedEvent> listener) {
+		addListener(EventChangedEvent.class, listener);
 	}
 }

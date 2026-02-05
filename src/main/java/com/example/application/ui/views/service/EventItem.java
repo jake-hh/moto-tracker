@@ -27,12 +27,20 @@ public class EventItem extends HorizontalLayout {
 
 	private final EventItemController controller;
 	private final Runnable refreshEventList;
+	private final Runnable fireEventChangedEvent;
 	private final List<Tracker> allTrackers;
 	private final VerticalLayout operationList;
 
-	public EventItem(Event event, Runnable refreshEventList, List<Tracker> allTrackers, MainService service) {
+	public EventItem(
+			Event event,
+			Runnable refreshEventList,
+			Runnable fireEventChangedEvent,
+			List<Tracker> allTrackers,
+			MainService service
+	) {
 		this.controller = new EventItemController(service, event);
 		this.refreshEventList = refreshEventList;
+		this.fireEventChangedEvent = fireEventChangedEvent;
 		this.allTrackers = allTrackers;
 
 		setAlignItems(FlexComponent.Alignment.START);
@@ -74,6 +82,7 @@ public class EventItem extends HorizontalLayout {
 			if (operationsCount == 0) {
 				controller.deleteEvent();
 				refreshEventList.run();
+				fireEventChangedEvent.run();
 			}
 			else {
 				openDeleteDialog(operationsCount);
@@ -99,6 +108,7 @@ public class EventItem extends HorizontalLayout {
 		dialog.addConfirmListener(ce -> {
 			controller.deleteEventWithOperations();
 			refreshEventList.run();
+			fireEventChangedEvent.run();
 		});
 
 		dialog.open();
@@ -121,8 +131,10 @@ public class EventItem extends HorizontalLayout {
 		mileageField.addValueChangeListener(mileageEv -> {
 			Integer mileage = mileageEv.getValue();
 
-			if (mileage == null || mileage % 100 == 0)
+			if (mileage == null || mileage % 100 == 0) {
 				controller.updateMileage(mileage);
+				fireEventChangedEvent.run();
+			}
 		});
 
 		return mileageField;
@@ -150,8 +162,10 @@ public class EventItem extends HorizontalLayout {
 		dateField.addValueChangeListener(dateEv -> {
 			LocalDate date = dateEv.getValue();
 
-			if (date != null && !date.isAfter(Time.today()))
+			if (date != null && !date.isAfter(Time.today())) {
 				controller.updateDate(date);
+				fireEventChangedEvent.run();
+			}
 		});
 
 		return dateField;

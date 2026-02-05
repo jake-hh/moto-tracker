@@ -2,6 +2,7 @@ package com.example.application.ui.views.oplist;
 
 import com.example.application.data.entity.Operation;
 import com.example.application.services.MainService;
+import com.example.application.ui.events.EventChangedEvent;
 import com.example.application.ui.events.TrackerChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.views.MainLayout;
@@ -42,6 +43,7 @@ public class OplistView extends VerticalLayout {
 		this.service = service;
 		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
 		trackerView.addTrackerChangedListener(this::onTrackerChanged);
+		mainLayout.addEventChangedListener(this::onEventChanged);
 
 		addClassName("view");
 		setSizeFull();
@@ -59,6 +61,11 @@ public class OplistView extends VerticalLayout {
 	}
 
 	private void onTrackerChanged(TrackerChangedEvent e) {
+		updateList();
+		updateForm();
+	}
+
+	private void onEventChanged(EventChangedEvent e) {
 		updateList();
 		updateForm();
 	}
