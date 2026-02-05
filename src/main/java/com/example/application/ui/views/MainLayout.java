@@ -4,10 +4,7 @@ import com.example.application.data.entity.Vehicle;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
-import com.example.application.ui.events.EventChangedEvent;
-import com.example.application.ui.events.TrackerChangedEvent;
-import com.example.application.ui.events.VehicleSelectedEvent;
-import com.example.application.ui.events.VehicleChangedEvent;
+import com.example.application.ui.events.*;
 import com.example.application.ui.views.dashboard.DashboardView;
 import com.example.application.ui.views.oplist.OplistView;
 import com.example.application.ui.views.service.ServiceView;
@@ -140,6 +137,10 @@ public class MainLayout extends AppLayout {
 		fireEvent(new EventChangedEvent(this));
 	}
 
+	public void fireOperationChangedEvent() {
+		fireEvent(new OperationChangedEvent(this));
+	}
+
 	// --- Subscribe to events ---
 
 	public void addVehicleSelectedListener(ComponentEventListener<VehicleSelectedEvent> listener) {
@@ -152,5 +153,9 @@ public class MainLayout extends AppLayout {
 
 	public void addEventChangedListener(ComponentEventListener<EventChangedEvent> listener) {
 		addListener(EventChangedEvent.class, listener);
+	}
+
+	public void addOperationChangedListener(ComponentEventListener<OperationChangedEvent> listener) {
+		addListener(OperationChangedEvent.class, listener);
 	}
 }

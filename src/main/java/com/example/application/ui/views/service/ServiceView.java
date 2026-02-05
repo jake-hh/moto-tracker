@@ -3,6 +3,7 @@ package com.example.application.ui.views.service;
 import com.example.application.data.entity.Event;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
+import com.example.application.ui.events.OperationChangedEvent;
 import com.example.application.ui.events.TrackerChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.views.MainLayout;
@@ -38,6 +39,7 @@ public class ServiceView extends VerticalLayout {
 
 		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
 		mainLayout.addTrackerChangedListener(this::onTrackerChanged);
+		mainLayout.addOperationChangedListener(this::onOperationChanged);
 
 		addClassName("view");
 		//setPadding(true);
@@ -53,6 +55,10 @@ public class ServiceView extends VerticalLayout {
 	}
 
 	private void onTrackerChanged(TrackerChangedEvent e) {
+		renderEventList();
+	}
+
+	private void onOperationChanged(OperationChangedEvent e) {
 		renderEventList();
 	}
 
@@ -80,7 +86,14 @@ public class ServiceView extends VerticalLayout {
 		eventList.removeAll();
 
 		for (Event event : events)
-			eventList.add(new EventItem(event, this::renderEventList, mainLayout::fireEventChangedEvent, trackers, service));
+			eventList.add(new EventItem(
+					event,
+					this::renderEventList,
+					mainLayout::fireEventChangedEvent,
+					mainLayout::fireOperationChangedEvent,
+					trackers,
+					service
+			));
 
 		eventList.addClassNames("event-item");
 	}

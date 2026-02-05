@@ -3,6 +3,7 @@ package com.example.application.ui.views.oplist;
 import com.example.application.data.entity.Operation;
 import com.example.application.services.MainService;
 import com.example.application.ui.events.EventChangedEvent;
+import com.example.application.ui.events.OperationChangedEvent;
 import com.example.application.ui.events.TrackerChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.views.MainLayout;
@@ -34,12 +35,16 @@ public class OplistView extends VerticalLayout {
 	private final OperationForm form = new OperationForm();
 	// TextField filterText = new TextField();
 
+	private final MainLayout mainLayout;
+
 	public OplistView(MainService service, MainLayout mainLayout) {
 		this.service = service;
+		this.mainLayout = mainLayout;
 
 		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
 		mainLayout.addTrackerChangedListener(this::onTrackerChanged);
 		mainLayout.addEventChangedListener(this::onEventChanged);
+		mainLayout.addOperationChangedListener(this::onOperationChanged);
 
 		addClassName("view");
 		setSizeFull();
@@ -66,6 +71,11 @@ public class OplistView extends VerticalLayout {
 		updateForm();
 	}
 
+	private void onOperationChanged(OperationChangedEvent e) {
+		updateList();
+		updateForm();
+	}
+
 	private HorizontalLayout getContent() {
 		HorizontalLayout content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
@@ -87,12 +97,14 @@ public class OplistView extends VerticalLayout {
 		service.saveOperation(event.getOperation());
 		updateList();
 		closeEditor();
+		mainLayout.fireTrackerChangedEvent();
 	}
 
 	private void deleteOperation(OperationForm.DeleteEvent event) {
 		service.deleteOperation(event.getOperation());
 		updateList();
 		closeEditor();
+		mainLayout.fireTrackerChangedEvent();
 	}
 
 	private void configureGrid() {

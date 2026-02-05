@@ -28,6 +28,7 @@ public class EventItem extends HorizontalLayout {
 	private final EventItemController controller;
 	private final Runnable refreshEventList;
 	private final Runnable fireEventChangedEvent;
+	private final Runnable fireOperationChangedEvent;
 	private final List<Tracker> allTrackers;
 	private final VerticalLayout operationList;
 
@@ -35,12 +36,14 @@ public class EventItem extends HorizontalLayout {
 			Event event,
 			Runnable refreshEventList,
 			Runnable fireEventChangedEvent,
+			Runnable fireOperationChangedEvent,
 			List<Tracker> allTrackers,
 			MainService service
 	) {
 		this.controller = new EventItemController(service, event);
 		this.refreshEventList = refreshEventList;
 		this.fireEventChangedEvent = fireEventChangedEvent;
+		this.fireOperationChangedEvent = fireOperationChangedEvent;
 		this.allTrackers = allTrackers;
 
 		setAlignItems(FlexComponent.Alignment.START);
@@ -208,12 +211,14 @@ public class EventItem extends HorizontalLayout {
 			item.onTrackerBoxChanged(tracker -> {
 				controller.updateOperation(op, tracker);
 				refreshOperationList();
+				fireOperationChangedEvent.run();
 			});
 
 			if (row.canRemove())
 				item.onRemoveButtonPressed(() -> {
 					controller.deleteOperation(op);
 					refreshOperationList();
+					fireOperationChangedEvent.run();
 				});
 			else
 				item.disableRemoveButton(true);
@@ -224,10 +229,14 @@ public class EventItem extends HorizontalLayout {
 			item.onTrackerBoxChanged(tracker -> {
 				controller.createOperation(tracker);
 				refreshOperationList();
+				fireOperationChangedEvent.run();
 			});
 
 			if (row.canRemove())
-				item.onRemoveButtonPressed(this::refreshOperationList);
+				item.onRemoveButtonPressed(() -> {
+					refreshOperationList();
+					fireOperationChangedEvent.run();
+				});
 			else
 				item.disableRemoveButton(true);
 		}
@@ -236,7 +245,10 @@ public class EventItem extends HorizontalLayout {
 		item.enableTrackerLabel(row.hasLabel());
 
 		if (row.canAdd())
-			item.onAddButtonPressed(() -> refreshOperationListAndAdd(row.nextPos()));
+			item.onAddButtonPressed(() -> {
+				refreshOperationListAndAdd(row.nextPos());
+				fireOperationChangedEvent.run();
+			});
 		else
 			item.disableAddButton(true);
 

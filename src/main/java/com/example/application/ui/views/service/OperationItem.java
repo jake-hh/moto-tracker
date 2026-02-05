@@ -54,7 +54,10 @@ public class OperationItem extends HorizontalLayout {
 	}
 
 	public void onTrackerBoxChanged(Consumer<Tracker> callback) {
-		trackerBox.addValueChangeListener(trackerVCE -> callback.accept(trackerVCE.getValue()));
+		trackerBox.addValueChangeListener(trackerVCE -> {
+			if (trackerVCE.isFromClient())
+				callback.accept(trackerVCE.getValue());
+		});
 	}
 
 	public void onAddButtonPressed(Runnable callback) {
