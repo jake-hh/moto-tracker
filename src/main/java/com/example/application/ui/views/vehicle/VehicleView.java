@@ -62,14 +62,14 @@ public class VehicleView extends VerticalLayout {
 	}
 
 	private void saveVehicle(VehicleForm.SaveEvent event) {
-		service.saveVehicle(event.getVehicle());
+		service.saveVehicle(event.getValue());
 		updateList();
 		closeEditor();
 		fireEvent(new VehicleChangedEvent(this));
 	}
 
 	private void deleteVehicle(VehicleForm.DeleteEvent event) {
-		service.deleteVehicle(event.getVehicle());
+		service.deleteVehicle(event.getValue());
 		updateList();
 		closeEditor();
 		fireEvent(new VehicleChangedEvent(this));

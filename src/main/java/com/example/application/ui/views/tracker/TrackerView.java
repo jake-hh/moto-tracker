@@ -89,14 +89,14 @@ public class TrackerView extends VerticalLayout {
 	}
 
 	private void saveTracker(TrackerForm.SaveEvent event) {
-		service.saveTracker(event.getTracker());
+		service.saveTracker(event.getValue());
 		updateList();
 		closeEditor();
 		mainLayout.fireTrackerChangedEvent();
 	}
 
 	private void deleteTracker(TrackerForm.DeleteEvent event) {
-		service.deleteTracker(event.getTracker());
+		service.deleteTracker(event.getValue());
 		updateList();
 		closeEditor();
 		mainLayout.fireTrackerChangedEvent();

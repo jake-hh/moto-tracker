@@ -13,7 +13,7 @@ public class LayoutFormEvent<Entity extends AbstractEntity> extends ComponentEve
 		this.value = value;
 	}
 
-	public Entity getVehicle() {
+	public Entity getValue() {
 		return value;
 	}
 }
