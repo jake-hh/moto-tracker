@@ -1,9 +1,9 @@
 package com.example.application.ui.views.tracker;
 
 import com.example.application.data.entity.Tracker;
+import com.example.application.ui.events.LayoutFormEvent;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -88,33 +88,19 @@ public class TrackerForm extends FormLayout {
 	 // --- Events ---
 	// --------------
 
-	public static abstract class TrackerFormEvent extends ComponentEvent<TrackerForm> {
-		private final Tracker tracker;
-
-		protected TrackerFormEvent(TrackerForm source, Tracker tracker) {
-			super(source, false);
-			this.tracker = tracker;
-		}
-
-		public Tracker getTracker() {
-			return tracker;
-		}
-	}
-
-	public static class SaveEvent extends TrackerFormEvent {
+	public static class SaveEvent extends LayoutFormEvent<Tracker> {
 		SaveEvent(TrackerForm source, Tracker tracker) {
 			super(source, tracker);
 		}
 	}
 
-	public static class DeleteEvent extends TrackerFormEvent {
+	public static class DeleteEvent extends LayoutFormEvent<Tracker> {
 		DeleteEvent(TrackerForm source, Tracker tracker) {
 			super(source, tracker);
 		}
-
 	}
 
-	public static class CloseEvent extends TrackerFormEvent {
+	public static class CloseEvent extends LayoutFormEvent<Tracker> {
 		CloseEvent(TrackerForm source) {
 			super(source, null);
 		}

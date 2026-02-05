@@ -1,9 +1,9 @@
 package com.example.application.ui.views.vehicle;
 
 import com.example.application.data.entity.Vehicle;
+import com.example.application.ui.events.LayoutFormEvent;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -130,32 +130,19 @@ public class VehicleForm extends FormLayout {
 	 // --- Events ---
 	// --------------
 
-	public static abstract class VehicleFormEvent extends ComponentEvent<VehicleForm> {
-		private final Vehicle vehicle;
-
-		protected VehicleFormEvent(VehicleForm source, Vehicle vehicle) {
-			super(source, false);
-			this.vehicle = vehicle;
-		}
-
-		public Vehicle getVehicle() {
-			return vehicle;
-		}
-	}
-
-	public static class SaveEvent extends VehicleFormEvent {
+	public static class SaveEvent extends LayoutFormEvent<Vehicle> {
 		SaveEvent(VehicleForm source, Vehicle vehicle) {
 			super(source, vehicle);
 		}
 	}
 
-	public static class DeleteEvent extends VehicleFormEvent {
+	public static class DeleteEvent extends LayoutFormEvent<Vehicle> {
 		DeleteEvent(VehicleForm source, Vehicle vehicle) {
 			super(source, vehicle);
 		}
 	}
 
-	public static class CloseEvent extends VehicleFormEvent {
+	public static class CloseEvent extends LayoutFormEvent<Vehicle> {
 		CloseEvent(VehicleForm source) {
 			super(source, null);
 		}

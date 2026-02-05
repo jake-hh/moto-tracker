@@ -1,9 +1,9 @@
 package com.example.application.ui.views.oplist;
 
 import com.example.application.data.entity.*;
+import com.example.application.ui.events.LayoutFormEvent;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -78,33 +78,19 @@ public class OperationForm extends FormLayout {
 	 // --- Events ---
 	// --------------
 
-	public static abstract class OperationFormEvent extends ComponentEvent<OperationForm> {
-		private final Operation operation;
-
-		protected OperationFormEvent(OperationForm source, Operation operation) {
-			super(source, false);
-			this.operation = operation;
-		}
-
-		public Operation getOperation() {
-			return operation;
-		}
-	}
-
-	public static class SaveEvent extends OperationFormEvent {
+	public static class SaveEvent extends LayoutFormEvent<Operation> {
 		SaveEvent(OperationForm source, Operation operation) {
 			super(source, operation);
 		}
 	}
 
-	public static class DeleteEvent extends OperationFormEvent {
+	public static class DeleteEvent extends LayoutFormEvent<Operation> {
 		DeleteEvent(OperationForm source, Operation operation) {
 			super(source, operation);
 		}
-
 	}
 
-	public static class CloseEvent extends OperationFormEvent {
+	public static class CloseEvent extends LayoutFormEvent<Operation> {
 		CloseEvent(OperationForm source) {
 			super(source, null);
 		}
