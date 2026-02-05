@@ -11,7 +11,6 @@ import com.example.application.ui.events.TrackerChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
-import com.example.application.ui.views.tracker.TrackerView;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
@@ -48,13 +47,13 @@ public class DashboardView extends VerticalLayout {
 	public DashboardView(
 			MainService mainService,
 			UserSettingsService settingsService,
-			MainLayout mainLayout,
-			TrackerView trackerView
+			MainLayout mainLayout
 	) {
 		this.mainService = mainService;
 		this.settingsService = settingsService;
+
 		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
-		trackerView.addTrackerChangedListener(this::onTrackerChanged);
+		mainLayout.addTrackerChangedListener(this::onTrackerChanged);
 		mainLayout.addEventChangedListener(this::onEventChanged);
 
 		addClassName("view");

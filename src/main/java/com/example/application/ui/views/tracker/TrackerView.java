@@ -5,13 +5,11 @@ import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
 import com.example.application.services.model.TrackerData;
 import com.example.application.ui.events.EventChangedEvent;
-import com.example.application.ui.events.TrackerChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -40,10 +38,13 @@ public class TrackerView extends VerticalLayout {
 	private final TrackerForm form = new TrackerForm();
 
 	private final MainService service;
+	private final MainLayout mainLayout;
 
 
 	public TrackerView(MainService service, MainLayout mainLayout) {
 		this.service = service;
+		this.mainLayout = mainLayout;
+
 		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
 		mainLayout.addEventChangedListener(this::onEventChanged);
 
@@ -85,14 +86,14 @@ public class TrackerView extends VerticalLayout {
 		service.saveTracker(event.getTracker());
 		updateList();
 		closeEditor();
-		fireEvent(new TrackerChangedEvent(this));
+		mainLayout.fireTrackerChangedEvent();
 	}
 
 	private void deleteTracker(TrackerForm.DeleteEvent event) {
 		service.deleteTracker(event.getTracker());
 		updateList();
 		closeEditor();
-		fireEvent(new TrackerChangedEvent(this));
+		mainLayout.fireTrackerChangedEvent();
 	}
 
 	private void configureGrid() {
@@ -161,9 +162,5 @@ public class TrackerView extends VerticalLayout {
 
 		grid.getColumnByKey("mileage")
 				.setRenderer(TrackerDataRenderer.renderMileage(data, DashboardEventFormat.LAST_SERVICE));
-	}
-
-	public void addTrackerChangedListener(ComponentEventListener<TrackerChangedEvent> listener) {
-		addListener(TrackerChangedEvent.class, listener);
 	}
 }

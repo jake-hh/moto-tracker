@@ -5,6 +5,7 @@ import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
 import com.example.application.ui.events.EventChangedEvent;
+import com.example.application.ui.events.TrackerChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.events.VehicleChangedEvent;
 import com.example.application.ui.views.dashboard.DashboardView;
@@ -129,12 +130,24 @@ public class MainLayout extends AppLayout {
 		));
 	}
 
+	// --- Publish events ---
+
+	public void fireTrackerChangedEvent() {
+		fireEvent(new TrackerChangedEvent(this));
+	}
+
 	public void fireEventChangedEvent() {
 		fireEvent(new EventChangedEvent(this));
 	}
 
+	// --- Subscribe to events ---
+
 	public void addVehicleSelectedListener(ComponentEventListener<VehicleSelectedEvent> listener) {
 		addListener(VehicleSelectedEvent.class, listener);
+	}
+
+	public void addTrackerChangedListener(ComponentEventListener<TrackerChangedEvent> listener) {
+		addListener(TrackerChangedEvent.class, listener);
 	}
 
 	public void addEventChangedListener(ComponentEventListener<EventChangedEvent> listener) {

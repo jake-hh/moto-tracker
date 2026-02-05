@@ -6,7 +6,6 @@ import com.example.application.ui.events.EventChangedEvent;
 import com.example.application.ui.events.TrackerChangedEvent;
 import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.views.MainLayout;
-import com.example.application.ui.views.tracker.TrackerView;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -35,14 +34,11 @@ public class OplistView extends VerticalLayout {
 	private final OperationForm form = new OperationForm();
 	// TextField filterText = new TextField();
 
-	public OplistView(
-			MainService service,
-			MainLayout mainLayout,
-			TrackerView trackerView
-	) {
+	public OplistView(MainService service, MainLayout mainLayout) {
 		this.service = service;
+
 		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
-		trackerView.addTrackerChangedListener(this::onTrackerChanged);
+		mainLayout.addTrackerChangedListener(this::onTrackerChanged);
 		mainLayout.addEventChangedListener(this::onEventChanged);
 
 		addClassName("view");
