@@ -1,5 +1,6 @@
 package com.example.application.ui.views.vehicle;
 
+import com.example.application.data.BasicPolicy;
 import com.example.application.data.entity.Vehicle;
 import com.example.application.ui.events.LayoutFormEvent;
 
@@ -38,23 +39,21 @@ public class VehicleForm extends FormLayout {
 	private final Button saveBtn = new Button("Save");
 	private final Button deleteBtn = new Button("Delete");
 	private final Button closeBtn = new Button("Cancel");
-	private final Span addStatusLabel = new Span();
 	private final Span removeStatusLabel = new Span();
 
 	private final Binder<Vehicle> binder = new BeanValidationBinder<>(Vehicle.class);
 
 	public VehicleForm() {
 		addClassName("form");
-		binder.bindInstanceFields(this);
 
-		type.setValueChangeMode(ValueChangeMode.EAGER);
-		make.setValueChangeMode(ValueChangeMode.EAGER);
-		model.setValueChangeMode(ValueChangeMode.EAGER);
-		engine.setValueChangeMode(ValueChangeMode.EAGER);
-		colour.setValueChangeMode(ValueChangeMode.EAGER);
-		plate.setValueChangeMode(ValueChangeMode.EAGER);
-		vin.setValueChangeMode(ValueChangeMode.EAGER);
-		mileage.setValueChangeMode(ValueChangeMode.EAGER);
+		type.setValueChangeMode(ValueChangeMode.LAZY);
+		make.setValueChangeMode(ValueChangeMode.LAZY);
+		model.setValueChangeMode(ValueChangeMode.LAZY);
+		engine.setValueChangeMode(ValueChangeMode.LAZY);
+		colour.setValueChangeMode(ValueChangeMode.LAZY);
+		plate.setValueChangeMode(ValueChangeMode.LAZY);
+		vin.setValueChangeMode(ValueChangeMode.LAZY);
+		mileage.setValueChangeMode(ValueChangeMode.LAZY);
 
 		mileage.setStepButtonsVisible(true);
 		mileage.setStep(100);
@@ -65,18 +64,10 @@ public class VehicleForm extends FormLayout {
 				.setBadInputErrorMessage("Invalid number format")
 				.setStepErrorMessage("Number must be a multiple of 100"));
 
-		mileage.addValueChangeListener(e -> binder.validate());
-
-		trackingDate.addValueChangeListener(e -> binder.validate());
-
-		addStatusLabel.addClassNames("mt-helper-text", "warning");
+		//addStatusLabel.addClassNames("mt-helper-text", "warning");
 		removeStatusLabel.addClassName("mt-helper-text");
 
-		binder.addStatusChangeListener(e -> {
-			boolean isValid = binder.isValid();
-			saveBtn.setEnabled(isValid);
-			addStatusLabel.setText(isValid ? "" : "Please fill in all required fields");
-		});
+		bindFields();
 
 		add(
 			type,
@@ -91,9 +82,64 @@ public class VehicleForm extends FormLayout {
 			registrationDate,
 			trackingDate,
 			createButtonsLayout(),
-			addStatusLabel,
 			removeStatusLabel
 		);
+	}
+
+	void bindFields() {
+		//binder.bindInstanceFields(this);
+
+		binder.forField(type)
+				.asRequired("Vehicle type is required")
+				.withValidator(BasicPolicy::isAlphabetic, "Vehicle type must be alphabetic")
+				.withValidator(BasicPolicy::isStrEmptyOrLongEnough, "Vehicle type is too short")
+				.withValidator(BasicPolicy::isStrEmptyOrNotTooLong, "Vehicle type is too long")
+				.bind(Vehicle::getType, Vehicle::setType);
+
+		binder.forField(make)
+				.asRequired("Vehicle make is required")
+				.withValidator(BasicPolicy::isAlphabetic, "Vehicle make must be alphabetic")
+				.withValidator(BasicPolicy::isStrEmptyOrLongEnough, "Vehicle make is too short")
+				.withValidator(BasicPolicy::isStrEmptyOrNotTooLong, "Vehicle make is too long")
+				.bind(Vehicle::getMake, Vehicle::setMake);
+
+		binder.forField(model)
+				.asRequired("Vehicle model is required")
+				.withValidator(BasicPolicy::isAlphanumeric, "Vehicle model must be alphanumeric")
+				.withValidator(BasicPolicy::isStrEmptyOrLongEnough, "Vehicle model is too short")
+				.withValidator(BasicPolicy::isStrEmptyOrNotTooLong, "Vehicle model is too long")
+				.bind(Vehicle::getModel, Vehicle::setModel);
+
+		binder.forField(engine)
+				.asRequired("Vehicle engine is required")
+				.withValidator(BasicPolicy::isStrEmptyOrLongEnough, "Vehicle engine is too short")
+				.withValidator(BasicPolicy::isStrEmptyOrNotTooLong, "Vehicle engine is too long")
+				.bind(Vehicle::getEngine, Vehicle::setEngine);
+
+		binder.forField(colour)
+				.asRequired("Vehicle colour is required")
+				.withValidator(BasicPolicy::isAlphabetic, "Vehicle colour must be alphabetic")
+				.withValidator(BasicPolicy::isStrEmptyOrLongEnough, "Vehicle colour is too short")
+				.withValidator(BasicPolicy::isStrEmptyOrNotTooLong, "Vehicle colour is too long")
+				.bind(Vehicle::getColour, Vehicle::setColour);
+
+		binder.forField(plate)
+				.asRequired("Vehicle plate is required")
+				.withValidator(BasicPolicy::isAlphanumeric, "Vehicle plate must be alphanumeric")
+				.withValidator(BasicPolicy::isStrEmptyOrLongEnough, "Vehicle plate is too short")
+				.withValidator(BasicPolicy::isStrEmptyOrNotTooLong, "Vehicle plate is too long")
+				.bind(Vehicle::getPlate, Vehicle::setPlate);
+
+		binder.forField(vin)
+				.asRequired("Vehicle vin is required")
+				.withValidator(BasicPolicy::isAlphanumeric, "Vehicle vin must be alphanumeric")
+				.withValidator(BasicPolicy::isStrEmptyOrLongEnough, "Vehicle vin is too short")
+				.withValidator(BasicPolicy::isStrEmptyOrNotTooLong, "Vehicle vin is too long")
+				.bind(Vehicle::getVin, Vehicle::setVin);
+
+		binder.forField(mileage)
+				.asRequired("Vehicle mileage is required")
+				.bind(Vehicle::getMileage, Vehicle::setMileage);
 	}
 
 	private Component createButtonsLayout() {
@@ -117,7 +163,9 @@ public class VehicleForm extends FormLayout {
 	}
 
 	private void validateAndSave() {
-		if (binder.isValid())
+		Vehicle vehicle = new Vehicle();
+
+		if (binder.writeBeanIfValid(vehicle)) // validates and reads fields
 			fireEvent(new SaveEvent(this, binder.getBean()));
 	}
 
