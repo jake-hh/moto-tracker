@@ -54,6 +54,13 @@ public class VehicleForm extends FormLayout {
 		vin.setValueChangeMode(ValueChangeMode.LAZY);
 		mileage.setValueChangeMode(ValueChangeMode.LAZY);
 
+		type.setRequired(true);
+		make.setRequired(true);
+		model.setRequired(true);
+		engine.setRequired(true);
+		colour.setRequired(true);
+		mileage.setRequired(true);
+
 		mileage.setStepButtonsVisible(true);
 		mileage.setStep(Vehicle.MILEAGE_STEP);
 		mileage.setMin(Vehicle.MIN_MILEAGE);
