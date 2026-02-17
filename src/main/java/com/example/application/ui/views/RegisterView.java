@@ -5,6 +5,7 @@ import com.example.application.services.RegistrationService;
 import com.example.application.ui.Notify;
 
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -32,7 +33,7 @@ public class RegisterView extends VerticalLayout {
 
 	private final TextField username = new TextField("Username");
 	private final TextField firstName = new TextField("First name");
-	private final TextField lastName = new TextField("First name");
+	private final TextField lastName = new TextField("Last name");
 	private final EmailField email = new EmailField("E-mail address");
 	private final PasswordField password = new PasswordField("Password");
 	private final PasswordField pConfirm = new PasswordField("Confirm password");
@@ -60,6 +61,13 @@ public class RegisterView extends VerticalLayout {
 
 		var header = new H2("Create account");
 
+		username.setValueChangeMode(ValueChangeMode.LAZY);
+		firstName.setValueChangeMode(ValueChangeMode.LAZY);
+		lastName.setValueChangeMode(ValueChangeMode.LAZY);
+		email.setValueChangeMode(ValueChangeMode.LAZY);
+		password.setValueChangeMode(ValueChangeMode.LAZY);
+		pConfirm.setValueChangeMode(ValueChangeMode.LAZY);
+
 		firstName.setClearButtonVisible(true);
 		lastName.setClearButtonVisible(true);
 
@@ -73,6 +81,7 @@ public class RegisterView extends VerticalLayout {
 		bindFields2AppUser();
 
 		Button registerBtn = new Button("Register", this::validateAndSave);
+		registerBtn.addClickShortcut(Key.ENTER);
 		registerBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		registerBtn.setWidthFull();
 		registerBtn.getStyle().set("margin-top", "var(--lumo-space-l");
