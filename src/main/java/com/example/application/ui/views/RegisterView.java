@@ -1,6 +1,5 @@
 package com.example.application.ui.views;
 
-import com.example.application.data.AppUserPolicy;
 import com.example.application.data.entity.AppUser;
 import com.example.application.services.RegistrationService;
 import com.example.application.ui.Notify;
@@ -16,7 +15,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
@@ -26,6 +27,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @Route("register")
 @PageTitle("Register | Moto Tracker")
 @AnonymousAllowed
+@SuppressWarnings("FieldCanBeLocal")
 public class RegisterView extends VerticalLayout {
 
 	private final TextField username = new TextField("Username");
@@ -36,7 +38,7 @@ public class RegisterView extends VerticalLayout {
 	private final PasswordField pConfirm = new PasswordField("Confirm password");
 
 	private final RegistrationService registrationService;
-	private final Binder<AppUser> binder = new Binder<>(AppUser.class);
+	private final Binder<AppUser> binder = new BeanValidationBinder<>(AppUser.class);
 
 
 	public RegisterView(RegistrationService registrationService) {
@@ -63,59 +65,41 @@ public class RegisterView extends VerticalLayout {
 
 		email.setClearButtonVisible(true);
 		email.setPrefixComponent(VaadinIcon.ENVELOPE.create());
+		//email.setErrorMessage("Invalid e-mail address");
 
 		password.setPrefixComponent(VaadinIcon.KEY.create());
 		pConfirm.setPrefixComponent(VaadinIcon.KEY.create());
 
 		bindFields2AppUser();
 
-		Button register = new Button("Register", this::validateAndSave);
-		register.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		register.setWidthFull();
-		register.getStyle().set("margin-top", "var(--lumo-space-l");
+		Button registerBtn = new Button("Register", this::validateAndSave);
+		registerBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		registerBtn.setWidthFull();
+		registerBtn.getStyle().set("margin-top", "var(--lumo-space-l");
 
 		var loginLink = new RouterLink("Back to login page", LoginView.class);
 		loginLink.addClassName("mt-footer-link");
 
-		form.add(header, username, firstName, lastName, email, password, pConfirm, register);
+		form.add(header, username, firstName, lastName, email, password, pConfirm, registerBtn);
 		card.add(form);
 		add(title, card, loginLink);
 	}
 
 	private void bindFields2AppUser() {
+		binder.bindInstanceFields(this);
+
 		binder.forField(username)
 				.asRequired("Username is required")
-				.withValidator(AppUserPolicy::isValidUsername, "Username must contain lowercase alphanumeric or dash and begin with a lowercase letter")
-				.withValidator(AppUserPolicy::isUsernameLongEnough, "Username is too short")
-				.withValidator(AppUserPolicy::isEmptyOrNotTooLong, "Username is too long")
 				.withValidator(registrationService::isUsernameAvailable, "Username is already taken")
-				.bind(AppUser::getUsername, AppUser::setUsername);
+				.bind("username");   // Use Entity validators
 
-		binder.forField(firstName)
-				.withValidator(AppUserPolicy::isAlphabetic, "Name must be alphabetic")
-				.withValidator(AppUserPolicy::isNameEmptyOrLongEnough, "Name is too short")
-				.withValidator(AppUserPolicy::isEmptyOrNotTooLong, "Name is too long")
-				.bind(AppUser::getFirstName, AppUser::setFirstName);
-
-		binder.forField(lastName)
-				.withValidator(AppUserPolicy::isAlphabetic, "Name must be alphabetic")
-				.withValidator(AppUserPolicy::isNameEmptyOrLongEnough, "Name is too short")
-				.withValidator(AppUserPolicy::isEmptyOrNotTooLong, "Name is too long")
-				.bind(AppUser::getLastName, AppUser::setLastName);
-
-		binder.forField(email)
-				.withValidator(AppUserPolicy::isEmailEmptyOrValid, "Enter a valid e-mail address")
-				.withValidator(AppUserPolicy::isEmptyOrNotTooLong, "E-mail is too long")
-				.bind(AppUser::getEmail, AppUser::setEmail);
+		//binder.forField(email)
+				//.withValidator(AppUser::validateEmail, "Invalid e-mail address")
+				//.bind("email");
 
 		binder.forField(password)
 				.asRequired("Password is required")
-				.withValidator(AppUserPolicy::isPasswordLongEnough, "Password is too short")
-				.withValidator(AppUserPolicy::hasUppercase, "Password must contain uppercase")
-				.withValidator(AppUserPolicy::hasLowercase, "Password must contain lowercase")
-				.withValidator(AppUserPolicy::hasDigit, "Password must contain digit")
-				.withValidator(AppUserPolicy::isEmptyOrNotTooLong, "Password is too long")
-				.bind(AppUser::getPasswordHash, AppUser::setPasswordHash);
+				.bind("passwordHash");
 
 		binder.forField(pConfirm)
 				.asRequired("Please confirm password")
@@ -124,10 +108,10 @@ public class RegisterView extends VerticalLayout {
 	}
 
 	private void validateAndSave(ClickEvent<Button> click) {
-		var user = new AppUser();
-
-		if (binder.writeBeanIfValid(user)) { // validates and reads fields
+		if (binder.isValid()) { // validates and reads fields
 			try {
+				AppUser user = new AppUser();
+				binder.writeBean(user); // copy fields into fresh entity
 				registrationService.register(user);
 				getUI().ifPresent(ui -> ui.navigate("login"));
 			}
