@@ -26,28 +26,35 @@ public class Vehicle extends AbstractEntity {
 
 	//@Size(min = 2, max = 24, message = "Vehicle type must be 2–24 characters")
 	@NotBlank(message = "Vehicle type is required")
+	@Size(max = 24, message = "Vehicle type exceeds 24 characters")
 	@Pattern(regexp = "[\\p{L}]*", message = "Vehicle type must contain letters")
     private String type; //osobowy PKV, dostawczy LKV, motorbike
 
 	@NotBlank(message = "Vehicle make is required")
+	@Size(max = 24, message = "Vehicle make exceeds 24 characters")
 	@Pattern(regexp = "[\\p{L} -]*", message = "Vehicle make must contain letters, space or dash")
     private String make; //comp
 
 	@NotBlank(message = "Vehicle model is required")
+	@Size(max = 24, message = "Vehicle model exceeds 24 characters")
 	@Pattern(regexp = "[\\p{L}0-9 -]*", message = "Vehicle model must contain alphanumerics space or dash")
     private String model;
 
 	@NotBlank(message = "Vehicle engine is required")
+	@Size(max = 24, message = "Vehicle engine exceeds 24 characters")
 	private String engine;
 
 	@NotBlank(message = "Vehicle colour is required")
+	@Size(max = 24, message = "Vehicle colour exceeds 24 characters")
 	@Pattern(regexp = "[\\p{L}]*", message = "Vehicle colour must contain letters")
     private String colour;
 
 	@Pattern(regexp = "[\\p{L}0-9]*", message = "Vehicle plate must contain alphanumerics")
+	@Size(max = 24, message = "Vehicle plate exceeds 24 characters")
     private String plate;
 
 	@Pattern(regexp = "[\\p{L}0-9]*", message = "Vehicle VIN number must contain alphanumerics")
+	@Size(max = 24, message = "Vehicle vin exceeds 24 characters")
     private String vin;
 
 	@NotNull(message = "Vehicle mileage is required")
