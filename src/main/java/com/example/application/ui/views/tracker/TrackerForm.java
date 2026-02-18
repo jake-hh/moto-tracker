@@ -34,18 +34,29 @@ public class TrackerForm extends FormLayout {
 
 	public TrackerForm() {
 		addClassName("form");
+
 		binder.bindInstanceFields(this);
 
 		binder.forField(intervalField)
 				.withValidator(i -> i == null || i.isValid(), "amount and unit must both be set or both empty")
 				.bind(Tracker::getInterval, Tracker::setInterval);
 
+		name.setRequired(true);
 		name.setValueChangeMode(ValueChangeMode.LAZY);
 
 		range.setValueChangeMode(ValueChangeMode.LAZY);
 		range.setStepButtonsVisible(true);
-		range.setStep(100);
-		range.setMin(100);
+		range.setStep(Tracker.RANGE_STEP);
+		range.setMin(Tracker.RANGE_MIN);
+		range.setMax(Tracker.RANGE_MAX);
+		range.setSuffixComponent(new Span("km"));
+
+		range.setI18n(
+				new IntegerField.IntegerFieldI18n()
+						.setStepErrorMessage(Tracker.RANGE_STEP_MSG)
+						.setMinErrorMessage(Tracker.RANGE_MIN_MSG)
+						.setMaxErrorMessage(Tracker.RANGE_MAX_MSG)
+		);
 
 		btnFooter.addClassName("mt-helper-text");
 
@@ -64,7 +75,7 @@ public class TrackerForm extends FormLayout {
 		deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
 		closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
-		binder.addStatusChangeListener(e -> saveBtn.setEnabled(binder.isValid()));
+		//binder.addStatusChangeListener(e -> saveBtn.setEnabled(binder.isValid()));
 
 		return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
 	}
@@ -77,6 +88,8 @@ public class TrackerForm extends FormLayout {
 	private void validateAndSave() {
 		if (binder.isValid())
 			fireEvent(new SaveEvent(this, binder.getBean()));
+		else
+			binder.validate();
 	}
 
 	public void setTracker(Tracker tracker) {

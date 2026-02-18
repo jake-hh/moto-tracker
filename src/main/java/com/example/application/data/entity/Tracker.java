@@ -2,19 +2,32 @@ package com.example.application.data.entity;
 
 import com.example.application.data.BasicInterval;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 
 @Entity
 public class Tracker extends AbstractEntity {
 
+	public static final int RANGE_STEP = 100;
+	public static final int RANGE_MIN = 100;
+	public static final int RANGE_MAX = 1_000_000;
+
+	public static final String RANGE_STEP_MSG = "Range must be a multiple of " + RANGE_STEP;
+	public static final String RANGE_MIN_MSG = "Range must be at least " + RANGE_MIN + " km";
+	public static final String RANGE_MAX_MSG = "Range is too large";
+
 	@NotNull
 	@ManyToOne
 	private Vehicle vehicle;
 
-	@NotBlank
+	@NotBlank(message = "Tracker name is required")
+	@Size(max = 24, message = "Tracker name exceeds 24 characters")
+	@Pattern(regexp = "[\\p{L}0-9 -]*", message = "Tracker name must contain alphanumerics space or dash")
 	private String name;
+
+	@Min(value = 100, message = RANGE_MIN_MSG)
+	@Max(value = 10_000_000, message = RANGE_MAX_MSG)
+	private Integer range;
 
 	// @Column(name = "interval_value")
 	@Embedded
@@ -23,8 +36,6 @@ public class Tracker extends AbstractEntity {
 			@AttributeOverride(name = "unit",   column = @Column(name = "INTERV_UNIT"))
 	})
 	private BasicInterval interv;
-
-	private Integer range;
 
 
 	public Tracker() { }
