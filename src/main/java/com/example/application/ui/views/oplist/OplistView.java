@@ -13,8 +13,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-//import com.vaadin.flow.component.textfield.TextField;
-//import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -33,7 +31,6 @@ public class OplistView extends VerticalLayout {
 	private final MainService service;
 	private final Grid<Operation> grid = new Grid<>(Operation.class, false);
 	private final OperationForm form = new OperationForm();
-	// TextField filterText = new TextField();
 
 	private final MainLayout mainLayout;
 
@@ -87,9 +84,9 @@ public class OplistView extends VerticalLayout {
 
 	private void configureForm() {
 		form.setWidth("25em");
-		form.addSaveListener(this::saveOperation); // <1>
-		form.addDeleteListener(this::deleteOperation); // <2>
-		form.addCloseListener(e -> closeEditor()); // <3>
+		form.addSaveListener(this::saveOperation);
+		form.addDeleteListener(this::deleteOperation);
+		form.addCloseListener(e -> closeEditor());
 		updateForm();
 	}
 
@@ -110,7 +107,6 @@ public class OplistView extends VerticalLayout {
 	private void configureGrid() {
 		grid.addClassNames("grid");
 		grid.setSizeFull();
-		// grid.setColumns("firstName", "lastName", "email");
 		grid.addColumn(operation -> operation.getEvent().getDateStr()).setHeader("Date");
 		grid.addColumn(operation -> operation.getEvent().getMileage()).setHeader("Mileage");
 		grid.addColumn(operation -> operation.getTracker().getName()).setHeader("Tracker");
@@ -123,15 +119,10 @@ public class OplistView extends VerticalLayout {
 	}
 
 	private Component getToolbar() {
-		// filterText.setPlaceholder("Filter by name...");
-		// filterText.setClearButtonVisible(true);
-		// filterText.setValueChangeMode(ValueChangeMode.LAZY);
-		// filterText.addValueChangeListener(e -> updateList());
-
 		Button addOperationButton = new Button("Add operation");
 		addOperationButton.addClickListener(click -> addOperation());
 
-		var toolbar = new HorizontalLayout(/*filterText, */addOperationButton);
+		var toolbar = new HorizontalLayout(addOperationButton);
 		toolbar.addClassName("toolbar");
 		return toolbar;
 	}
@@ -160,7 +151,7 @@ public class OplistView extends VerticalLayout {
 	}
 
 	private void updateList() {
-		grid.setItems(service.findOperations(/*filterText.getValue()*/));
+		grid.setItems(service.findOperations());
 	}
 
 	private void updateForm() {
