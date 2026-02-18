@@ -108,6 +108,9 @@ public class VehicleForm extends FormLayout {
 		deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
 		closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
+		binder.addStatusChangeListener(e ->
+				saveBtn.getClassNames().set("mt-inactive-btn", !binder.isValid()));
+
 		return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
 	}
 

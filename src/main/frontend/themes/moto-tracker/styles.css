@@ -27,3 +27,12 @@ a[highlight] {
 		border:			1px solid var(--lumo-contrast-20pct);
 		border-radius:	8px;
 }
+
+.mt-inactive-btn {
+		background-color:	var(--lumo-contrast-5pct);
+		color:				var(--lumo-disabled-text-color);
+}
+
+.mt-inactive-btn:not([theme~="primary"]):hover {
+		background-color:	var(--lumo-contrast-10pct);
+}

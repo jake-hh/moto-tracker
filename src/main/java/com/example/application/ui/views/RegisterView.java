@@ -85,6 +85,12 @@ public class RegisterView extends VerticalLayout {
 		registerBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		registerBtn.setWidthFull();
 		registerBtn.getStyle().set("margin-top", "var(--lumo-space-l");
+		/*
+		registerBtn.addClassName("mt-inactive-btn");
+
+		binder.addStatusChangeListener(e ->
+				registerBtn.getClassNames().set("mt-inactive-btn", !binder.isValid()));
+		*/
 
 		var loginLink = new RouterLink("Back to login page", LoginView.class);
 		loginLink.addClassName("mt-footer-link");
