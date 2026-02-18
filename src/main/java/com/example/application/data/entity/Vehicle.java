@@ -77,6 +77,13 @@ public class Vehicle extends AbstractEntity {
 		this.trackingDate = trackingDate;
 	}
 
+	public static boolean isEmpty(Vehicle v) {
+		return v == null || v.getOwner() == null
+				|| v.getType() == null || v.getType().isBlank()
+				|| v.getMake() == null || v.getMake().isBlank()
+				|| v.getModel() == null || v.getModel().isBlank();
+	}
+
 	@Override
 	public String toString() {
 		return "Vehicle of " + owner + " [ " + type + " " + make + " " + model + " " + engine + " " + colour + " " + plate + " " + mileage + " " + trackingDate + " ]";

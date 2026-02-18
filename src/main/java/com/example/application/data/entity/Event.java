@@ -29,6 +29,10 @@ public class Event extends AbstractEntity {
 		this.date = date;
 	}
 
+	public static boolean isEmpty(Event e) {
+		return e == null || e.getVehicle() == null || e.getDate() == null;
+	}
+
 	@Override
 	public String toString() {
 		return "Event " + getDateStr() + " " + getMileage();

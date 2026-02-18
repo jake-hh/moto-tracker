@@ -24,6 +24,10 @@ public class Operation extends AbstractEntity {
 		this.tracker = tracker;
 	}
 
+	public static boolean isEmpty(Operation o) {
+		return o == null || o.getTracker() == null || o.getEvent() == null;
+	}
+
 	@Override
 	public String toString() {
 		return "Operation [ " + getEvent() + " <-> " + getTracker() + " ]";

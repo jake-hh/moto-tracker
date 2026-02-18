@@ -73,6 +73,7 @@ public class MainService {
 	}
 
 	public void bumpVehicleMileage(Event event) {
+		// TODO: check if event is empty
 		Vehicle vehicle = event.getVehicle();
 
 		if (vehicle.getMileage() == null || vehicle.getMileage() < event.getMileage()) {
@@ -88,7 +89,10 @@ public class MainService {
 	}
 
 	public void deleteVehicle(@NotNull Vehicle vehicle) {
-		try {
+		if (Vehicle.isEmpty(vehicle)) {
+			Notify.error("Failed to delete empty vehicle");
+		}
+		else try {
 			getSettingsService().unselectDeletedVehicle(vehicle, this);
 			vehicleRepository.delete(vehicle);
 			Notify.ok("Deleted vehicle");
@@ -99,12 +103,10 @@ public class MainService {
 	}
 
 	public void saveVehicle(@NotNull Vehicle vehicle) {
-		if (vehicle == null) {
-			Notify.error("Vehicle is null. Are you sure you have connected your form to the application?");
-			return;
+		if (Vehicle.isEmpty(vehicle)) {
+			Notify.error("Failed to save empty vehicle");
 		}
-
-		try {
+		else try {
 			vehicleRepository.save(vehicle);
 			Notify.ok("Saved vehicle");
 		} catch (Exception e) {
@@ -163,7 +165,10 @@ public class MainService {
 	}
 
 	public void deleteOperation(@NotNull Operation operation) {
-		try {
+		if (Operation.isEmpty(operation)) {
+			Notify.error("Failed to delete empty operation");
+		}
+		else try {
 			operationRepository.delete(operation);
 			Notify.ok("Deleted operation");
 		} catch (Exception e) {
@@ -183,22 +188,15 @@ public class MainService {
 	}
 
 	public void saveOperation(@NotNull Operation operation) {
-		//Notify.info(operation.toString());
-
-		if (operation == null) {
-			Notify.error("Operation is null. Are you sure you have connected your form to the application?");
+		if (Operation.isEmpty(operation)) {
+			Notify.error("Failed to save empty operation");
 		}
-		else if (operation.getEvent() == null) {
-			Notify.error(operation + " must be linked to an Event before saving");
-		}
-		else if (operation.getTracker() != null) {
-			try {
-				operationRepository.save(operation);
-				Notify.ok("Saved operation");
-			} catch (Exception e) {
-				Notify.error("Failed to save operation: " + e.getMessage());
-				throw new RuntimeException("Could not save operation", e);
-			}
+		else try {
+			operationRepository.save(operation);
+			Notify.ok("Saved operation");
+		} catch (Exception e) {
+			Notify.error("Failed to save operation: " + e.getMessage());
+			throw new RuntimeException("Could not save operation", e);
 		}
 	}
 
@@ -273,7 +271,10 @@ public class MainService {
 	}
 
 	public void deleteTracker(@NotNull Tracker tracker) {
-		try {
+		if (Tracker.isEmpty(tracker)) {
+			Notify.error("Failed to delete empty tracker");
+		}
+		else try {
 			trackerRepository.delete(tracker);
 			Notify.ok("Deleted tracker");
 		} catch (Exception e) {
@@ -283,12 +284,10 @@ public class MainService {
 	}
 
 	public void saveTracker(@NotNull Tracker tracker) {
-		if (tracker == null) {
-			Notify.error("Tracker is null. Are you sure you have connected your form to the application?");
-			return;
+		if (Tracker.isEmpty(tracker)) {
+			Notify.error("Failed to save empty tracker");
 		}
-
-		try {
+		else try {
 			trackerRepository.save(tracker);
 			Notify.ok("Saved tracker");
 		} catch (Exception e) {
@@ -325,7 +324,10 @@ public class MainService {
 	}
 
 	/*public void deleteEvent(Event event) {
-		try {
+		if (Event.isEmpty(event)) {
+			Notify.error("Failed to delete empty event");
+		}
+		else try {
 			eventRepository.delete(event);
 			Notify.ok("Deleted event");
 		} catch (Exception e) {
@@ -367,20 +369,15 @@ public class MainService {
 	}
 
 	public void saveEvent(@NotNull Event event) {
-		if (event == null) {
-			Notify.error("Event is null. Are you sure you have connected your form to the application?");
+		if (Event.isEmpty(event)) {
+			Notify.error("Failed to save empty event");
 		}
-		else if (event.getDate() == null) {
-			Notify.error(event + " needs a date before saving");
-		}
-		else {
-			try {
-				eventRepository.save(event);
-				Notify.ok("Saved event");
-			} catch (Exception e) {
-				Notify.error("Failed to save event: " + e.getMessage());
-				throw new RuntimeException("Could not save event", e);
-			}
+		else try {
+			eventRepository.save(event);
+			Notify.ok("Saved event");
+		} catch (Exception e) {
+			Notify.error("Failed to save event: " + e.getMessage());
+			throw new RuntimeException("Could not save event", e);
 		}
 	}
 }
