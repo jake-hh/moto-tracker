@@ -74,6 +74,7 @@ public class OperationForm extends FormLayout {
 
 
 	public void setOperation(Operation operation) {
+		deleteBtn.setVisible(!Operation.isEmpty(operation));
 		binder.setBean(operation);
 	}
 

@@ -95,6 +95,7 @@ public class TrackerForm extends FormLayout {
 	}
 
 	public void setTracker(Tracker tracker) {
+		deleteBtn.setVisible(!Tracker.isEmpty(tracker));
 		binder.setBean(tracker);
 	}
 

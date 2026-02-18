@@ -127,6 +127,7 @@ public class VehicleForm extends FormLayout {
 	}
 
 	public void setVehicle(Vehicle vehicle) {
+		deleteBtn.setVisible(!Vehicle.isEmpty(vehicle));
 		binder.setBean(vehicle);
 	}
 
