@@ -7,6 +7,11 @@ import java.time.Period;
 @Embeddable
 public record BasicInterval(Integer amount, Unit unit) {
 
+	public static final int AMOUNT_MIN = 1;
+	public static final int AMOUNT_MAX = 100;
+
+	public static final String AMOUNT_MIN_MSG = "Interval amount must be greater than 0";
+	public static final String AMOUNT_MAX_MSG = "Interval amount is too large";
 	public static final String NOT_VALID_MSG = "Interval amount and unit must both be set or both empty";
 
 	public enum Unit {
@@ -31,6 +36,6 @@ public record BasicInterval(Integer amount, Unit unit) {
 	}
 
 	public static boolean isValid(BasicInterval i) {
-		return i == null || (i.amount != null && i.unit != null && i.amount > 0);
+		return i == null || i.amount != null && (i.unit != null || i.amount < AMOUNT_MIN || i.amount > AMOUNT_MAX);
 	}
 }
