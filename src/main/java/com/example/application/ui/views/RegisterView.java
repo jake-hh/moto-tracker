@@ -2,6 +2,7 @@ package com.example.application.ui.views;
 
 import com.example.application.data.entity.AppUser;
 import com.example.application.services.RegistrationService;
+//import com.example.application.ui.components.Button;
 import com.example.application.ui.Notify;
 
 import com.vaadin.flow.component.ClickEvent;
@@ -85,12 +86,8 @@ public class RegisterView extends VerticalLayout {
 		registerBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		registerBtn.setWidthFull();
 		registerBtn.getStyle().set("margin-top", "var(--lumo-space-l");
-		/*
-		registerBtn.addClassName("mt-inactive-btn");
 
-		binder.addStatusChangeListener(e ->
-				registerBtn.getClassNames().set("mt-inactive-btn", !binder.isValid()));
-		*/
+		//binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
 
 		var loginLink = new RouterLink("Back to login page", LoginView.class);
 		loginLink.addClassName("mt-footer-link");

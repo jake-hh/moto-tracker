@@ -1,12 +1,12 @@
 package com.example.application.ui.views.vehicle;
 
 import com.example.application.data.entity.Vehicle;
+import com.example.application.ui.components.Button;
 import com.example.application.ui.events.LayoutFormEvent;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Span;
@@ -108,8 +108,7 @@ public class VehicleForm extends FormLayout {
 		deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
 		closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
-		binder.addStatusChangeListener(e ->
-				saveBtn.getClassNames().set("mt-inactive-btn", !binder.isValid()));
+		binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
 
 		return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
 	}
