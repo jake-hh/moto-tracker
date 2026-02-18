@@ -86,6 +86,10 @@ public class RegisterView extends VerticalLayout {
 		registerBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		registerBtn.setWidthFull();
 		registerBtn.getStyle().set("margin-top", "var(--lumo-space-l");
+		registerBtn.setTooltipText("Invalid input");
+
+		binder.addStatusChangeListener(e ->
+				registerBtn.setTooltipText(binder.isValid() ? null : "Invalid input"));
 
 		//binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
 

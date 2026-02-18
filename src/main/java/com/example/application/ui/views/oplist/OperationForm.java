@@ -55,6 +55,8 @@ public class OperationForm extends FormLayout {
 		saveBtn.addClickShortcut(Key.ENTER);
 		closeBtn.addClickShortcut(Key.ESCAPE);
 
+		saveBtn.setInactiveTooltipText("Invalid input");
+
 		saveBtn.addClickListener(event -> validateAndSave());
 		deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
 		closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
