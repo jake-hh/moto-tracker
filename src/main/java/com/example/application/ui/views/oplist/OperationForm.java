@@ -30,6 +30,7 @@ public class OperationForm extends FormLayout {
 
 	public OperationForm() {
 		addClassName("form");
+
 		binder.bindInstanceFields(this);
 
 		tracker.setItemLabelGenerator(Tracker::getName);
@@ -58,7 +59,7 @@ public class OperationForm extends FormLayout {
 		delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
 		close.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
-		binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
+		//binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
 
 		return new HorizontalLayout(save, delete, close);
 	}
@@ -66,6 +67,8 @@ public class OperationForm extends FormLayout {
 	private void validateAndSave() {
 		if (binder.isValid())
 			fireEvent(new SaveEvent(this, binder.getBean()));
+		else
+			binder.validate();
 	}
 
 
