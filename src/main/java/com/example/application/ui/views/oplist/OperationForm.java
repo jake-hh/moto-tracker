@@ -22,9 +22,9 @@ public class OperationForm extends FormLayout {
 	private final ComboBox<Event> event = new ComboBox<>("Event");
 	private final ComboBox<Tracker> tracker = new ComboBox<>("Tracker");
 
-	private final Button save = new Button("Save");
-	private final Button delete = new Button("Delete");
-	private final Button close = new Button("Cancel");
+	private final Button saveBtn = new Button("Save");
+	private final Button deleteBtn = new Button("Delete");
+	private final Button closeBtn = new Button("Cancel");
 
 	private final Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
 
@@ -48,20 +48,20 @@ public class OperationForm extends FormLayout {
 	}
 
 	private Component createButtonsLayout() {
-		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-		close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		saveBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
+		closeBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-		save.addClickShortcut(Key.ENTER);
-		close.addClickShortcut(Key.ESCAPE);
+		saveBtn.addClickShortcut(Key.ENTER);
+		closeBtn.addClickShortcut(Key.ESCAPE);
 
-		save.addClickListener(event -> validateAndSave());
-		delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
-		close.addClickListener(event -> fireEvent(new CloseEvent(this)));
+		saveBtn.addClickListener(event -> validateAndSave());
+		deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+		closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
-		//binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
+		//binder.addStatusChangeListener(e -> saveBtn.setEnabled(binder.isValid()));
 
-		return new HorizontalLayout(save, delete, close);
+		return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
 	}
 
 	private void validateAndSave() {
