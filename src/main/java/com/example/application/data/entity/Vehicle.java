@@ -13,11 +13,11 @@ import java.time.LocalDate;
 public class Vehicle extends AbstractEntity {
 
 	public static final int MILEAGE_STEP = 100;
-	public static final int MIN_MILEAGE = 100;
-	public static final int MAX_MILEAGE = 10_000_000;
+	public static final int MILEAGE_MIN = 100;
+	public static final int MILEAGE_MAX = 10_000_000;
 
-	public static final String MILEAGE_STEP_MSG = "Number must be a multiple of " + MILEAGE_STEP;
-	public static final String MILEAGE_MIN_MSG = "Vehicle mileage must be at least " + MIN_MILEAGE + " km";
+	public static final String MILEAGE_STEP_MSG = "Vehicle mileage must be a multiple of " + MILEAGE_STEP;
+	public static final String MILEAGE_MIN_MSG = "Vehicle mileage must be at least " + MILEAGE_MIN + " km";
 	public static final String MILEAGE_MAX_MSG = "Vehicle mileage is too large";
 
 	@ManyToOne(optional = false)

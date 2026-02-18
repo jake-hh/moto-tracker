@@ -63,8 +63,8 @@ public class VehicleForm extends FormLayout {
 
 		mileage.setStepButtonsVisible(true);
 		mileage.setStep(Vehicle.MILEAGE_STEP);
-		mileage.setMin(Vehicle.MIN_MILEAGE);
-		mileage.setMax(Vehicle.MAX_MILEAGE);
+		mileage.setMin(Vehicle.MILEAGE_MIN);
+		mileage.setMax(Vehicle.MILEAGE_MAX);
 		mileage.setSuffixComponent(new Span("km"));
 
 		mileage.setI18n(
