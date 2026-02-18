@@ -1,5 +1,6 @@
 package com.example.application.ui.views.tracker;
 
+import com.example.application.data.BasicInterval;
 import com.example.application.data.entity.Tracker;
 import com.example.application.ui.events.LayoutFormEvent;
 
@@ -38,7 +39,7 @@ public class TrackerForm extends FormLayout {
 		binder.bindInstanceFields(this);
 
 		binder.forField(intervalField)
-				.withValidator(i -> i == null || i.isValid(), "amount and unit must both be set or both empty")
+				.withValidator(BasicInterval::isValid, BasicInterval.NOT_VALID_MSG)
 				.bind(Tracker::getInterval, Tracker::setInterval);
 
 		name.setRequired(true);

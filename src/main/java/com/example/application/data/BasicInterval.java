@@ -7,6 +7,8 @@ import java.time.Period;
 @Embeddable
 public record BasicInterval(Integer amount, Unit unit) {
 
+	public static final String NOT_VALID_MSG = "Interval amount and unit must both be set or both empty";
+
 	public enum Unit {
 		Days, Weeks, Months, Years
 	}
@@ -28,7 +30,7 @@ public record BasicInterval(Integer amount, Unit unit) {
 		return unit.name().substring(0, unit.name().length() - 1);
 	}
 
-	public boolean isValid() {
-		return amount != null && unit != null && amount() > 0;
+	public static boolean isValid(BasicInterval i) {
+		return i == null || (i.amount != null && i.unit != null && i.amount > 0);
 	}
 }
