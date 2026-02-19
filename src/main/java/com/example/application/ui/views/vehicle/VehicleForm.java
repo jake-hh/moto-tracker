@@ -14,12 +14,14 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
 
@@ -65,6 +67,38 @@ public class VehicleForm extends FormLayout {
 		colour.setRequiredIndicatorVisible(true);
 
 		type.setItems(VehicleType.values());
+
+		// --- Renderer for icons + label ---
+		type.setRenderer(new ComponentRenderer<>(vehicleType -> {
+			var icon = vehicleType.getIcon(); // Component
+			var label = new Span(vehicleType.name());
+
+			var layout = new HorizontalLayout(icon, label);
+			layout.setAlignItems(FlexComponent.Alignment.CENTER);
+			layout.setPadding(false);
+			layout.setSpacing(true);
+
+			return layout;
+		}));
+
+		// --- Update prefix component when selection changes ---
+		type.addValueChangeListener(event -> {
+			var selected = event.getValue();
+
+			if (selected != null) {
+				var icon = selected.getIcon();
+				icon.getStyle().set("cursor", "default");
+				type.setPrefixComponent(icon);
+			} else {
+				type.setPrefixComponent(null);
+			}
+		});
+
+		// --- Initialize prefix for existing value ---
+		if (type.getValue() != null) {
+			var icon = type.getValue().getIcon();
+			type.setPrefixComponent(icon);
+		}
 
 		mileage.setStepButtonsVisible(true);
 		mileage.setStep(Vehicle.MILEAGE_STEP);
