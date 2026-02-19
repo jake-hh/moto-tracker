@@ -10,6 +10,10 @@ public class Button extends com.vaadin.flow.component.button.Button {
 		super(label);
 	}
 
+	public boolean isActive() {
+		return active;
+	}
+
 	public void setActive(boolean active) {
 		this.active = active;
 		setClassName("mt-inactive-btn", !active);

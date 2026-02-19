@@ -38,7 +38,8 @@ public class VehicleForm extends FormLayout {
 	private final Button saveBtn = new Button("Save");
 	private final Button deleteBtn = new Button("Delete");
 	private final Button closeBtn = new Button("Cancel");
-	private final Span removeStatusLabel = new Span();
+
+	private final Span deleteBtnHelper = new Span();
 
 	private final Binder<Vehicle> binder = new BeanValidationBinder<>(Vehicle.class);
 
@@ -74,8 +75,7 @@ public class VehicleForm extends FormLayout {
 						.setMaxErrorMessage(Vehicle.MILEAGE_MAX_MSG)
 		);
 
-		//addStatusLabel.addClassNames("mt-helper-text", "warning");
-		removeStatusLabel.addClassName("mt-helper-text");
+		deleteBtnHelper.addClassNames("mt-helper-text", "warning");
 
 		binder.bindInstanceFields(this);
 
@@ -92,7 +92,7 @@ public class VehicleForm extends FormLayout {
 			registrationDate,
 			trackingDate,
 			createButtonsLayout(),
-			removeStatusLabel
+			deleteBtnHelper
 		);
 	}
 
@@ -105,9 +105,10 @@ public class VehicleForm extends FormLayout {
 		closeBtn.addClickShortcut(Key.ESCAPE);
 
 		saveBtn.setInactiveTooltipText("Invalid input");
+		deleteBtn.setInactiveTooltipText("Vehicle is used in service history");
 
 		saveBtn.addClickListener(event -> validateAndSave());
-		deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+		deleteBtn.addClickListener(event -> checkAndDelete());
 		closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
 		binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
@@ -116,8 +117,14 @@ public class VehicleForm extends FormLayout {
 	}
 
 	public void setDeleteEnabled(boolean enabled) {
-		deleteBtn.setEnabled(enabled);
-		removeStatusLabel.setText(enabled ? null : "Vehicle is used in service history");
+		deleteBtn.setActive(enabled);
+	}
+
+	private void checkAndDelete() {
+		if (deleteBtn.isActive())
+			fireEvent(new DeleteEvent(this, binder.getBean()));
+		else
+			deleteBtnHelper.setText("Cannot delete - Vehicle is used in service history");
 	}
 
 	private void validateAndSave() {
@@ -128,8 +135,9 @@ public class VehicleForm extends FormLayout {
 	}
 
 	public void setVehicle(Vehicle vehicle) {
-		deleteBtn.setVisible(!Vehicle.isEmpty(vehicle));
 		binder.setBean(vehicle);
+		deleteBtn.setVisible(!Vehicle.isEmpty(vehicle));
+		deleteBtnHelper.setText(null);
 	}
 
 

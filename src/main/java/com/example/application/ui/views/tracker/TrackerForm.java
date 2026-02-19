@@ -29,7 +29,8 @@ public class TrackerForm extends FormLayout {
 	private final Button saveBtn = new Button("Save");
 	private final Button deleteBtn = new Button("Delete");
 	private final Button closeBtn = new Button("Cancel");
-	private final Span btnFooter = new Span();
+
+	private final Span deleteBtnHelper = new Span();
 
 	private final Binder<Tracker> binder = new BeanValidationBinder<>(Tracker.class);
 
@@ -59,9 +60,9 @@ public class TrackerForm extends FormLayout {
 						.setMaxErrorMessage(Tracker.RANGE_MAX_MSG)
 		);
 
-		btnFooter.addClassName("mt-helper-text");
+		deleteBtnHelper.addClassNames("mt-helper-text", "warning");
 
-		add(name, range, intervalField, createButtonsLayout(), btnFooter);
+		add(name, range, intervalField, createButtonsLayout(), deleteBtnHelper);
 	}
 
 	private Component createButtonsLayout() {
@@ -73,9 +74,10 @@ public class TrackerForm extends FormLayout {
 		closeBtn.addClickShortcut(Key.ESCAPE);
 
 		saveBtn.setInactiveTooltipText("Invalid input");
+		deleteBtn.setInactiveTooltipText("Tracker is used in service history");
 
 		saveBtn.addClickListener(event -> validateAndSave());
-		deleteBtn.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+		deleteBtn.addClickListener(event -> checkAndDelete());
 		closeBtn.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
 		binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
@@ -84,8 +86,14 @@ public class TrackerForm extends FormLayout {
 	}
 
 	public void setDeleteEnabled(boolean enabled) {
-		deleteBtn.setEnabled(enabled);
-		btnFooter.setText(enabled ? null : "Tracker is used in service history");
+		deleteBtn.setActive(enabled);
+	}
+
+	private void checkAndDelete() {
+		if (deleteBtn.isActive())
+			fireEvent(new DeleteEvent(this, binder.getBean()));
+		else
+			deleteBtnHelper.setText("Cannot delete - Tracker is used in service history");
 	}
 
 	private void validateAndSave() {
@@ -96,8 +104,9 @@ public class TrackerForm extends FormLayout {
 	}
 
 	public void setTracker(Tracker tracker) {
-		deleteBtn.setVisible(!Tracker.isEmpty(tracker));
 		binder.setBean(tracker);
+		deleteBtn.setVisible(!Tracker.isEmpty(tracker));
+		deleteBtnHelper.setText(null);
 	}
 
 
