@@ -5,10 +5,6 @@ import com.example.application.data.entity.Tracker;
 import com.example.application.services.model.TrackerData;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
-import com.example.application.ui.events.EventChangedEvent;
-import com.example.application.ui.events.OperationChangedEvent;
-import com.example.application.ui.events.TrackerChangedEvent;
-import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
@@ -50,35 +46,23 @@ public class DashboardView extends VerticalLayout {
 		this.mainService = mainService;
 		this.settingsService = settingsService;
 
-		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
-		mainLayout.addTrackerChangedListener(this::onTrackerChanged);
-		mainLayout.addEventChangedListener(this::onEventChanged);
-		mainLayout.addOperationChangedListener(this::onOperationChanged);
+		registerListeners(mainLayout);
 
 		addClassName("view");
 		setSizeFull();
 		configureGrid();
 
-		add(header, getToolbar(), grid);
+		add(header, createToolbar(), grid);
 		//grid.setSizeFull();
 
-		update();
+		updateView();
 	}
 
-	private void onVehicleSelected(VehicleSelectedEvent e) {
-		update();
-	}
-
-	private void onTrackerChanged(TrackerChangedEvent e) {
-		update();
-	}
-
-	private void onEventChanged(EventChangedEvent e) {
-		update();
-	}
-
-	private void onOperationChanged(OperationChangedEvent e) {
-		update();
+	private void registerListeners(MainLayout mainLayout) {
+		mainLayout.addVehicleSelectedListener(e -> updateView());
+		mainLayout.addTrackerChangedListener(e -> updateView());
+		mainLayout.addEventChangedListener(e -> updateView());
+		mainLayout.addOperationChangedListener(e -> updateView());
 	}
 
 	private void configureGrid() {
@@ -92,7 +76,7 @@ public class DashboardView extends VerticalLayout {
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 	}
 
-	private HorizontalLayout getToolbar() {
+	private HorizontalLayout createToolbar() {
 		formatSelect.setLabel("Service format");
 		formatSelect.setItems(DashboardEventFormat.values());
 		formatSelect.setItemLabelGenerator(DashboardEventFormat::getLabel);
@@ -108,17 +92,33 @@ public class DashboardView extends VerticalLayout {
 
 		settingsService.updateDashboardEventFormat(change.getValue());
 		updateHeader();
-		updateList();
+		updateGrid();
 	}
 
-	private void update() {
+	private void updateView() {
 		formatSelect.setValue(settingsService.getDashboardEventFormat());
 		updateHeader();
-		updateList();
+		updateGrid();
 	}
 
 	private void updateHeader() {
 		header.update(settingsService.getSelectedVehicle());
+	}
+
+	private void updateGrid() {
+		DashboardEventFormat format = settingsService.getDashboardEventFormat();
+		List<Tracker> trackers = mainService.findTrackers();
+		TrackerData data = mainService.loadDataForTrackers(trackers);
+
+		grid.setItems(trackers);
+
+		grid.getColumnByKey("date")
+				.setHeader(getDateColumnHeader(format))
+				.setRenderer(TrackerDataRenderer.renderDate(data, format));
+
+		grid.getColumnByKey("mileage")
+				.setHeader(getMileageColumnHeader(format))
+				.setRenderer(TrackerDataRenderer.renderMileage(data, format));
 	}
 
 	private String getDateColumnHeader(DashboardEventFormat format) {
@@ -135,22 +135,5 @@ public class DashboardView extends VerticalLayout {
 			case NEXT_SERVICE -> "Next mileage";
 			case NEXT_SERVICE_RELATIVE -> "Remaining distance";
 		};
-	}
-
-	private void updateList() {
-		DashboardEventFormat format = settingsService.getDashboardEventFormat();
-		List<Tracker> trackers = mainService.findTrackers();
-		TrackerData data = mainService.loadDataForTrackers(trackers);
-
-		grid.setItems(trackers);
-
-		grid.getColumnByKey("date")
-				.setHeader(getDateColumnHeader(format))
-				.setRenderer(TrackerDataRenderer.renderDate(data, format));
-
-		grid.getColumnByKey("mileage")
-				.setHeader(getMileageColumnHeader(format))
-				.setRenderer(TrackerDataRenderer.renderMileage(data, format));
-
 	}
 }

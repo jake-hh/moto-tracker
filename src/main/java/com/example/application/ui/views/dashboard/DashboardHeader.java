@@ -35,7 +35,8 @@ public class DashboardHeader extends VerticalLayout {
 				.orElse(VehicleType.Other)
 				.getIcon();
 
-		icon.getStyle().set("cursor", "default")
+		icon.getStyle()
+				.set("cursor", "default")
 				.set("font-size", "2em");
 
 		nameBar.removeAll();
