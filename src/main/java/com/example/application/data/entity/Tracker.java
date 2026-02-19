@@ -17,7 +17,7 @@ public class Tracker extends AbstractEntity {
 	public static final String RANGE_MAX_MSG = "Range is too large";
 
 	@NotNull
-	@ManyToOne
+	@ManyToOne(optional = false)
 	private Vehicle vehicle;
 
 	@NotBlank(message = "Tracker name is required")

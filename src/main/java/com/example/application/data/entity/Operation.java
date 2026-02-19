@@ -9,11 +9,11 @@ import jakarta.validation.constraints.NotNull;
 public class Operation extends AbstractEntity {
 
 	@NotNull(message = "Tracker is required")
-	@ManyToOne
+	@ManyToOne(optional = false)
 	private Tracker tracker;
 
 	@NotNull(message = "Event is required")
-	@ManyToOne
+	@ManyToOne(optional = false)
 	private Event event;
 
 

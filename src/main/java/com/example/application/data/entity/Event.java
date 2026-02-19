@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Event extends AbstractEntity {
 
 	@NotNull
-	@ManyToOne
+	@ManyToOne(optional = false)
 	private Vehicle vehicle;
 
 	@NotNull

@@ -2,6 +2,7 @@ package com.example.application.data.entity;
 
 import com.example.application.data.DashboardEventFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 
 @SuppressWarnings("unused")
@@ -9,6 +10,7 @@ import jakarta.persistence.*;
 //@Table(name = "user_settings")
 public class AppUserSettings extends AbstractEntity {
 
+	@NotNull
 	@OneToOne(optional = false)
 	private AppUser user;
 

@@ -20,6 +20,7 @@ public class Vehicle extends AbstractEntity {
 	public static final String MILEAGE_MIN_MSG = "Vehicle mileage must be at least " + MILEAGE_MIN + " km";
 	public static final String MILEAGE_MAX_MSG = "Vehicle mileage is too large";
 
+	@NotNull
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "owner_id")
     private AppUser owner;
@@ -66,7 +67,7 @@ public class Vehicle extends AbstractEntity {
 
 	private LocalDate registrationDate;
 
-	@NotNull
+	@NotNull(message = "Vehicle tracking date is required")
 	private LocalDate trackingDate;
 
 
