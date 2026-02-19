@@ -9,6 +9,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -94,8 +95,12 @@ public class VehicleView extends VerticalLayout {
 		grid.addColumns(
 				"make",
 				"model",
-				"engine",
-				"colour",
+				"engine"
+		);
+		grid.addColumn(new ComponentRenderer<>(
+				vehicle -> createColorCircle(vehicle.getColour())))
+				.setHeader("Colour");
+		grid.addColumns(
 				"plate",
 				"vin",
 				"productionDate",
@@ -111,6 +116,17 @@ public class VehicleView extends VerticalLayout {
 
 		grid.asSingleSelect().addValueChangeListener(event ->
 				editVehicle(event.getValue()));
+	}
+
+	private Component createColorCircle(String color) {
+		Div circle = new Div();
+		circle.setWidth("20px");
+		circle.setHeight("20px");
+		circle.getStyle().set("border-radius", "50%");
+		circle.getStyle().set("border", "1px solid var(--lumo-contrast-20pct)");
+		circle.getStyle().set("background-color", color != null ? color : "transparent");
+		circle.getStyle().set("margin", "auto");
+		return circle;
 	}
 
 	private Component getToolbar() {
