@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -78,8 +79,19 @@ public class VehicleView extends VerticalLayout {
 	private void configureGrid() {
 		grid.addClassNames("grid");
 		grid.setSizeFull();
-		grid.setColumns(
-				"type",
+
+		grid.addColumn(new ComponentRenderer<>(vehicle -> {
+					Component icon = vehicle.getType().getIcon();
+					icon.getStyle().set("cursor", "default");
+					return icon;
+				}))
+				.setHeader("Type")
+				.setSortable(true)
+				.setComparator(vehicle -> vehicle.getType().ordinal())
+				.setAutoWidth(true)
+				.setFlexGrow(0);
+
+		grid.addColumns(
 				"make",
 				"model",
 				"engine",
