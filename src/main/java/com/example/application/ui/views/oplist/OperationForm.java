@@ -2,6 +2,7 @@ package com.example.application.ui.views.oplist;
 
 import com.example.application.data.entity.*;
 import com.example.application.ui.components.Button;
+import com.example.application.ui.components.Footer;
 import com.example.application.ui.events.LayoutFormEvent;
 
 import com.vaadin.flow.component.Component;
@@ -26,6 +27,8 @@ public class OperationForm extends FormLayout {
 	private final Button deleteBtn = new Button("Delete");
 	private final Button closeBtn = new Button("Cancel");
 
+	private final Footer btnFooter = new Footer();
+
 	private final Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
 
 	public OperationForm() {
@@ -36,7 +39,7 @@ public class OperationForm extends FormLayout {
 		tracker.setItemLabelGenerator(Tracker::getName);
 		event.setItemLabelGenerator(Event::getDateStr);
 
-		add(tracker, event, createButtonsLayout());
+		add(tracker, event, createButtonsLayout(), btnFooter);
 	}
 
 	public void setTrackers(List<Tracker> trackers) {

@@ -2,6 +2,7 @@ package com.example.application.ui.views.vehicle;
 
 import com.example.application.data.entity.Vehicle;
 import com.example.application.ui.components.Button;
+import com.example.application.ui.components.Footer;
 import com.example.application.ui.events.LayoutFormEvent;
 
 import com.vaadin.flow.component.Component;
@@ -39,7 +40,7 @@ public class VehicleForm extends FormLayout {
 	private final Button deleteBtn = new Button("Delete");
 	private final Button closeBtn = new Button("Cancel");
 
-	private final Span deleteBtnHelper = new Span();
+	private final Footer btnFooter = new Footer();
 
 	private final Binder<Vehicle> binder = new BeanValidationBinder<>(Vehicle.class);
 
@@ -75,8 +76,6 @@ public class VehicleForm extends FormLayout {
 						.setMaxErrorMessage(Vehicle.MILEAGE_MAX_MSG)
 		);
 
-		deleteBtnHelper.addClassNames("mt-helper-text", "warning");
-
 		binder.bindInstanceFields(this);
 
 		add(
@@ -92,7 +91,7 @@ public class VehicleForm extends FormLayout {
 			registrationDate,
 			trackingDate,
 			createButtonsLayout(),
-			deleteBtnHelper
+			btnFooter
 		);
 	}
 
@@ -106,6 +105,7 @@ public class VehicleForm extends FormLayout {
 
 		saveBtn.setInactiveTooltipText("Invalid input");
 		deleteBtn.setInactiveTooltipText("Vehicle is used in service history");
+		btnFooter.setText("Cannot delete - Vehicle is used in service history");
 
 		saveBtn.addClickListener(event -> validateAndSave());
 		deleteBtn.addClickListener(event -> checkAndDelete());
@@ -126,7 +126,7 @@ public class VehicleForm extends FormLayout {
 		if (deleteBtn.isActive())
 			fireEvent(new DeleteEvent(this, binder.getBean()));
 		else
-			deleteBtnHelper.setText("Cannot delete - Vehicle is used in service history");
+			btnFooter.showText(true);
 	}
 
 	private void validateAndSave() {
@@ -139,7 +139,7 @@ public class VehicleForm extends FormLayout {
 	public void setVehicle(Vehicle vehicle) {
 		binder.setBean(vehicle);
 		deleteBtn.setVisible(!Vehicle.isEmpty(vehicle));
-		deleteBtnHelper.setText(null);
+		btnFooter.showText(false);
 	}
 
 

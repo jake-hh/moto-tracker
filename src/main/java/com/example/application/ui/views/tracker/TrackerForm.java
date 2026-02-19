@@ -3,6 +3,7 @@ package com.example.application.ui.views.tracker;
 import com.example.application.data.BasicInterval;
 import com.example.application.data.entity.Tracker;
 import com.example.application.ui.components.Button;
+import com.example.application.ui.components.Footer;
 import com.example.application.ui.events.LayoutFormEvent;
 
 import com.vaadin.flow.component.Component;
@@ -30,7 +31,7 @@ public class TrackerForm extends FormLayout {
 	private final Button deleteBtn = new Button("Delete");
 	private final Button closeBtn = new Button("Cancel");
 
-	private final Span deleteBtnHelper = new Span();
+	private final Footer btnFooter = new Footer();
 
 	private final Binder<Tracker> binder = new BeanValidationBinder<>(Tracker.class);
 
@@ -60,9 +61,7 @@ public class TrackerForm extends FormLayout {
 						.setMaxErrorMessage(Tracker.RANGE_MAX_MSG)
 		);
 
-		deleteBtnHelper.addClassNames("mt-helper-text", "warning");
-
-		add(name, range, intervalField, createButtonsLayout(), deleteBtnHelper);
+		add(name, range, intervalField, createButtonsLayout(), btnFooter);
 	}
 
 	private Component createButtonsLayout() {
@@ -75,6 +74,7 @@ public class TrackerForm extends FormLayout {
 
 		saveBtn.setInactiveTooltipText("Invalid input");
 		deleteBtn.setInactiveTooltipText("Tracker is used in service history");
+		btnFooter.setText("Cannot delete - Tracker is used in service history");
 
 		saveBtn.addClickListener(event -> validateAndSave());
 		deleteBtn.addClickListener(event -> checkAndDelete());
@@ -95,7 +95,7 @@ public class TrackerForm extends FormLayout {
 		if (deleteBtn.isActive())
 			fireEvent(new DeleteEvent(this, binder.getBean()));
 		else
-			deleteBtnHelper.setText("Cannot delete - Tracker is used in service history");
+			btnFooter.showText(true);
 	}
 
 	private void validateAndSave() {
@@ -108,7 +108,7 @@ public class TrackerForm extends FormLayout {
 	public void setTracker(Tracker tracker) {
 		binder.setBean(tracker);
 		deleteBtn.setVisible(!Tracker.isEmpty(tracker));
-		deleteBtnHelper.setText(null);
+		btnFooter.showText(false);
 	}
 
 
