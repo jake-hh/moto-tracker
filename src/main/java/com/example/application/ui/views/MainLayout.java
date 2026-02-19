@@ -11,6 +11,7 @@ import com.example.application.ui.views.service.ServiceView;
 import com.example.application.ui.views.tracker.TrackerView;
 import com.example.application.ui.views.vehicle.VehicleView;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.UI;
@@ -20,11 +21,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -99,6 +102,23 @@ public class MainLayout extends AppLayout {
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
 		vehicleBox.addValueChangeListener(this::onVehicleBoxChange);
+
+		var renderer = new ComponentRenderer<Component, Vehicle>(vehicle -> {
+			var icon = vehicle.getType().getIcon();
+			icon.getStyle().set("cursor", "default");
+
+			var name = new Span(vehicle.toStringShort());
+
+			var layout = new HorizontalLayout(icon, name);
+			layout.setAlignItems(FlexComponent.Alignment.CENTER);
+			layout.setPadding(false);
+			layout.setSpacing(true);
+
+			return layout;
+		});
+
+		vehicleBox.setRenderer(renderer);
+		//vehicleBox.setValueRenderer(renderer);
 		refreshVehicleBox();
 
 		// Create Edit Vehicles Button
