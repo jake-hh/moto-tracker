@@ -78,6 +78,7 @@ public class Vehicle extends AbstractEntity {
 	public Vehicle(AppUser owner, LocalDate trackingDate) {
 		this.owner = owner;
 		this.trackingDate = trackingDate;
+		this.type = VehicleType.Car;
 		this.colour = DEFAULT_COLOR;
 	}
 
