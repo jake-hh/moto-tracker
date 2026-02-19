@@ -1,9 +1,7 @@
 package com.example.application.ui.views.dashboard;
 
 import com.example.application.data.DashboardEventFormat;
-import com.example.application.data.VehicleType;
 import com.example.application.data.entity.Tracker;
-import com.example.application.data.entity.Vehicle;
 import com.example.application.services.model.TrackerData;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
@@ -14,12 +12,8 @@ import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.NativeLabel;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -31,7 +25,6 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @SpringComponent
@@ -41,8 +34,8 @@ import java.util.Optional;
 @PageTitle("Dashboard | Moto Tracker")
 public class DashboardView extends VerticalLayout {
 
+	private final DashboardHeader header = new DashboardHeader();
 	private final Grid<Tracker> grid = new Grid<>(Tracker.class, false);
-	private final VerticalLayout header = new VerticalLayout();
 	private final RadioButtonGroup<DashboardEventFormat> formatSelect = new RadioButtonGroup<>();
 
 	private final MainService mainService;
@@ -125,23 +118,7 @@ public class DashboardView extends VerticalLayout {
 	}
 
 	private void updateHeader() {
-		Optional<Vehicle> vehicle = settingsService.getSelectedVehicle();
-
-		String vehicleName = vehicle.map(Vehicle::toStringShort).orElse("No vehicle has been selected");
-		String vehicleData = vehicle.map(Vehicle::toString).orElse(" ");
-
-		Component icon = vehicle.map(Vehicle::getType)
-				.orElse(VehicleType.Other)
-				.getIcon();
-
-		icon.getStyle().set("cursor", "default")
-				.set("font-size", "2em");
-
-		var bar = new HorizontalLayout(icon, new H1(vehicleName));
-		bar.setAlignItems(FlexComponent.Alignment.END);
-
-		header.removeAll();
-		header.add(bar, new NativeLabel(vehicleData));
+		header.update(settingsService.getSelectedVehicle());
 	}
 
 	private String getDateColumnHeader(DashboardEventFormat format) {
