@@ -113,7 +113,9 @@ public class VehicleForm extends FormLayout {
 
 		binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
 
-		return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
+		var layout = new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
+		layout.setClassName("mt-form-btn-layout");
+		return layout;
 	}
 
 	public void setDeleteEnabled(boolean enabled) {

@@ -63,7 +63,9 @@ public class OperationForm extends FormLayout {
 
 		binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
 
-		return new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
+		var layout = new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
+		layout.setClassName("mt-form-btn-layout");
+		return layout;
 	}
 
 	private void validateAndSave() {

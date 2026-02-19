@@ -28,6 +28,11 @@ a[highlight] {
 		border-radius:	8px;
 }
 
+.mt-form-btn-layout {
+		margin-top:			var(--lumo-space-m);
+		margin-bottom:		var(--lumo-space-xs);
+}
+
 .mt-inactive-btn {
 		background-color:	var(--lumo-contrast-5pct);
 		color:				var(--lumo-disabled-text-color);
