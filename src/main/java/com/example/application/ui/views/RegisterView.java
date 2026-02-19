@@ -53,13 +53,19 @@ public class RegisterView extends VerticalLayout {
 
 		var title = new H1("Moto Tracker");
 
-		var card = new VerticalLayout();
+		var card = new VerticalLayout(createRegisterForm());
 		card.setWidth("344px");           // same width as LoginForm
 		card.getStyle().set("padding-top", "var(--lumo-space-xl");
 		card.getStyle().set("padding-bottom", "var(--lumo-space-xl");
 
-		var form = new FormLayout();
+		// Wrap in Span if css font stops working
+		var loginLink = new RouterLink("Back to login page", LoginView.class);
+		loginLink.addClassName("mt-footer-link");
 
+		add(title, card, loginLink);
+	}
+
+	public FormLayout createRegisterForm() {
 		var header = new H2("Create account");
 
 		username.setValueChangeMode(ValueChangeMode.LAZY);
@@ -93,12 +99,7 @@ public class RegisterView extends VerticalLayout {
 
 		//binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
 
-		var loginLink = new RouterLink("Back to login page", LoginView.class);
-		loginLink.addClassName("mt-footer-link");
-
-		form.add(header, username, firstName, lastName, email, password, pConfirm, registerBtn);
-		card.add(form);
-		add(title, card, loginLink);
+		return new FormLayout(header, username, firstName, lastName, email, password, pConfirm, registerBtn);
 	}
 
 	private void bindFields2AppUser() {
