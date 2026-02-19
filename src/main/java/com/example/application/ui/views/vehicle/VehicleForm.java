@@ -1,5 +1,6 @@
 package com.example.application.ui.views.vehicle;
 
+import com.example.application.data.VehicleType;
 import com.example.application.data.entity.Vehicle;
 import com.example.application.ui.components.Button;
 import com.example.application.ui.components.Footer;
@@ -9,6 +10,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -23,7 +25,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 @SuppressWarnings("FieldCanBeLocal")
 public class VehicleForm extends FormLayout {
 
-	private final TextField type = new TextField("Type");
+	private final ComboBox<VehicleType> type = new ComboBox<>("Type");
 	private final TextField make = new TextField("Make");
 	private final TextField model = new TextField("Model");
 	private final TextField engine = new TextField("Engine");
@@ -47,7 +49,6 @@ public class VehicleForm extends FormLayout {
 	public VehicleForm() {
 		addClassName("form");
 
-		type.setValueChangeMode(ValueChangeMode.LAZY);
 		make.setValueChangeMode(ValueChangeMode.LAZY);
 		model.setValueChangeMode(ValueChangeMode.LAZY);
 		engine.setValueChangeMode(ValueChangeMode.LAZY);
@@ -62,6 +63,8 @@ public class VehicleForm extends FormLayout {
 		engine.setRequired(true);
 		colour.setRequired(true);
 		mileage.setRequired(true);
+
+		type.setItems(VehicleType.values());
 
 		mileage.setStepButtonsVisible(true);
 		mileage.setStep(Vehicle.MILEAGE_STEP);

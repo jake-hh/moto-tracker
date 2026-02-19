@@ -1,8 +1,8 @@
 package com.example.application.data.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.example.application.data.VehicleType;
+
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
@@ -26,10 +26,10 @@ public class Vehicle extends AbstractEntity {
     private AppUser owner;
 
 	//@Size(min = 2, max = 24, message = "Vehicle type must be 2–24 characters")
-	@NotBlank(message = "Vehicle type is required")
-	@Size(max = 24, message = "Vehicle type exceeds 24 characters")
-	@Pattern(regexp = "[\\p{L}]*", message = "Vehicle type must contain letters")
-    private String type; //osobowy PKV, dostawczy LKV, motorbike
+	@NotNull(message = "Vehicle type is required")
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private VehicleType type;
 
 	@NotBlank(message = "Vehicle make is required")
 	@Size(max = 24, message = "Vehicle make exceeds 24 characters")
@@ -79,8 +79,9 @@ public class Vehicle extends AbstractEntity {
 	}
 
 	public static boolean isEmpty(Vehicle v) {
-		return v == null || v.getOwner() == null
-				|| v.getType() == null || v.getType().isBlank()
+		return v == null
+				|| v.getOwner() == null
+				|| v.getType() == null
 				|| v.getMake() == null || v.getMake().isBlank()
 				|| v.getModel() == null || v.getModel().isBlank();
 	}
@@ -98,7 +99,7 @@ public class Vehicle extends AbstractEntity {
 		return owner;
 	}
 
-	public String getType() {
+	public VehicleType getType() {
 		return type;
 	}
 
@@ -146,7 +147,7 @@ public class Vehicle extends AbstractEntity {
 		this.owner = owner;
 	}
 
-	public void setType(String type) {
+	public void setType(VehicleType type) {
 		this.type = type;
 	}
 
