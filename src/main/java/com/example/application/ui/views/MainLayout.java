@@ -37,9 +37,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @SpringComponent
 @UIScope
 public class MainLayout extends AppLayout {
+
 	private final SecurityService securityService;
 	private final UserSettingsService settingsService;
 	private final MainService mainService;
+
 	private final ComboBox<Vehicle> vehicleBox = new ComboBox<>("Vehicle");
 
 	public MainLayout(
@@ -66,13 +68,18 @@ public class MainLayout extends AppLayout {
 		if (!change.isFromClient()) return;
 
 		Vehicle vehicle = change.getValue();
+
 		settingsService.updateSelectedVehicle(vehicle);
+		updateVehicleBoxPrefixIcon(vehicle);
 		fireEvent(new VehicleSelectedEvent(this, vehicle));
 	}
 
 	public void refreshVehicleBox() {
 		vehicleBox.setItems(mainService.findVehicles());
-		settingsService.getSelectedVehicle().ifPresent(vehicleBox::setValue);
+		settingsService.getSelectedVehicle().ifPresent(vehicle -> {
+			vehicleBox.setValue(vehicle);
+			updateVehicleBoxPrefixIcon(vehicle);
+		});
 	}
 
 	private void createHeader() {
@@ -83,11 +90,11 @@ public class MainLayout extends AppLayout {
 		);
 
 		String u = securityService.getCurrentUsername();
-		Button logout = new Button("Log out " + u, click -> securityService.logout()); // <2>
+		Button logout = new Button("Log out " + u, click -> securityService.logout());
 
 		var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 		header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-		header.expand(logo); // <4>
+		header.expand(logo);
 		header.setWidthFull();
 		header.addClassNames(
 				LumoUtility.Padding.Vertical.NONE,
@@ -104,8 +111,7 @@ public class MainLayout extends AppLayout {
 		vehicleBox.addValueChangeListener(this::onVehicleBoxChange);
 
 		var renderer = new ComponentRenderer<Component, Vehicle>(vehicle -> {
-			var icon = vehicle.getType().getIcon();
-			icon.getStyle().set("cursor", "default");
+			var icon = getSelectedVehicleIcon(vehicle);
 
 			var name = new Span(vehicle.toStringShort());
 
@@ -118,7 +124,6 @@ public class MainLayout extends AppLayout {
 		});
 
 		vehicleBox.setRenderer(renderer);
-		//vehicleBox.setValueRenderer(renderer);
 		refreshVehicleBox();
 
 		// Create Edit Vehicles Button
@@ -136,7 +141,7 @@ public class MainLayout extends AppLayout {
 		vehicleLayout.setWidthFull();
 		vehicleLayout.setPadding(false);
 		vehicleLayout.setSpacing(false);
-		vehicleLayout.setAlignItems(FlexComponent.Alignment.END); // optional
+		vehicleLayout.setAlignItems(FlexComponent.Alignment.END);
 
 		addToDrawer(new VerticalLayout(
 				vehicleLayout,
@@ -145,6 +150,21 @@ public class MainLayout extends AppLayout {
 				new RouterLink("Services", ServiceView.class),
 				new RouterLink("Trackers", TrackerView.class)
 		));
+	}
+
+	private Component getSelectedVehicleIcon(Vehicle vehicle) {
+		if (vehicle == null)
+			return new Icon();
+
+		Component icon = vehicle.getType().getIcon();
+		icon.getStyle().set("cursor", "default");
+		return icon;
+	}
+
+	public void updateVehicleBoxPrefixIcon(Vehicle vehicle) {
+		var icon = getSelectedVehicleIcon(vehicle);
+		icon.addClassName("mt-box-icon");
+		vehicleBox.setPrefixComponent(icon);
 	}
 
 	// --- Publish events ---
