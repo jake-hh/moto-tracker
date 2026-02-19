@@ -3,6 +3,7 @@ package com.example.application.ui.views.vehicle;
 import com.example.application.data.VehicleType;
 import com.example.application.data.entity.Vehicle;
 import com.example.application.ui.components.Button;
+import com.example.application.ui.components.ColorPicker;
 import com.example.application.ui.components.Footer;
 import com.example.application.ui.events.LayoutFormEvent;
 
@@ -29,7 +30,7 @@ public class VehicleForm extends FormLayout {
 	private final TextField make = new TextField("Make");
 	private final TextField model = new TextField("Model");
 	private final TextField engine = new TextField("Engine");
-	private final TextField colour = new TextField("Colour");
+	private final ColorPicker colour = new ColorPicker("Colour");
 	private final TextField plate = new TextField("Plate");
 	private final TextField vin = new TextField("VIN number");
 	private final IntegerField mileage = new IntegerField("Mileage");
@@ -52,7 +53,6 @@ public class VehicleForm extends FormLayout {
 		make.setValueChangeMode(ValueChangeMode.LAZY);
 		model.setValueChangeMode(ValueChangeMode.LAZY);
 		engine.setValueChangeMode(ValueChangeMode.LAZY);
-		colour.setValueChangeMode(ValueChangeMode.LAZY);
 		plate.setValueChangeMode(ValueChangeMode.LAZY);
 		vin.setValueChangeMode(ValueChangeMode.LAZY);
 		mileage.setValueChangeMode(ValueChangeMode.LAZY);
@@ -61,8 +61,8 @@ public class VehicleForm extends FormLayout {
 		make.setRequired(true);
 		model.setRequired(true);
 		engine.setRequired(true);
-		colour.setRequired(true);
 		mileage.setRequired(true);
+		colour.setRequiredIndicatorVisible(true);
 
 		type.setItems(VehicleType.values());
 

@@ -41,3 +41,22 @@ a[highlight] {
 .mt-inactive-btn:not([theme~="primary"]):hover {
 		background-color:	var(--lumo-contrast-10pct);
 }
+
+.mt-color-picker-wrapper {
+		position:			relative;
+		width:				100%;
+		height:				var(--lumo-space-xl);
+		overflow:			hidden;
+}
+
+.mt-color-picker-input {
+		background-color:	#e0e0e0;
+		position:			absolute;
+		inset:				0;
+		width:				100%;
+		height:				100%;
+		border:				2px solid #e0e0e0;
+		border-radius:		var(--lumo-border-radius-m);
+		padding:			0;
+		cursor:				pointer;
+}

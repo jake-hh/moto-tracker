@@ -12,6 +12,8 @@ import java.time.LocalDate;
 @Entity
 public class Vehicle extends AbstractEntity {
 
+	public static final String DEFAULT_COLOR = "#000000";
+
 	public static final int MILEAGE_STEP = 100;
 	public static final int MILEAGE_MIN = 100;
 	public static final int MILEAGE_MAX = 10_000_000;
@@ -47,7 +49,7 @@ public class Vehicle extends AbstractEntity {
 
 	@NotBlank(message = "Vehicle colour is required")
 	@Size(max = 24, message = "Vehicle colour exceeds 24 characters")
-	@Pattern(regexp = "[\\p{L}]*", message = "Vehicle colour must contain letters")
+	//@Pattern(regexp = "#?[\\p{L}]*", message = "Vehicle colour must contain letters")
     private String colour;
 
 	@Pattern(regexp = "[\\p{L}0-9]*", message = "Vehicle plate must contain alphanumerics")
@@ -76,6 +78,7 @@ public class Vehicle extends AbstractEntity {
 	public Vehicle(AppUser owner, LocalDate trackingDate) {
 		this.owner = owner;
 		this.trackingDate = trackingDate;
+		this.colour = DEFAULT_COLOR;
 	}
 
 	public static boolean isEmpty(Vehicle v) {
