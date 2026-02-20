@@ -2,10 +2,6 @@ package com.example.application.ui.views.oplist;
 
 import com.example.application.data.entity.Operation;
 import com.example.application.services.MainService;
-import com.example.application.ui.events.EventChangedEvent;
-import com.example.application.ui.events.OperationChangedEvent;
-import com.example.application.ui.events.TrackerChangedEvent;
-import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
@@ -38,10 +34,10 @@ public class OplistView extends VerticalLayout {
 		this.service = service;
 		this.mainLayout = mainLayout;
 
-		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
-		mainLayout.addTrackerChangedListener(this::onTrackerChanged);
-		mainLayout.addEventChangedListener(this::onEventChanged);
-		mainLayout.addOperationChangedListener(this::onOperationChanged);
+		mainLayout.addVehicleSelectedListener(e -> updateView());
+		mainLayout.addTrackerChangedListener(e -> updateView());
+		mainLayout.addEventChangedListener(e -> updateView());
+		mainLayout.addOperationChangedListener(e -> updateView());
 
 		addClassName("view");
 		setSizeFull();
@@ -53,22 +49,7 @@ public class OplistView extends VerticalLayout {
 		closeEditor();
 	}
 
-	private void onVehicleSelected(VehicleSelectedEvent e) {
-		updateList();
-		updateForm();
-	}
-
-	private void onTrackerChanged(TrackerChangedEvent e) {
-		updateList();
-		updateForm();
-	}
-
-	private void onEventChanged(EventChangedEvent e) {
-		updateList();
-		updateForm();
-	}
-
-	private void onOperationChanged(OperationChangedEvent e) {
+	private void updateView() {
 		updateList();
 		updateForm();
 	}

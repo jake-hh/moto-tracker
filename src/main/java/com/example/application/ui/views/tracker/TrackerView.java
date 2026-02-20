@@ -4,9 +4,6 @@ import com.example.application.data.DashboardEventFormat;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
 import com.example.application.services.model.TrackerData;
-import com.example.application.ui.events.EventChangedEvent;
-import com.example.application.ui.events.OperationChangedEvent;
-import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
@@ -46,9 +43,9 @@ public class TrackerView extends VerticalLayout {
 		this.service = service;
 		this.mainLayout = mainLayout;
 
-		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
-		mainLayout.addEventChangedListener(this::onEventChanged);
-		mainLayout.addOperationChangedListener(this::onOperationChanged);
+		mainLayout.addVehicleSelectedListener(e -> updateList());
+		mainLayout.addEventChangedListener(e -> updateList());
+		mainLayout.addOperationChangedListener(e -> updateList());
 
 		addClassName("view");
 		setSizeFull();
@@ -58,18 +55,6 @@ public class TrackerView extends VerticalLayout {
 		add(createToolbar(), createContent());
 		updateList();
 		closeEditor();
-	}
-
-	private void onVehicleSelected(VehicleSelectedEvent e) {
-		updateList();
-	}
-
-	private void onEventChanged(EventChangedEvent e) {
-		updateList();
-	}
-
-	private void onOperationChanged(OperationChangedEvent e) {
-		updateList();
 	}
 
 	private HorizontalLayout createContent() {

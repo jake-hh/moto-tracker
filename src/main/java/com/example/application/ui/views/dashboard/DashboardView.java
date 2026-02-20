@@ -46,7 +46,10 @@ public class DashboardView extends VerticalLayout {
 		this.mainService = mainService;
 		this.settingsService = settingsService;
 
-		registerListeners(mainLayout);
+		mainLayout.addVehicleSelectedListener(e -> updateView());
+		mainLayout.addTrackerChangedListener(e -> updateView());
+		mainLayout.addEventChangedListener(e -> updateView());
+		mainLayout.addOperationChangedListener(e -> updateView());
 
 		addClassName("view");
 		setSizeFull();
@@ -56,13 +59,6 @@ public class DashboardView extends VerticalLayout {
 		//grid.setSizeFull();
 
 		updateView();
-	}
-
-	private void registerListeners(MainLayout mainLayout) {
-		mainLayout.addVehicleSelectedListener(e -> updateView());
-		mainLayout.addTrackerChangedListener(e -> updateView());
-		mainLayout.addEventChangedListener(e -> updateView());
-		mainLayout.addOperationChangedListener(e -> updateView());
 	}
 
 	private void configureGrid() {

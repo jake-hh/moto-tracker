@@ -3,9 +3,6 @@ package com.example.application.ui.views.service;
 import com.example.application.data.entity.Event;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
-import com.example.application.ui.events.OperationChangedEvent;
-import com.example.application.ui.events.TrackerChangedEvent;
-import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
@@ -37,9 +34,9 @@ public class ServiceView extends VerticalLayout {
 		this.service = service;
 		this.mainLayout = mainLayout;
 
-		mainLayout.addVehicleSelectedListener(this::onVehicleSelected);
-		mainLayout.addTrackerChangedListener(this::onTrackerChanged);
-		mainLayout.addOperationChangedListener(this::onOperationChanged);
+		mainLayout.addVehicleSelectedListener(e -> renderEventList());
+		mainLayout.addTrackerChangedListener(e -> renderEventList());
+		mainLayout.addOperationChangedListener(e -> renderEventList());
 
 		addClassName("view");
 		//setPadding(true);
@@ -48,18 +45,6 @@ public class ServiceView extends VerticalLayout {
 
 		createEventList();
 		add(createToolbar(), eventList);
-	}
-
-	private void onVehicleSelected(VehicleSelectedEvent e) {
-		renderEventList();
-	}
-
-	private void onTrackerChanged(TrackerChangedEvent e) {
-		renderEventList();
-	}
-
-	private void onOperationChanged(OperationChangedEvent e) {
-		renderEventList();
 	}
 
 	private Component createToolbar() {

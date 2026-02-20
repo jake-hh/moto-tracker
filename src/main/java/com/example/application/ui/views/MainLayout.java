@@ -53,14 +53,10 @@ public class MainLayout extends AppLayout {
 		this.settingsService = settingsService;
 		this.mainService = mainService;
 
-		vehicleView.addVehicleChangedListener(this::onVehicleChanged);
+		vehicleView.addVehicleChangedListener(e -> refreshVehicleBox());
 
 		createHeader();
 		createDrawer();
-	}
-
-	private void onVehicleChanged(VehicleChangedEvent change) {
-		refreshVehicleBox();
 	}
 
 	private void onVehicleBoxChange(ValueChangeEvent<Vehicle> change) {
