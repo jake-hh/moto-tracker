@@ -28,6 +28,9 @@ a[highlight] {
 		border-radius:	8px;
 }
 
+
+/* Buttons */
+
 .mt-form-btn-layout {
 		margin-top:			var(--lumo-space-m);
 		margin-bottom:		var(--lumo-space-xs);
@@ -41,6 +44,31 @@ a[highlight] {
 .mt-inactive-btn:not([theme~="primary"]):hover {
 		background-color:	var(--lumo-contrast-10pct);
 }
+
+
+/* ComboBox with VehicleType icon */
+
+.mt-box-icon {
+		cursor:			default;
+}
+
+.mt-box-item-layout {
+		gap:			var(--lumo-space-s);
+		padding:		0;
+		margin:			0;
+}
+
+.mt-box-item-icon {
+		margin-left:	var(--lumo-space-xs);
+}
+
+.mt-box-value-icon {
+		margin-left:	var(--lumo-space-xs);		/* 0.35rem 1.75rem */
+		margin-right:	var(--lumo-space-xs);
+}
+
+
+/* ColorPicker */
 
 .mt-color-picker-wrapper {
 		position:			relative;

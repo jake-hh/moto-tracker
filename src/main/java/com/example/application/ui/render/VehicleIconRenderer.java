@@ -27,11 +27,18 @@ public class VehicleIconRenderer {
 	}
 
 	// --- Render menu layout ---
-	private static Component getLayout(VehicleType vehicleType, String name) {
+	private static Component getLayout(VehicleType vehicleType, String vehicleName) {
+		var icon = getIconByVehicleType(vehicleType);
+		icon.addClassName("mt-box-item-icon");
+
+		var label = new Span(vehicleName);
+		label.getStyle().set("white-space", "nowrap");
+
 		var layout = new HorizontalLayout(
-				getIconByVehicleType(vehicleType),
-				new Span(name)
+				icon,
+				label
 		);
+		layout.addClassName("mt-box-item-layout");
 		layout.setAlignItems(FlexComponent.Alignment.CENTER);
 		layout.setPadding(false);
 		layout.setSpacing(true);
@@ -48,21 +55,21 @@ public class VehicleIconRenderer {
 	public static Component getSelectedVehicleIconByVehicleType(VehicleType vehicleType) {
 		if (vehicleType != null) {
 			Component icon = getIconByVehicleType(vehicleType);
-			//icon.addClassName("mt-box-icon");
+			icon.addClassName("mt-box-value-icon");
 			return icon;
 		}
 		else return null;
 	}
 
 	// --- Render icon ---
-	public static Component getIconByVehicleType(VehicleType vehicleType) {
-		Component icon = vehicleType.getIcon();
-		icon.getStyle().set("cursor", "default");
-		return icon;
+	public static Component getIconByVehicle(Vehicle vehicle) {
+		return getIconByVehicleType(vehicle.getType());
 	}
 
 	// --- Render icon ---
-	public static Component getIconByVehicle(Vehicle vehicle) {
-		return getIconByVehicleType(vehicle.getType());
+	public static Component getIconByVehicleType(VehicleType vehicleType) {
+		Component icon = vehicleType.getIcon();
+		icon.addClassName("mt-box-icon");
+		return icon;
 	}
 }
