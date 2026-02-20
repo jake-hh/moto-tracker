@@ -11,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 public class VehicleIconRenderer {
 
 	// --- Render menu items ---
-	public static Component getDropdownIconsByVehicle(Vehicle vehicle) {
+	public static Component getDropdownItemsByVehicle(Vehicle vehicle) {
 		return getLayout(
 				vehicle.getType(),
 				vehicle.toStringShort()
@@ -19,7 +19,7 @@ public class VehicleIconRenderer {
 	}
 
 	// --- Render menu items ---
-	public static Component getDropdownIconsByVehicleType(VehicleType vehicleType) {
+	public static Component getDropdownItemsByVehicleType(VehicleType vehicleType) {
 		return getLayout(
 				vehicleType,
 				vehicleType.name()

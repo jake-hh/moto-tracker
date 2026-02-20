@@ -70,7 +70,7 @@ public class VehicleForm extends FormLayout {
 		type.setItems(VehicleType.values());
 
 		// --- Render menu items ---
-		type.setRenderer(new ComponentRenderer<>(VehicleIconRenderer::getDropdownIconsByVehicleType));
+		type.setRenderer(new ComponentRenderer<>(VehicleIconRenderer::getDropdownItemsByVehicleType));
 
 		// --- Update icon when value changes ---
 		type.addValueChangeListener(click -> {

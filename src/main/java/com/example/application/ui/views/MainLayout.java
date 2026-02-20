@@ -108,7 +108,7 @@ public class MainLayout extends AppLayout {
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
 		vehicleBox.addValueChangeListener(this::onVehicleBoxChange);
-		vehicleBox.setRenderer(new ComponentRenderer<>(VehicleIconRenderer::getDropdownIconsByVehicle));
+		vehicleBox.setRenderer(new ComponentRenderer<>(VehicleIconRenderer::getDropdownItemsByVehicle));
 		refreshVehicleBox();
 
 		// Create Edit Vehicles Button
