@@ -178,17 +178,6 @@ public class EventItem extends HorizontalLayout {
 		updateOperationListAndAdd(null);
 	}
 
-	private List<Tracker> getAvailableTrackers(List<Operation> operations) {
-		var usedTrackers = new HashSet<Tracker>();
-
-		for (Operation op : operations)
-			usedTrackers.add(op.getTracker());
-
-		return allTrackers.stream()
-				.filter(t -> !usedTrackers.contains(t))
-				.toList();
-	}
-
 	private void updateOperationListAndAdd(Integer newOperationPos) {
 		List<Operation> operations = controller.getOperations();
 		List<OperationRow> rows = OperationRowsBuilder.build(operations, newOperationPos);
@@ -198,6 +187,17 @@ public class EventItem extends HorizontalLayout {
 
 		for (OperationRow row : rows)
 			operationList.add(createOperationItem(row, availableTrackers));
+	}
+
+	private List<Tracker> getAvailableTrackers(List<Operation> operations) {
+		var usedTrackers = new HashSet<Tracker>();
+
+		for (Operation op : operations)
+			usedTrackers.add(op.getTracker());
+
+		return allTrackers.stream()
+				.filter(t -> !usedTrackers.contains(t))
+				.toList();
 	}
 
 	@NotNull

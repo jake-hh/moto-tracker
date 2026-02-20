@@ -57,6 +57,20 @@ public class TrackerView extends VerticalLayout {
 		closeEditor();
 	}
 
+	private Component createToolbar() {
+		filterText.setPlaceholder("Filter by name...");
+		filterText.setClearButtonVisible(true);
+		filterText.setValueChangeMode(ValueChangeMode.LAZY);
+		filterText.addValueChangeListener(e -> updateList());
+
+		Button addTrackerButton = new Button("Add tracker");
+		addTrackerButton.addClickListener(click -> addTracker());
+
+		var toolbar = new HorizontalLayout(filterText, addTrackerButton);
+		toolbar.addClassName("toolbar");
+		return toolbar;
+	}
+
 	private HorizontalLayout createContent() {
 		var content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
@@ -99,20 +113,6 @@ public class TrackerView extends VerticalLayout {
 
 		grid.asSingleSelect().addValueChangeListener(event ->
 				editTracker(event.getValue()));
-	}
-
-	private Component createToolbar() {
-		filterText.setPlaceholder("Filter by name...");
-		filterText.setClearButtonVisible(true);
-		filterText.setValueChangeMode(ValueChangeMode.LAZY);
-		filterText.addValueChangeListener(e -> updateList());
-
-		Button addTrackerButton = new Button("Add tracker");
-		addTrackerButton.addClickListener(click -> addTracker());
-
-		var toolbar = new HorizontalLayout(filterText, addTrackerButton);
-		toolbar.addClassName("toolbar");
-		return toolbar;
 	}
 
 	public void editTracker(Tracker tracker) {

@@ -48,6 +48,15 @@ public class VehicleView extends VerticalLayout {
 		closeEditor();
 	}
 
+	private Component createToolbar() {
+		Button addVehicleButton = new Button("Add vehicle");
+		addVehicleButton.addClickListener(click -> addVehicle());
+
+		var toolbar = new HorizontalLayout(addVehicleButton);
+		toolbar.addClassName("toolbar");
+		return toolbar;
+	}
+
 	private HorizontalLayout createContent() {
 		var content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
@@ -115,15 +124,6 @@ public class VehicleView extends VerticalLayout {
 
 		grid.asSingleSelect().addValueChangeListener(event ->
 				editVehicle(event.getValue()));
-	}
-
-	private Component createToolbar() {
-		Button addVehicleButton = new Button("Add vehicle");
-		addVehicleButton.addClickListener(click -> addVehicle());
-
-		var toolbar = new HorizontalLayout(addVehicleButton);
-		toolbar.addClassName("toolbar");
-		return toolbar;
 	}
 
 	public void editVehicle(Vehicle vehicle) {

@@ -61,17 +61,6 @@ public class DashboardView extends VerticalLayout {
 		updateView();
 	}
 
-	private void configureGrid() {
-		grid.addClassNames("grid");
-		grid.setSizeFull();
-		grid.setColumns("name", "interval", "range");
-
-		grid.addColumn(tracker -> "").setKey("date");
-		grid.addColumn(tracker -> "").setKey("mileage");
-
-		grid.getColumns().forEach(col -> col.setAutoWidth(true));
-	}
-
 	private HorizontalLayout createToolbar() {
 		formatSelect.setLabel("Service format");
 		formatSelect.setItems(DashboardEventFormat.values());
@@ -81,6 +70,17 @@ public class DashboardView extends VerticalLayout {
 		var toolbar = new HorizontalLayout(formatSelect);
 		toolbar.addClassName("toolbar");
 		return toolbar;
+	}
+
+	private void configureGrid() {
+		grid.addClassNames("grid");
+		grid.setSizeFull();
+		grid.setColumns("name", "interval", "range");
+
+		grid.addColumn(tracker -> "").setKey("date");
+		grid.addColumn(tracker -> "").setKey("mileage");
+
+		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 	}
 
 	private void saveFormatAndUpdate(ValueChangeEvent<DashboardEventFormat> change) {

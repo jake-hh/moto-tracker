@@ -59,24 +59,6 @@ public class MainLayout extends AppLayout {
 		createDrawer();
 	}
 
-	private void saveSelectedVehicle(ValueChangeEvent<Vehicle> change) {
-		if (!change.isFromClient()) return;
-
-		Vehicle vehicle = change.getValue();
-
-		settingsService.updateSelectedVehicle(vehicle);
-		updateVehicleBoxPrefixIcon(vehicle);
-		fireEvent(new VehicleSelectedEvent(this, vehicle));
-	}
-
-	public void updateVehicleBox() {
-		vehicleBox.setItems(mainService.findVehicles());
-		settingsService.getSelectedVehicle().ifPresent(vehicle -> {
-			vehicleBox.setValue(vehicle);
-			updateVehicleBoxPrefixIcon(vehicle);
-		});
-	}
-
 	private void createHeader() {
 		H1 logo = new H1("Moto Tracker");
 		logo.addClassNames(
@@ -131,6 +113,24 @@ public class MainLayout extends AppLayout {
 				new RouterLink("Services", ServiceView.class),
 				new RouterLink("Trackers", TrackerView.class)
 		));
+	}
+
+	private void saveSelectedVehicle(ValueChangeEvent<Vehicle> change) {
+		if (!change.isFromClient()) return;
+
+		Vehicle vehicle = change.getValue();
+
+		settingsService.updateSelectedVehicle(vehicle);
+		updateVehicleBoxPrefixIcon(vehicle);
+		fireEvent(new VehicleSelectedEvent(this, vehicle));
+	}
+
+	public void updateVehicleBox() {
+		vehicleBox.setItems(mainService.findVehicles());
+		settingsService.getSelectedVehicle().ifPresent(vehicle -> {
+			vehicleBox.setValue(vehicle);
+			updateVehicleBoxPrefixIcon(vehicle);
+		});
 	}
 
 	public void updateVehicleBoxPrefixIcon(Vehicle vehicle) {

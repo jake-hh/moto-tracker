@@ -49,9 +49,13 @@ public class OplistView extends VerticalLayout {
 		closeEditor();
 	}
 
-	private void updateView() {
-		updateList();
-		updateForm();
+	private Component createToolbar() {
+		Button addOperationButton = new Button("Add operation");
+		addOperationButton.addClickListener(click -> addOperation());
+
+		var toolbar = new HorizontalLayout(addOperationButton);
+		toolbar.addClassName("toolbar");
+		return toolbar;
 	}
 
 	private HorizontalLayout createContent() {
@@ -99,15 +103,6 @@ public class OplistView extends VerticalLayout {
 				editOperation(event.getValue()));
 	}
 
-	private Component createToolbar() {
-		Button addOperationButton = new Button("Add operation");
-		addOperationButton.addClickListener(click -> addOperation());
-
-		var toolbar = new HorizontalLayout(addOperationButton);
-		toolbar.addClassName("toolbar");
-		return toolbar;
-	}
-
 	public void editOperation(Operation operation) {
 		if (operation == null) {
 			closeEditor();
@@ -129,6 +124,11 @@ public class OplistView extends VerticalLayout {
 
 		// TODO: disable add button if no vehicle is present
 		service.createOperation().ifPresent(this::editOperation);
+	}
+
+	private void updateView() {
+		updateList();
+		updateForm();
 	}
 
 	private void updateList() {
