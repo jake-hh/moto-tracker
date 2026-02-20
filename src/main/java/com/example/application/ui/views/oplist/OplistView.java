@@ -48,7 +48,7 @@ public class OplistView extends VerticalLayout {
 		configureGrid();
 		configureForm();
 
-		add(getToolbar(), getContent());
+		add(createToolbar(), createContent());
 		updateList();
 		closeEditor();
 	}
@@ -73,7 +73,7 @@ public class OplistView extends VerticalLayout {
 		updateForm();
 	}
 
-	private HorizontalLayout getContent() {
+	private HorizontalLayout createContent() {
 		HorizontalLayout content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
 		content.setFlexGrow(1, form);
@@ -118,7 +118,7 @@ public class OplistView extends VerticalLayout {
 				editOperation(event.getValue()));
 	}
 
-	private Component getToolbar() {
+	private Component createToolbar() {
 		Button addOperationButton = new Button("Add operation");
 		addOperationButton.addClickListener(click -> addOperation());
 

@@ -55,7 +55,7 @@ public class TrackerView extends VerticalLayout {
 		configureGrid();
 		configureForm();
 
-		add(getToolbar(), getContent());
+		add(createToolbar(), createContent());
 		updateList();
 		closeEditor();
 	}
@@ -72,7 +72,7 @@ public class TrackerView extends VerticalLayout {
 		updateList();
 	}
 
-	private HorizontalLayout getContent() {
+	private HorizontalLayout createContent() {
 		HorizontalLayout content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
 		content.setFlexGrow(1, form);
@@ -116,7 +116,7 @@ public class TrackerView extends VerticalLayout {
 				editTracker(event.getValue()));
 	}
 
-	private Component getToolbar() {
+	private Component createToolbar() {
 		filterText.setPlaceholder("Filter by name...");
 		filterText.setClearButtonVisible(true);
 		filterText.setValueChangeMode(ValueChangeMode.LAZY);

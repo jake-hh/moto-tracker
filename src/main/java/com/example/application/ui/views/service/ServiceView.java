@@ -47,7 +47,7 @@ public class ServiceView extends VerticalLayout {
 		setSizeFull();
 
 		createEventList();
-		add(getToolbar(), eventList);
+		add(createToolbar(), eventList);
 	}
 
 	private void onVehicleSelected(VehicleSelectedEvent e) {
@@ -62,7 +62,7 @@ public class ServiceView extends VerticalLayout {
 		renderEventList();
 	}
 
-	private Component getToolbar() {
+	private Component createToolbar() {
 		Button addEventButton = new Button("Add event");
 		addEventButton.addClickListener(click -> addEvent());
 

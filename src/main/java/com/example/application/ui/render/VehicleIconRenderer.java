@@ -12,7 +12,7 @@ public class VehicleIconRenderer {
 
 	// --- Render menu items ---
 	public static Component getDropdownItemsByVehicle(Vehicle vehicle) {
-		return getLayout(
+		return createLayout(
 				vehicle.getType(),
 				vehicle.toStringShort()
 		);
@@ -20,14 +20,14 @@ public class VehicleIconRenderer {
 
 	// --- Render menu items ---
 	public static Component getDropdownItemsByVehicleType(VehicleType vehicleType) {
-		return getLayout(
+		return createLayout(
 				vehicleType,
 				vehicleType.name()
 		);
 	}
 
 	// --- Render menu layout ---
-	private static Component getLayout(VehicleType vehicleType, String vehicleName) {
+	private static Component createLayout(VehicleType vehicleType, String vehicleName) {
 		var icon = getIconByVehicleType(vehicleType);
 		icon.addClassName("mt-box-item-icon");
 

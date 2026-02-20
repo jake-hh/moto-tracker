@@ -43,12 +43,12 @@ public class VehicleView extends VerticalLayout {
 		configureGrid();
 		configureForm();
 
-		add(getToolbar(), getContent());
+		add(createToolbar(), createContent());
 		updateList();
 		closeEditor();
 	}
 
-	private HorizontalLayout getContent() {
+	private HorizontalLayout createContent() {
 		HorizontalLayout content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
 		content.setFlexGrow(1, form);
@@ -117,7 +117,7 @@ public class VehicleView extends VerticalLayout {
 				editVehicle(event.getValue()));
 	}
 
-	private Component getToolbar() {
+	private Component createToolbar() {
 		Button addVehicleButton = new Button("Add vehicle");
 		addVehicleButton.addClickListener(click -> addVehicle());
 
