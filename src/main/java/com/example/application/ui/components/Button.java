@@ -1,6 +1,8 @@
 package com.example.application.ui.components;
 
+
 public class Button extends com.vaadin.flow.component.button.Button {
+
 	//deleteBtn.hasClassName("mt-inactive-btn")
 	private boolean active = true;
 	private String inactiveTooltipText = null;

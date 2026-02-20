@@ -9,9 +9,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
+
 public class IntervalField extends CustomField<BasicInterval> {
+
 	private final IntegerField amountField = new IntegerField();
 	private final ComboBox<Unit> unitField = new ComboBox<>();
+
 
 	public IntervalField(String label) {
 		setLabel(label);

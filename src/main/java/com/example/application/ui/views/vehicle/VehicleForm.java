@@ -44,10 +44,10 @@ public class VehicleForm extends FormLayout {
 	private final Button saveBtn = new Button("Save");
 	private final Button deleteBtn = new Button("Delete");
 	private final Button closeBtn = new Button("Cancel");
-
 	private final Footer btnFooter = new Footer();
 
 	private final Binder<Vehicle> binder = new BeanValidationBinder<>(Vehicle.class);
+
 
 	public VehicleForm() {
 		addClassName("form");

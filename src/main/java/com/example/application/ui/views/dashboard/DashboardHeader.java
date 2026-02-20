@@ -21,6 +21,7 @@ public class DashboardHeader extends VerticalLayout {
 	private final H1          vehicleName = new H1();
 	private final NativeLabel vehicleData = new NativeLabel();
 
+
 	public DashboardHeader() {
 		nameBar.setAlignItems(FlexComponent.Alignment.END);
 

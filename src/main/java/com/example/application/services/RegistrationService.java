@@ -15,6 +15,7 @@ public class RegistrationService {
 	private final AppUserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
+
 	public RegistrationService(
 			AppUserRepository userRepository,
 			PasswordEncoder passwordEncoder

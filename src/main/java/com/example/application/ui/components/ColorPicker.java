@@ -11,6 +11,7 @@ public class ColorPicker extends CustomField<String> {
 
 	private final Input inputPicker = new Input();
 
+
 	public ColorPicker() {
 		inputPicker.setType("color");
 		inputPicker.setValue(Vehicle.DEFAULT_COLOR);

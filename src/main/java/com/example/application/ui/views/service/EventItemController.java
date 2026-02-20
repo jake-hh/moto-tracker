@@ -15,6 +15,7 @@ public class EventItemController {
 	private final MainService service;
 	private Event event;
 
+
 	public EventItemController(MainService service, Event event) {
 		this.service = service;
 		this.event = event;

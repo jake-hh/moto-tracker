@@ -30,10 +30,10 @@ public class TrackerForm extends FormLayout {
 	private final Button saveBtn = new Button("Save");
 	private final Button deleteBtn = new Button("Delete");
 	private final Button closeBtn = new Button("Cancel");
-
 	private final Footer btnFooter = new Footer();
 
 	private final Binder<Tracker> binder = new BeanValidationBinder<>(Tracker.class);
+
 
 	public TrackerForm() {
 		addClassName("form");

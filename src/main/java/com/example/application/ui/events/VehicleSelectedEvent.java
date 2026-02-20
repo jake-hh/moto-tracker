@@ -10,6 +10,7 @@ public class VehicleSelectedEvent extends ComponentEvent<MainLayout> {
 
 	private final Vehicle selectedVehicle;
 
+
 	public VehicleSelectedEvent(MainLayout source, Vehicle selectedVehicle) {
 		super(source, false); // false = not from client
 		this.selectedVehicle = selectedVehicle;

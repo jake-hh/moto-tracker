@@ -40,6 +40,7 @@ public class RegisterView extends VerticalLayout {
 	private final PasswordField pConfirm = new PasswordField("Confirm password");
 
 	private final RegistrationService registrationService;
+
 	private final Binder<AppUser> binder = new BeanValidationBinder<>(AppUser.class);
 
 

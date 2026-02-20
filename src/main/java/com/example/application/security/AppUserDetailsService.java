@@ -15,6 +15,7 @@ public class AppUserDetailsService implements UserDetailsService {
 
 	private final AppUserRepository userRepository;
 
+
 	public AppUserDetailsService(AppUserRepository userRepository) {
 		this.userRepository = userRepository;
 	}

@@ -3,6 +3,7 @@ package com.example.application.ui;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 
+
 public class Notify {
 
 	public static void ok(String msg) {

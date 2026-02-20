@@ -18,6 +18,7 @@ public class SecurityService {
 	private final AuthenticationContext authenticationContext;
 	private final AppUserRepository userRepository;
 
+
 	public SecurityService(AuthenticationContext authenticationContext, AppUserRepository userRepository) {
 		this.authenticationContext = authenticationContext;
 		this.userRepository = userRepository;

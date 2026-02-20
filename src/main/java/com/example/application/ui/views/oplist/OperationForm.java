@@ -20,16 +20,17 @@ import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class OperationForm extends FormLayout {
+
 	private final ComboBox<Event> event = new ComboBox<>("Event");
 	private final ComboBox<Tracker> tracker = new ComboBox<>("Tracker");
 
 	private final Button saveBtn = new Button("Save");
 	private final Button deleteBtn = new Button("Delete");
 	private final Button closeBtn = new Button("Cancel");
-
 	private final Footer btnFooter = new Footer();
 
 	private final Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
+
 
 	public OperationForm() {
 		addClassName("form");

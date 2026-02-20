@@ -13,6 +13,7 @@ import com.vaadin.testbench.IPAddress;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
 //@RunLocally(Browser.FIREFOX)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginE2ETest extends BrowserTestBase {
@@ -42,5 +43,4 @@ public class LoginE2ETest extends BrowserTestBase {
 		LoginViewElement loginView = $(LoginViewElement.class).onPage().first();
 		assertFalse(loginView.login("user", "invalid"));
 	}
-
 }

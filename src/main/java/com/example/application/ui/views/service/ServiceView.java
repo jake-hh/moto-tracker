@@ -27,8 +27,10 @@ import java.util.List;
 public class ServiceView extends VerticalLayout {
 
 	private final VerticalLayout eventList = new VerticalLayout();
+
 	private final MainService service;
 	private final MainLayout mainLayout;
+
 
 	public ServiceView(MainService service, MainLayout mainLayout) {
 		this.service = service;

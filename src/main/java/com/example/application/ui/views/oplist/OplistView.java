@@ -30,6 +30,7 @@ public class OplistView extends VerticalLayout {
 
 	private final MainLayout mainLayout;
 
+
 	public OplistView(MainService service, MainLayout mainLayout) {
 		this.service = service;
 		this.mainLayout = mainLayout;

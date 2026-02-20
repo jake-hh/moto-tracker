@@ -5,6 +5,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 
 public class Footer extends HorizontalLayout {
+
 	private final Span span = new Span();
 	private String text;
 

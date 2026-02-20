@@ -21,6 +21,7 @@ public class OperationItem extends HorizontalLayout {
 	private final Button addButton = new Button(new Icon(VaadinIcon.PLUS));
 	private final Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
 
+
 	public OperationItem(@Nullable Tracker selectedTracker, List<Tracker> trackers) {
 		this.setAlignItems(Alignment.END);
 		this.setSpacing(true);

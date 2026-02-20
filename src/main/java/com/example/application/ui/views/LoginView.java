@@ -14,7 +14,8 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final LoginForm loginForm = new LoginForm();
 
-	public LoginView(){
+
+	public LoginView() {
 		addClassName("view");
 		setSizeFull();
 		setAlignItems(Alignment.CENTER);

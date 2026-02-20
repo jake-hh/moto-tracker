@@ -30,6 +30,7 @@ public class MainService {
 	private final SecurityService securityService;
 	private final ObjectProvider<UserSettingsService> settingsProvider;
 
+
 	public MainService(
 			VehicleRepository vehicleRepository,
 			OperationRepository operationRepository,
@@ -300,7 +301,7 @@ public class MainService {
 	 // ---- EVENTS ---- //
 	//////////////////////
 
-	public List<Event> findAllEvents(){
+	public List<Event> findAllEvents() {
 		return eventRepository.findAll();
 	}
 
