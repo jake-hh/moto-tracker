@@ -88,3 +88,24 @@ a[highlight] {
 		padding:			0;
 		cursor:				pointer;
 }
+
+
+/* Color circle */
+
+.mt-color-circle {
+		margin:				auto;
+		border:				1px solid var(--lumo-contrast-20pct);
+		border-radius:		50%;
+}
+
+/*
+.mt-color-circle-wrapper {
+		width:				2.5em;
+		height:				2.5em;
+		background:			var(--lumo-primary-color);
+		border-radius:		50%;
+		display:			flex;
+		align-items:		center;
+		justify-content:	center;
+}
+*/
