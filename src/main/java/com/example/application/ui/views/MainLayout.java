@@ -12,6 +12,7 @@ import com.example.application.ui.views.service.ServiceView;
 import com.example.application.ui.views.tracker.TrackerView;
 import com.example.application.ui.views.vehicle.VehicleView;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.UI;
@@ -55,11 +56,11 @@ public class MainLayout extends AppLayout {
 
 		vehicleView.addVehicleChangedListener(e -> updateVehicleBox());
 
-		createHeader();
-		createDrawer();
+		addToNavbar(createHeader());
+		addToDrawer(createDrawer());
 	}
 
-	private void createHeader() {
+	private Component createHeader() {
 		H1 logo = new H1("Moto Tracker");
 		logo.addClassNames(
 				LumoUtility.FontSize.LARGE,
@@ -77,11 +78,10 @@ public class MainLayout extends AppLayout {
 				LumoUtility.Padding.Vertical.NONE,
 				LumoUtility.Padding.Horizontal.MEDIUM
 		);
-
-		addToNavbar(header);
+		return header;
 	}
 
-	private void createDrawer() {
+	private Component createDrawer() {
 		// Init Vehicle Box
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
@@ -106,13 +106,13 @@ public class MainLayout extends AppLayout {
 		vehicleBar.setSpacing(false);
 		vehicleBar.setAlignItems(FlexComponent.Alignment.END);
 
-		addToDrawer(new VerticalLayout(
+		return new VerticalLayout(
 				vehicleBar,
 				new RouterLink("Dashboard", DashboardView.class),
 				new RouterLink("Operations", OplistView.class),
 				new RouterLink("Services", ServiceView.class),
 				new RouterLink("Trackers", TrackerView.class)
-		));
+		);
 	}
 
 	private void saveSelectedVehicle(ValueChangeEvent<Vehicle> change) {

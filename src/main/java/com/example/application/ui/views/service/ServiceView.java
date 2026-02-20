@@ -26,7 +26,7 @@ import java.util.List;
 @PageTitle("Services | Moto Tracker")
 public class ServiceView extends VerticalLayout {
 
-	private VerticalLayout eventList;
+	private final VerticalLayout eventList = new VerticalLayout();
 	private final MainService service;
 	private final MainLayout mainLayout;
 
@@ -43,7 +43,8 @@ public class ServiceView extends VerticalLayout {
 		//setSpacing(true);
 		setSizeFull();
 
-		createEventList();
+		configEventList();
+
 		add(createToolbar(), eventList);
 	}
 
@@ -56,8 +57,7 @@ public class ServiceView extends VerticalLayout {
 		return toolbar;
 	}
 
-	private void createEventList() {
-		eventList = new VerticalLayout();
+	private void configEventList() {
 		eventList.addClassName("event-list");
 		eventList.setSizeFull();
 

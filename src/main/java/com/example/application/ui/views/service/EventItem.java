@@ -55,16 +55,12 @@ public class EventItem extends HorizontalLayout {
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
 
-		updateAll();
-	}
-
-	public void updateAll() {
-		removeAll();
-
-		add(createDeleteButton(),
+		add(
+			createDeleteButton(),
 			createMileageField(),
 			createDateField(),
-			operationList);
+			operationList
+		);
 
 		updateOperationList();
 	}
