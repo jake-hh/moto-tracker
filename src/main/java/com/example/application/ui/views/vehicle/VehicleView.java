@@ -111,6 +111,7 @@ public class VehicleView extends VerticalLayout {
 		grid.addColumns(
 				"plate",
 				"vin",
+				"mileage",
 				"productionDate",
 				"registrationDate",
 				"trackingDate"
