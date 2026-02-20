@@ -2,6 +2,8 @@ package com.example.application.ui.views.dashboard;
 
 import com.example.application.data.VehicleType;
 import com.example.application.data.entity.Vehicle;
+import com.example.application.ui.render.VehicleIconRenderer;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -10,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.Optional;
+
 
 public class DashboardHeader extends VerticalLayout {
 
@@ -31,13 +34,10 @@ public class DashboardHeader extends VerticalLayout {
 				vehicle.map(Vehicle::toString).orElse(" ")
 		);
 
-		Component icon = vehicle.map(Vehicle::getType)
-				.orElse(VehicleType.Other)
-				.getIcon();
-
-		icon.getStyle()
-				.set("cursor", "default")
-				.set("font-size", "2em");
+		Component icon = VehicleIconRenderer.getIconByVehicleType(
+				vehicle.map(Vehicle::getType).orElse(VehicleType.Other)
+		);
+		icon.getStyle().set("font-size", "2em");
 
 		nameBar.removeAll();
 		nameBar.add(icon, vehicleName);
