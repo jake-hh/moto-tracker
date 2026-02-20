@@ -5,13 +5,13 @@ import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
 import com.example.application.ui.events.*;
+import com.example.application.ui.render.VehicleIconRenderer;
 import com.example.application.ui.views.dashboard.DashboardView;
 import com.example.application.ui.views.oplist.OplistView;
 import com.example.application.ui.views.service.ServiceView;
 import com.example.application.ui.views.tracker.TrackerView;
 import com.example.application.ui.views.vehicle.VehicleView;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.UI;
@@ -21,7 +21,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -109,21 +108,7 @@ public class MainLayout extends AppLayout {
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
 		vehicleBox.addValueChangeListener(this::onVehicleBoxChange);
-
-		var renderer = new ComponentRenderer<Component, Vehicle>(vehicle -> {
-			var icon = getSelectedVehicleIcon(vehicle);
-
-			var name = new Span(vehicle.toStringShort());
-
-			var layout = new HorizontalLayout(icon, name);
-			layout.setAlignItems(FlexComponent.Alignment.CENTER);
-			layout.setPadding(false);
-			layout.setSpacing(true);
-
-			return layout;
-		});
-
-		vehicleBox.setRenderer(renderer);
+		vehicleBox.setRenderer(new ComponentRenderer<>(VehicleIconRenderer::getDropdownIconsByVehicle));
 		refreshVehicleBox();
 
 		// Create Edit Vehicles Button
@@ -152,18 +137,8 @@ public class MainLayout extends AppLayout {
 		));
 	}
 
-	private Component getSelectedVehicleIcon(Vehicle vehicle) {
-		if (vehicle == null)
-			return new Icon();
-
-		Component icon = vehicle.getType().getIcon();
-		icon.getStyle().set("cursor", "default");
-		return icon;
-	}
-
 	public void updateVehicleBoxPrefixIcon(Vehicle vehicle) {
-		var icon = getSelectedVehicleIcon(vehicle);
-		icon.addClassName("mt-box-icon");
+		var icon = VehicleIconRenderer.getSelectedVehicleIconByVehicle(vehicle);
 		vehicleBox.setPrefixComponent(icon);
 	}
 

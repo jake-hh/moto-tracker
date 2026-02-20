@@ -7,6 +7,7 @@ import com.example.application.ui.components.ColorPicker;
 import com.example.application.ui.components.Footer;
 import com.example.application.ui.events.LayoutFormEvent;
 
+import com.example.application.ui.render.VehicleIconRenderer;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -14,7 +15,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -66,39 +66,21 @@ public class VehicleForm extends FormLayout {
 		mileage.setRequired(true);
 		colour.setRequiredIndicatorVisible(true);
 
+		// --- Set menu items ---
 		type.setItems(VehicleType.values());
 
-		// --- Renderer for icons + label ---
-		type.setRenderer(new ComponentRenderer<>(vehicleType -> {
-			var icon = vehicleType.getIcon(); // Component
-			var label = new Span(vehicleType.name());
+		// --- Render menu items ---
+		type.setRenderer(new ComponentRenderer<>(VehicleIconRenderer::getDropdownIconsByVehicleType));
 
-			var layout = new HorizontalLayout(icon, label);
-			layout.setAlignItems(FlexComponent.Alignment.CENTER);
-			layout.setPadding(false);
-			layout.setSpacing(true);
-
-			return layout;
-		}));
-
-		// --- Update prefix component when selection changes ---
-		type.addValueChangeListener(event -> {
-			var selected = event.getValue();
-
-			if (selected != null) {
-				var icon = selected.getIcon();
-				icon.getStyle().set("cursor", "default");
-				type.setPrefixComponent(icon);
-			} else {
-				type.setPrefixComponent(null);
-			}
+		// --- Update icon when value changes ---
+		type.addValueChangeListener(click -> {
+			var icon = VehicleIconRenderer.getSelectedVehicleIconByVehicleType(click.getValue());
+			type.setPrefixComponent(icon);
 		});
 
-		// --- Initialize prefix for existing value ---
-		if (type.getValue() != null) {
-			var icon = type.getValue().getIcon();
-			type.setPrefixComponent(icon);
-		}
+		// --- Initialize icon for existing value ---
+		var icon = VehicleIconRenderer.getSelectedVehicleIconByVehicleType(type.getValue());
+		type.setPrefixComponent(icon);
 
 		mileage.setStepButtonsVisible(true);
 		mileage.setStep(Vehicle.MILEAGE_STEP);
