@@ -7,6 +7,7 @@ import com.example.application.ui.format.HumanDistanceFormatter;
 import com.example.application.ui.format.HumanTimeFormatter;
 import com.example.application.util.Time;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -27,7 +28,7 @@ public class TrackerDataRenderer {
 		UNKNOWN
 	}
 
-	public static ComponentRenderer<HorizontalLayout, Tracker> renderDate(TrackerData data, DashboardEventFormat format) {
+	public static ComponentRenderer<Component, Tracker> renderDate(TrackerData data, DashboardEventFormat format) {
 		return new ComponentRenderer<>(tracker -> {
 
 			Optional<LocalDate> lastDate = data.getLastDate(tracker);
@@ -44,7 +45,7 @@ public class TrackerDataRenderer {
 		});
 	}
 
-	public static ComponentRenderer<HorizontalLayout, Tracker> renderMileage(TrackerData data, DashboardEventFormat format) {
+	public static ComponentRenderer<Component, Tracker> renderMileage(TrackerData data, DashboardEventFormat format) {
 		return new ComponentRenderer<>(tracker -> {
 
 			Optional<Integer> lastMileage = data.getLastMileage(tracker);
@@ -61,7 +62,7 @@ public class TrackerDataRenderer {
 		});
 	}
 
-	private static HorizontalLayout render(Status status, String str) {
+	private static Component render(Status status, String str) {
 		String color;
 		Icon icon;
 

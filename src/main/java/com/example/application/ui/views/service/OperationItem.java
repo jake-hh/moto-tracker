@@ -2,6 +2,7 @@ package com.example.application.ui.views.service;
 
 import com.example.application.data.entity.Tracker;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -31,7 +32,7 @@ public class OperationItem extends HorizontalLayout {
 		this.add(trackerBox, createEditBar());
 	}
 
-	private HorizontalLayout createEditBar() {
+	private Component createEditBar() {
 		var bar = new HorizontalLayout();
 		bar.setSpacing(false);
 		bar.setPadding(false);

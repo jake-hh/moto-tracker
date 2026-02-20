@@ -71,7 +71,7 @@ public class TrackerView extends VerticalLayout {
 		return toolbar;
 	}
 
-	private HorizontalLayout createContent() {
+	private Component createContent() {
 		var content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
 		content.setFlexGrow(1, form);

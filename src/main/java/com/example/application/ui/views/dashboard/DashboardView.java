@@ -8,6 +8,7 @@ import com.example.application.services.UserSettingsService;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -61,7 +62,7 @@ public class DashboardView extends VerticalLayout {
 		updateView();
 	}
 
-	private HorizontalLayout createToolbar() {
+	private Component createToolbar() {
 		formatSelect.setLabel("Service format");
 		formatSelect.setItems(DashboardEventFormat.values());
 		formatSelect.setItemLabelGenerator(DashboardEventFormat::getLabel);
