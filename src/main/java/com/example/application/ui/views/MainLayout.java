@@ -38,16 +38,17 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @UIScope
 public class MainLayout extends AppLayout {
 
-	private final SecurityService securityService;
-	private final UserSettingsService settingsService;
-	private final MainService mainService;
-
 	private final ComboBox<Vehicle> vehicleBox = new ComboBox<>("Vehicle");
 
+	private final MainService mainService;
+	private final SecurityService securityService;
+	private final UserSettingsService settingsService;
+
+
 	public MainLayout(
+			MainService mainService,
 			SecurityService securityService,
 			UserSettingsService settingsService,
-			MainService mainService,
 			VehicleView vehicleView
 	) {
 		this.securityService = securityService;

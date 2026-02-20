@@ -25,20 +25,22 @@ import java.util.List;
 
 public class EventItem extends HorizontalLayout {
 
+	private final List<Tracker> allTrackers;
+	private final VerticalLayout operationList;
+
 	private final EventItemController controller;
 	private final Runnable updateEventList;
 	private final Runnable fireEventChangedEvent;
 	private final Runnable fireOperationChangedEvent;
-	private final List<Tracker> allTrackers;
-	private final VerticalLayout operationList;
+
 
 	public EventItem(
 			Event event,
+			List<Tracker> allTrackers,
+			MainService service,
 			Runnable updateEventList,
 			Runnable fireEventChangedEvent,
-			Runnable fireOperationChangedEvent,
-			List<Tracker> allTrackers,
-			MainService service
+			Runnable fireOperationChangedEvent
 	) {
 		this.controller = new EventItemController(service, event);
 		this.updateEventList = updateEventList;

@@ -24,10 +24,10 @@ import jakarta.annotation.security.PermitAll;
 @PageTitle("Operations | Moto Tracker")
 public class OplistView extends VerticalLayout {
 
-	private final MainService service;
 	private final Grid<Operation> grid = new Grid<>(Operation.class, false);
 	private final OperationForm form = new OperationForm();
 
+	private final MainService service;
 	private final MainLayout mainLayout;
 
 
