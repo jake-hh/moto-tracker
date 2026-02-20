@@ -32,10 +32,10 @@ public class OperationItem extends HorizontalLayout {
 	}
 
 	private HorizontalLayout createEditBar() {
-		var editBar = new HorizontalLayout();
-		editBar.setSpacing(false);
-		editBar.setPadding(false);
-		editBar.add(addButton, removeButton);
+		var bar = new HorizontalLayout();
+		bar.setSpacing(false);
+		bar.setPadding(false);
+		bar.add(addButton, removeButton);
 
 		addButton.addThemeVariants(
 				ButtonVariant.LUMO_ICON,
@@ -50,7 +50,7 @@ public class OperationItem extends HorizontalLayout {
 		);
 		removeButton.getElement().setAttribute("title", "Remove this operation");
 
-		return editBar;
+		return bar;
 	}
 
 	public void onTrackerBoxChanged(Consumer<Tracker> callback) {

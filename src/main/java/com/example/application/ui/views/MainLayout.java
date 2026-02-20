@@ -122,14 +122,14 @@ public class MainLayout extends AppLayout {
 		editVehiclesBtn.addClickListener(click -> UI.getCurrent().navigate(VehicleView.class));
 
 		// Combine in Vehicle Layout
-		var vehicleLayout = new HorizontalLayout(vehicleBox, editVehiclesBtn);
-		vehicleLayout.setWidthFull();
-		vehicleLayout.setPadding(false);
-		vehicleLayout.setSpacing(false);
-		vehicleLayout.setAlignItems(FlexComponent.Alignment.END);
+		var vehicleBar = new HorizontalLayout(vehicleBox, editVehiclesBtn);
+		vehicleBar.setWidthFull();
+		vehicleBar.setPadding(false);
+		vehicleBar.setSpacing(false);
+		vehicleBar.setAlignItems(FlexComponent.Alignment.END);
 
 		addToDrawer(new VerticalLayout(
-				vehicleLayout,
+				vehicleBar,
 				new RouterLink("Dashboard", DashboardView.class),
 				new RouterLink("Operations", OplistView.class),
 				new RouterLink("Services", ServiceView.class),

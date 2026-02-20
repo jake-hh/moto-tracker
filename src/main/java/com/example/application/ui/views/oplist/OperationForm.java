@@ -39,7 +39,7 @@ public class OperationForm extends FormLayout {
 		tracker.setItemLabelGenerator(Tracker::getName);
 		event.setItemLabelGenerator(Event::getDateStr);
 
-		add(tracker, event, createButtonsLayout(), btnFooter);
+		add(tracker, event, createButtonBar(), btnFooter);
 	}
 
 	public void setTrackers(List<Tracker> trackers) {
@@ -50,7 +50,7 @@ public class OperationForm extends FormLayout {
 		event.setItems(events);
 	}
 
-	private Component createButtonsLayout() {
+	private Component createButtonBar() {
 		saveBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		closeBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -66,9 +66,9 @@ public class OperationForm extends FormLayout {
 
 		binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
 
-		var layout = new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
-		layout.addClassName("mt-form-btn-layout");
-		return layout;
+		var bar = new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
+		bar.addClassName("mt-form-btn-bar");
+		return bar;
 	}
 
 	private void validateAndSave() {

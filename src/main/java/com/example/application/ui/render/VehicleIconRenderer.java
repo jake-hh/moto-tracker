@@ -12,7 +12,7 @@ public class VehicleIconRenderer {
 
 	// --- Render menu items ---
 	public static Component getDropdownItemsByVehicle(Vehicle vehicle) {
-		return createLayout(
+		return createBar(
 				vehicle.getType(),
 				vehicle.toStringShort()
 		);
@@ -20,30 +20,30 @@ public class VehicleIconRenderer {
 
 	// --- Render menu items ---
 	public static Component getDropdownItemsByVehicleType(VehicleType vehicleType) {
-		return createLayout(
+		return createBar(
 				vehicleType,
 				vehicleType.name()
 		);
 	}
 
 	// --- Render menu layout ---
-	private static Component createLayout(VehicleType vehicleType, String vehicleName) {
+	private static Component createBar(VehicleType vehicleType, String vehicleName) {
 		var icon = getIconByVehicleType(vehicleType);
 		icon.addClassName("mt-box-item-icon");
 
 		var label = new Span(vehicleName);
 		label.getStyle().set("white-space", "nowrap");
 
-		var layout = new HorizontalLayout(
+		var bar = new HorizontalLayout(
 				icon,
 				label
 		);
-		layout.addClassName("mt-box-item-layout");
-		layout.setAlignItems(FlexComponent.Alignment.CENTER);
-		layout.setPadding(false);
-		layout.setSpacing(true);
+		bar.addClassName("mt-box-item-bar");
+		bar.setAlignItems(FlexComponent.Alignment.CENTER);
+		bar.setPadding(false);
+		bar.setSpacing(true);
 
-		return layout;
+		return bar;
 	}
 
 	// --- Render value icon ---

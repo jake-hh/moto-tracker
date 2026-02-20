@@ -61,10 +61,10 @@ public class TrackerForm extends FormLayout {
 						.setMaxErrorMessage(Tracker.RANGE_MAX_MSG)
 		);
 
-		add(name, range, intervalField, createButtonsLayout(), btnFooter);
+		add(name, range, intervalField, createButtonBar(), btnFooter);
 	}
 
-	private Component createButtonsLayout() {
+	private Component createButtonBar() {
 		saveBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		closeBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -82,9 +82,9 @@ public class TrackerForm extends FormLayout {
 
 		binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
 
-		var layout = new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
-		layout.addClassName("mt-form-btn-layout");
-		return layout;
+		var bar = new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
+		bar.addClassName("mt-form-btn-bar");
+		return bar;
 	}
 
 	public void setDeleteEnabled(boolean enabled) {

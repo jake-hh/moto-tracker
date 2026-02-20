@@ -49,7 +49,7 @@ public class VehicleView extends VerticalLayout {
 	}
 
 	private HorizontalLayout createContent() {
-		HorizontalLayout content = new HorizontalLayout(grid, form);
+		var content = new HorizontalLayout(grid, form);
 		content.setFlexGrow(2, grid);
 		content.setFlexGrow(1, form);
 		content.addClassNames("content");

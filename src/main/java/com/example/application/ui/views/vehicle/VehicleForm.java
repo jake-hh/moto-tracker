@@ -109,12 +109,12 @@ public class VehicleForm extends FormLayout {
 			productionDate,
 			registrationDate,
 			trackingDate,
-			createButtonsLayout(),
+			createButtonBar(),
 			btnFooter
 		);
 	}
 
-	private Component createButtonsLayout() {
+	private Component createButtonBar() {
 		saveBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		closeBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -132,9 +132,9 @@ public class VehicleForm extends FormLayout {
 
 		binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
 
-		var layout = new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
-		layout.addClassName("mt-form-btn-layout");
-		return layout;
+		var bar = new HorizontalLayout(saveBtn, deleteBtn, closeBtn);
+		bar.addClassName("mt-form-btn-bar");
+		return bar;
 	}
 
 	public void setDeleteEnabled(boolean enabled) {

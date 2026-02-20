@@ -94,13 +94,13 @@ public class TrackerDataRenderer {
 				.set("margin-right", "var(--lumo-space-s)")
 				.set("color", color); // icon follows text color
 
-		HorizontalLayout layout = new HorizontalLayout(icon, text);;
-		layout.setVisible(str != null);
-		layout.setPadding(false);
-		layout.setSpacing(false);
-		layout.setAlignItems(FlexComponent.Alignment.CENTER);
+		var bar = new HorizontalLayout(icon, text);;
+		bar.setVisible(str != null);
+		bar.setPadding(false);
+		bar.setSpacing(false);
+		bar.setAlignItems(FlexComponent.Alignment.CENTER);
 
-		return layout;
+		return bar;
 	}
 
 	private static Status getDateStatus(Long days) {

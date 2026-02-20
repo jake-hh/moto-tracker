@@ -35,9 +35,9 @@ public class IntervalField extends CustomField<BasicInterval> {
 		amountField.addValueChangeListener(e -> updateValue());
 		unitField.addValueChangeListener(e -> updateValue());
 
-		var layout = new HorizontalLayout(amountField, unitField);
-		layout.setSpacing(true);
-		add(layout);
+		var bar = new HorizontalLayout(amountField, unitField);
+		bar.setSpacing(true);
+		add(bar);
 	}
 
 	@Override
