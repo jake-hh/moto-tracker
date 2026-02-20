@@ -2,6 +2,7 @@ package com.example.application.ui.views.dashboard;
 
 import com.example.application.data.VehicleType;
 import com.example.application.data.entity.Vehicle;
+import com.example.application.ui.render.ColorCircleRenderer;
 import com.example.application.ui.render.VehicleIconRenderer;
 
 import com.vaadin.flow.component.Component;
@@ -39,7 +40,12 @@ public class DashboardHeader extends VerticalLayout {
 		);
 		VehicleIconRenderer.addSize(icon, 2);
 
+		Component circle = ColorCircleRenderer.getCircle(
+				vehicle.map(Vehicle::getColour).orElse(null),
+				2
+		);
+
 		nameBar.removeAll();
-		nameBar.add(icon, vehicleName);
+		nameBar.add(icon, vehicleName, circle);
 	}
 }
