@@ -72,4 +72,12 @@ public class VehicleIconRenderer {
 		icon.addClassName("mt-box-icon");
 		return icon;
 	}
+
+	public static void addColor(Component icon, String color) {
+		icon.getStyle().set("color", color);
+	}
+
+	public static void addSize(Component icon, float size) {
+		icon.getStyle().set("font-size", size + "em");
+	}
 }

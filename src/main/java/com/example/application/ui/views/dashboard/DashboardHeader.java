@@ -37,7 +37,7 @@ public class DashboardHeader extends VerticalLayout {
 		Component icon = VehicleIconRenderer.getIconByVehicleType(
 				vehicle.map(Vehicle::getType).orElse(VehicleType.Other)
 		);
-		icon.getStyle().set("font-size", "2em");
+		VehicleIconRenderer.addSize(icon, 2);
 
 		nameBar.removeAll();
 		nameBar.add(icon, vehicleName);
