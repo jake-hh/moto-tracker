@@ -1,5 +1,6 @@
 package com.example.application.ui.views.tracker;
 
+import com.example.application.data.BasicInterval;
 import com.example.application.data.DashboardEventFormat;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
@@ -21,6 +22,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -104,10 +106,24 @@ public class TrackerView extends VerticalLayout {
 	private void configureGrid() {
 		grid.addClassNames("grid");
 		grid.setSizeFull();
-		grid.setColumns("name", "interval", "range");
 
-		grid.addColumn(t -> "").setHeader("Last date").setKey("date");
-		grid.addColumn(t -> "").setHeader("Last mileage").setKey("mileage");
+		grid.addColumn("name");
+
+		grid.addColumn("interval")
+				.setSortable(true)
+				.setComparator(t -> BasicInterval.toDays(t.getInterval()));
+
+		grid.addColumn("range");
+
+		grid.addColumn(t -> "")
+				.setKey("date")
+				.setHeader("Last date")
+				.setSortable(true);
+
+		grid.addColumn(t -> "")
+				.setKey("mileage")
+				.setHeader("Last mileage")
+				.setSortable(true);
 
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
@@ -149,9 +165,11 @@ public class TrackerView extends VerticalLayout {
 		grid.setItems(trackers);
 
 		grid.getColumnByKey("date")
-				.setRenderer(TrackerDataRenderer.renderDate(data, DashboardEventFormat.LAST_SERVICE));
+				.setRenderer(TrackerDataRenderer.renderDate(data, DashboardEventFormat.LAST_SERVICE))
+				.setComparator(t -> data.getLastDate(t).orElse(LocalDate.EPOCH));
 
 		grid.getColumnByKey("mileage")
-				.setRenderer(TrackerDataRenderer.renderMileage(data, DashboardEventFormat.LAST_SERVICE));
+				.setRenderer(TrackerDataRenderer.renderMileage(data, DashboardEventFormat.LAST_SERVICE))
+				.setComparator(t -> data.getLastMileage(t).orElse(0));
 	}
 }

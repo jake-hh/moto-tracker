@@ -1,5 +1,6 @@
 package com.example.application.data;
 
+import com.example.application.util.Time;
 import jakarta.persistence.Embeddable;
 import java.time.Period;
 
@@ -24,6 +25,18 @@ public record BasicInterval(Integer amount, Unit unit) {
 			case Weeks -> Period.ofDays(amount * 7);
 			case Months -> Period.ofMonths(amount);
 			case Years -> Period.ofYears(amount);
+		};
+	}
+
+	public static long toDays(BasicInterval interval) {
+		if (interval == null)
+			return 0;
+
+		return switch (interval.unit) {
+			case Days -> (long) interval.amount;
+			case Weeks -> (long) interval.amount * Time.DAYS_IN_WEEK;
+			case Months -> (long) interval.amount * Time.DAYS_IN_MONTH;
+			case Years -> (long) interval.amount * Time.DAYS_IN_YEAR;
 		};
 	}
 
