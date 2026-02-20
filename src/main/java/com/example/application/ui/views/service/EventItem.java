@@ -26,7 +26,7 @@ import java.util.List;
 public class EventItem extends HorizontalLayout {
 
 	private final EventItemController controller;
-	private final Runnable refreshEventList;
+	private final Runnable updateEventList;
 	private final Runnable fireEventChangedEvent;
 	private final Runnable fireOperationChangedEvent;
 	private final List<Tracker> allTrackers;
@@ -34,14 +34,14 @@ public class EventItem extends HorizontalLayout {
 
 	public EventItem(
 			Event event,
-			Runnable refreshEventList,
+			Runnable updateEventList,
 			Runnable fireEventChangedEvent,
 			Runnable fireOperationChangedEvent,
 			List<Tracker> allTrackers,
 			MainService service
 	) {
 		this.controller = new EventItemController(service, event);
-		this.refreshEventList = refreshEventList;
+		this.updateEventList = updateEventList;
 		this.fireEventChangedEvent = fireEventChangedEvent;
 		this.fireOperationChangedEvent = fireOperationChangedEvent;
 		this.allTrackers = allTrackers;
@@ -55,10 +55,10 @@ public class EventItem extends HorizontalLayout {
 		operationList.setPadding(false);
 		operationList.setSpacing(false);
 
-		refreshAll();
+		updateAll();
 	}
 
-	public void refreshAll() {
+	public void updateAll() {
 		removeAll();
 
 		add(createDeleteButton(),
@@ -66,7 +66,7 @@ public class EventItem extends HorizontalLayout {
 			createDateField(),
 			operationList);
 
-		refreshOperationList();
+		updateOperationList();
 	}
 
 	private Button createDeleteButton() {
@@ -84,7 +84,7 @@ public class EventItem extends HorizontalLayout {
 
 			if (operationsCount == 0) {
 				controller.deleteEvent();
-				refreshEventList.run();
+				updateEventList.run();
 				fireEventChangedEvent.run();
 			}
 			else {
@@ -110,7 +110,7 @@ public class EventItem extends HorizontalLayout {
 
 		dialog.addConfirmListener(ce -> {
 			controller.deleteEventWithOperations();
-			refreshEventList.run();
+			updateEventList.run();
 			fireEventChangedEvent.run();
 		});
 
@@ -174,8 +174,8 @@ public class EventItem extends HorizontalLayout {
 		return dateField;
 	}
 
-	public void refreshOperationList() {
-		refreshOperationListAndAdd(null);
+	public void updateOperationList() {
+		updateOperationListAndAdd(null);
 	}
 
 	private List<Tracker> getAvailableTrackers(List<Operation> operations) {
@@ -189,7 +189,7 @@ public class EventItem extends HorizontalLayout {
 				.toList();
 	}
 
-	private void refreshOperationListAndAdd(Integer newOperationPos) {
+	private void updateOperationListAndAdd(Integer newOperationPos) {
 		List<Operation> operations = controller.getOperations();
 		List<OperationRow> rows = OperationRowsBuilder.build(operations, newOperationPos);
 		List<Tracker> availableTrackers = getAvailableTrackers(operations);
@@ -210,14 +210,14 @@ public class EventItem extends HorizontalLayout {
 
 			item.onTrackerBoxChanged(tracker -> {
 				controller.updateOperation(op, tracker);
-				refreshOperationList();
+				updateOperationList();
 				fireOperationChangedEvent.run();
 			});
 
 			if (row.canRemove())
 				item.onRemoveButtonPressed(() -> {
 					controller.deleteOperation(op);
-					refreshOperationList();
+					updateOperationList();
 					fireOperationChangedEvent.run();
 				});
 			else
@@ -228,13 +228,13 @@ public class EventItem extends HorizontalLayout {
 
 			item.onTrackerBoxChanged(tracker -> {
 				controller.createOperation(tracker);
-				refreshOperationList();
+				updateOperationList();
 				fireOperationChangedEvent.run();
 			});
 
 			if (row.canRemove())
 				item.onRemoveButtonPressed(() -> {
-					refreshOperationList();
+					updateOperationList();
 					fireOperationChangedEvent.run();
 				});
 			else
@@ -246,7 +246,7 @@ public class EventItem extends HorizontalLayout {
 
 		if (row.canAdd())
 			item.onAddButtonPressed(() -> {
-				refreshOperationListAndAdd(row.nextPos());
+				updateOperationListAndAdd(row.nextPos());
 				fireOperationChangedEvent.run();
 			});
 		else

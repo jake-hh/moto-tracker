@@ -53,7 +53,7 @@ public class MainLayout extends AppLayout {
 		this.settingsService = settingsService;
 		this.mainService = mainService;
 
-		vehicleView.addVehicleChangedListener(e -> refreshVehicleBox());
+		vehicleView.addVehicleChangedListener(e -> updateVehicleBox());
 
 		createHeader();
 		createDrawer();
@@ -69,7 +69,7 @@ public class MainLayout extends AppLayout {
 		fireEvent(new VehicleSelectedEvent(this, vehicle));
 	}
 
-	public void refreshVehicleBox() {
+	public void updateVehicleBox() {
 		vehicleBox.setItems(mainService.findVehicles());
 		settingsService.getSelectedVehicle().ifPresent(vehicle -> {
 			vehicleBox.setValue(vehicle);
@@ -105,7 +105,7 @@ public class MainLayout extends AppLayout {
 		vehicleBox.setWidthFull();
 		vehicleBox.addValueChangeListener(this::onVehicleBoxChange);
 		vehicleBox.setRenderer(new ComponentRenderer<>(VehicleIconRenderer::getDropdownItemsByVehicle));
-		refreshVehicleBox();
+		updateVehicleBox();
 
 		// Create Edit Vehicles Button
 		var editVehiclesBtn = new Button(new Icon(VaadinIcon.EDIT));
