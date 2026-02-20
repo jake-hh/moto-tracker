@@ -76,14 +76,14 @@ public class DashboardView extends VerticalLayout {
 		formatSelect.setLabel("Service format");
 		formatSelect.setItems(DashboardEventFormat.values());
 		formatSelect.setItemLabelGenerator(DashboardEventFormat::getLabel);
-		formatSelect.addValueChangeListener(this::onFormatSelectChange);
+		formatSelect.addValueChangeListener(this::saveFormatAndUpdate);
 
 		var toolbar = new HorizontalLayout(formatSelect);
 		toolbar.addClassName("toolbar");
 		return toolbar;
 	}
 
-	private void onFormatSelectChange(ValueChangeEvent<DashboardEventFormat> change) {
+	private void saveFormatAndUpdate(ValueChangeEvent<DashboardEventFormat> change) {
 		if (!change.isFromClient()) return;
 
 		settingsService.updateDashboardEventFormat(change.getValue());

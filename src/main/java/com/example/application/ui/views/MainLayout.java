@@ -59,7 +59,7 @@ public class MainLayout extends AppLayout {
 		createDrawer();
 	}
 
-	private void onVehicleBoxChange(ValueChangeEvent<Vehicle> change) {
+	private void saveSelectedVehicle(ValueChangeEvent<Vehicle> change) {
 		if (!change.isFromClient()) return;
 
 		Vehicle vehicle = change.getValue();
@@ -103,7 +103,7 @@ public class MainLayout extends AppLayout {
 		// Init Vehicle Box
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
-		vehicleBox.addValueChangeListener(this::onVehicleBoxChange);
+		vehicleBox.addValueChangeListener(this::saveSelectedVehicle);
 		vehicleBox.setRenderer(new ComponentRenderer<>(VehicleIconRenderer::getDropdownItemsByVehicle));
 		updateVehicleBox();
 
