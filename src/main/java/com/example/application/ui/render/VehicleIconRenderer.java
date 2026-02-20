@@ -60,4 +60,9 @@ public class VehicleIconRenderer {
 		icon.getStyle().set("cursor", "default");
 		return icon;
 	}
+
+	// --- Render icon ---
+	public static Component getIconByVehicle(Vehicle vehicle) {
+		return getIconByVehicleType(vehicle.getType());
+	}
 }

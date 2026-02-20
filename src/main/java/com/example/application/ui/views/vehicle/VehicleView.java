@@ -3,6 +3,7 @@ package com.example.application.ui.views.vehicle;
 import com.example.application.data.entity.Vehicle;
 import com.example.application.services.MainService;
 import com.example.application.ui.events.VehicleChangedEvent;
+import com.example.application.ui.render.VehicleIconRenderer;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
@@ -81,11 +82,7 @@ public class VehicleView extends VerticalLayout {
 		grid.addClassNames("grid");
 		grid.setSizeFull();
 
-		grid.addColumn(new ComponentRenderer<>(vehicle -> {
-					Component icon = vehicle.getType().getIcon();
-					icon.getStyle().set("cursor", "default");
-					return icon;
-				}))
+		grid.addColumn(new ComponentRenderer<>(VehicleIconRenderer::getIconByVehicle))
 				.setHeader("Type")
 				.setSortable(true)
 				.setComparator(vehicle -> vehicle.getType().ordinal())
@@ -97,9 +94,11 @@ public class VehicleView extends VerticalLayout {
 				"model",
 				"engine"
 		);
+
 		grid.addColumn(new ComponentRenderer<>(
 				vehicle -> createColorCircle(vehicle.getColour())))
 				.setHeader("Colour");
+
 		grid.addColumns(
 				"plate",
 				"vin",
