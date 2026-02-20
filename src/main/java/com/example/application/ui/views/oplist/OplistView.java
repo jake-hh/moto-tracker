@@ -93,11 +93,11 @@ public class OplistView extends VerticalLayout {
 	private void configureGrid() {
 		grid.addClassNames("grid");
 		grid.setSizeFull();
-		grid.addColumn(operation -> operation.getEvent().getDateStr()).setHeader("Date");
-		grid.addColumn(operation -> operation.getEvent().getMileage()).setHeader("Mileage");
-		grid.addColumn(operation -> operation.getTracker().getName()).setHeader("Tracker");
-		grid.addColumn(operation -> operation.getTracker().getInterval()).setHeader("Interval");
-		grid.addColumn(operation -> operation.getTracker().getRange()).setHeader("Range");
+		grid.addColumn(op -> op.getEvent().getDateStr()).setHeader("Date");
+		grid.addColumn(op -> op.getEvent().getMileage()).setHeader("Mileage");
+		grid.addColumn(op -> op.getTracker().getName()).setHeader("Tracker");
+		grid.addColumn(op -> op.getTracker().getInterval()).setHeader("Interval");
+		grid.addColumn(op -> op.getTracker().getRange()).setHeader("Range");
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
 		grid.asSingleSelect().addValueChangeListener(event ->

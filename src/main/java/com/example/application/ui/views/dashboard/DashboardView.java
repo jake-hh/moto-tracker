@@ -78,8 +78,8 @@ public class DashboardView extends VerticalLayout {
 		grid.setSizeFull();
 		grid.setColumns("name", "interval", "range");
 
-		grid.addColumn(tracker -> "").setKey("date");
-		grid.addColumn(tracker -> "").setKey("mileage");
+		grid.addColumn(t -> "").setKey("date");
+		grid.addColumn(t -> "").setKey("mileage");
 
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 	}

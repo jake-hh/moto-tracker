@@ -106,8 +106,8 @@ public class TrackerView extends VerticalLayout {
 		grid.setSizeFull();
 		grid.setColumns("name", "interval", "range");
 
-		grid.addColumn(tracker -> "").setHeader("Last date").setKey("date");
-		grid.addColumn(tracker -> "").setHeader("Last mileage").setKey("mileage");
+		grid.addColumn(t -> "").setHeader("Last date").setKey("date");
+		grid.addColumn(t -> "").setHeader("Last mileage").setKey("mileage");
 
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 

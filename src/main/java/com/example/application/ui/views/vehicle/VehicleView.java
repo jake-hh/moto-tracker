@@ -95,7 +95,6 @@ public class VehicleView extends VerticalLayout {
 				.setHeader("Type")
 				.setSortable(true)
 				.setComparator(vehicle -> vehicle.getType().ordinal())
-				.setAutoWidth(true)
 				.setFlexGrow(0);
 
 		grid.addColumns(
@@ -111,15 +110,12 @@ public class VehicleView extends VerticalLayout {
 		grid.addColumns(
 				"plate",
 				"vin",
-				"mileage",
-				"productionDate",
-				"registrationDate",
-				"trackingDate"
+				"mileage"
 		);
 
-		grid.getColumnByKey("productionDate").setHeader("Production date");
-		grid.getColumnByKey("registrationDate").setHeader("Registration date");
-		grid.getColumnByKey("trackingDate").setHeader("Tracking since");
+		grid.addColumn("productionDate").setHeader("Production date");
+		grid.addColumn("registrationDate").setHeader("Registration date");
+		grid.addColumn("trackingDate").setHeader("Tracking since");
 
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
