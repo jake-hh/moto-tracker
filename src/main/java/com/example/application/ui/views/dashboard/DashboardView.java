@@ -1,10 +1,12 @@
 package com.example.application.ui.views.dashboard;
 
+import com.example.application.data.BasicInterval;
 import com.example.application.data.DashboardEventFormat;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.model.TrackerData;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
+import com.example.application.ui.render.TrackerDataComparator;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
@@ -76,10 +78,22 @@ public class DashboardView extends VerticalLayout {
 	private void configureGrid() {
 		grid.addClassNames("grid");
 		grid.setSizeFull();
-		grid.setColumns("name", "interval", "range");
 
-		grid.addColumn(t -> "").setKey("date");
-		grid.addColumn(t -> "").setKey("mileage");
+		grid.addColumn("name");
+
+		grid.addColumn("interval")
+				.setSortable(true)
+				.setComparator(t -> BasicInterval.toDays(t.getInterval()));
+
+		grid.addColumn("range");
+
+		grid.addColumn(t -> "")
+				.setKey("date")
+				.setSortable(true);
+
+		grid.addColumn(t -> "")
+				.setKey("mileage")
+				.setSortable(true);
 
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 	}
@@ -111,11 +125,16 @@ public class DashboardView extends VerticalLayout {
 
 		grid.getColumnByKey("date")
 				.setHeader(getDateColumnHeader(format))
-				.setRenderer(TrackerDataRenderer.renderDate(data, format));
+				.setRenderer(TrackerDataRenderer.renderDate(data, format))
+				.setComparator(t -> TrackerDataComparator.compareDate(data, format, t));
 
 		grid.getColumnByKey("mileage")
 				.setHeader(getMileageColumnHeader(format))
-				.setRenderer(TrackerDataRenderer.renderMileage(data, format));
+				.setRenderer(TrackerDataRenderer.renderMileage(data, format))
+				.setComparator(t -> TrackerDataComparator.compareMileage(data, format, t));
+
+		// FIXME: Grid doesn't sort after changing type with radioButton - refactor this whole View
+		grid.getDataProvider().refreshAll();
 	}
 
 	private String getDateColumnHeader(DashboardEventFormat format) {
