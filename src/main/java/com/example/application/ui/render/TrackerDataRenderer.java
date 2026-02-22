@@ -61,7 +61,7 @@ public class TrackerDataRenderer {
 		});
 	}
 
-	private static Component render(Status status, String str) {
+	private static Component render(Status status, String text) {
 		String color;
 		Component icon;
 
@@ -87,16 +87,14 @@ public class TrackerDataRenderer {
 			}
 		}
 
-		Span text = new Span();
-		if (str != null)
-			text.setText(str);
+		Span span = new Span(text);
 
 		icon.addClassName("mt-status-icon");
 		icon.addClassName(color);
-		text.addClassName(color);
+		span.addClassName(color);
 
-		var bar = new HorizontalLayout(icon, text);;
-		bar.setVisible(str != null);
+		var bar = new HorizontalLayout(icon, span);
+		bar.setVisible(text != null);
 		bar.setPadding(false);
 		bar.setSpacing(false);
 		bar.setAlignItems(FlexComponent.Alignment.CENTER);
