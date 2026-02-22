@@ -68,6 +68,37 @@ a[highlight] {
 }
 
 
+/* Status icons */
+
+.mt-status-icon {
+		cursor:			default;
+		/* margin-right:	var(--lumo-space-s); */
+		margin-right:	0.5em;
+}
+
+.mt-success-color {
+		color:			hsl(145, 55%, 40%);
+}
+
+.mt-success-color.mt-status-icon {
+		font-size:		0.8em;
+		margin-left:	0.2em;
+		margin-right:	0.8em;
+}
+
+.mt-warning-color {
+		color:			hsl(40, 100%, 55%);
+}
+
+.mt-error-color {
+		color:			hsl(3, 85%, 50%);
+}
+
+.mt-secondary-color {
+		color:			hsl(214, 10%, 60%);
+}
+
+
 /* ColorPicker */
 
 .mt-color-picker-wrapper {

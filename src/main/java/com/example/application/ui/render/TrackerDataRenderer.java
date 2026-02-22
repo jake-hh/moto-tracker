@@ -9,11 +9,10 @@ import com.example.application.util.Time;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -64,25 +63,27 @@ public class TrackerDataRenderer {
 
 	private static Component render(Status status, String str) {
 		String color;
-		Icon icon;
+		Component icon;
 
 		switch (status) {
 			case OK -> {
-				icon = VaadinIcon.CHECK.create();
-				color = "var(--lumo-success-text-color)";
+				icon = LineAwesomeIcon.CHECK_SOLID.create();
+				//icon = LineAwesomeIcon.CHECK_CIRCLE.create();
+				color = "mt-success-color";
 			}
 			case APPROACHING -> {
-				icon = VaadinIcon.WRENCH.create();
-				color = "var(--lumo-warning-text-color)";
+				icon = LineAwesomeIcon.TOOLS_SOLID.create();
+				color = "mt-warning-color";
 			}
 			case OVERDUE -> {
-				icon = VaadinIcon.EXCLAMATION_CIRCLE.create();
-				color = "var(--lumo-error-text-color)";
+				//icon = LineAwesomeIcon.EXCLAMATION_CIRCLE_SOLID.create();
+				icon = LineAwesomeIcon.EXCLAMATION_TRIANGLE_SOLID.create();
+				color = "mt-error-color";
 			}
 			default -> {
-				icon = VaadinIcon.INFO_CIRCLE.create();
+				icon = LineAwesomeIcon.INFO_CIRCLE_SOLID.create();
 				//icon = null;
-				color = "var(--lumo-secondary-text-color)";
+				color = "mt-secondary-color";
 			}
 		}
 
@@ -90,10 +91,9 @@ public class TrackerDataRenderer {
 		if (str != null)
 			text.setText(str);
 
-		text.getStyle().set("color", color);
-		icon.getStyle()
-				.set("margin-right", "var(--lumo-space-s)")
-				.set("color", color); // icon follows text color
+		icon.addClassName("mt-status-icon");
+		icon.addClassName(color);
+		text.addClassName(color);
 
 		var bar = new HorizontalLayout(icon, text);;
 		bar.setVisible(str != null);
