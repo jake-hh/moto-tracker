@@ -78,6 +78,7 @@ public class DashboardView extends VerticalLayout {
 	private void configureGrid() {
 		grid.addClassNames("grid");
 		grid.setSizeFull();
+		grid.setSelectionMode(Grid.SelectionMode.NONE);
 
 		grid.addColumn("name");
 
