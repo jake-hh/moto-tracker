@@ -22,7 +22,6 @@ import com.vaadin.flow.spring.annotation.UIScope;
 
 import jakarta.annotation.security.PermitAll;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -166,10 +165,10 @@ public class TrackerView extends VerticalLayout {
 
 		grid.getColumnByKey("date")
 				.setRenderer(TrackerDataRenderer.renderDate(data, DashboardEventFormat.LAST_SERVICE))
-				.setComparator(t -> data.getLastDate(t).orElse(LocalDate.EPOCH));
+				.setComparator(t -> data.getLastDate(t).orElse(null));
 
 		grid.getColumnByKey("mileage")
 				.setRenderer(TrackerDataRenderer.renderMileage(data, DashboardEventFormat.LAST_SERVICE))
-				.setComparator(t -> data.getLastMileage(t).orElse(0));
+				.setComparator(t -> data.getLastMileage(t).orElse(null));
 	}
 }
