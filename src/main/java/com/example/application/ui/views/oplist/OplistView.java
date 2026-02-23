@@ -1,5 +1,6 @@
 package com.example.application.ui.views.oplist;
 
+import com.example.application.data.BasicInterval;
 import com.example.application.data.entity.Operation;
 import com.example.application.services.MainService;
 import com.example.application.ui.views.MainLayout;
@@ -93,12 +94,19 @@ public class OplistView extends VerticalLayout {
 	private void configureGrid() {
 		grid.addClassNames("grid");
 		grid.setSizeFull();
+
 		grid.addColumn(op -> op.getEvent().getDateStr()).setHeader("Date");
 		grid.addColumn(op -> op.getEvent().getMileage()).setHeader("Mileage");
 		grid.addColumn(op -> op.getTracker().getName()).setHeader("Tracker");
-		grid.addColumn(op -> op.getTracker().getInterval()).setHeader("Interval");
+		grid.addColumn(op -> op.getTracker().getInterval()).setHeader("Interval")
+				.setComparator(op -> BasicInterval.toDays(op.getTracker().getInterval()));
+
 		grid.addColumn(op -> op.getTracker().getRange()).setHeader("Range");
-		grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+		grid.getColumns().forEach(col -> {
+			col.setAutoWidth(true);
+			col.setSortable(true);
+		});
 
 		grid.asSingleSelect().addValueChangeListener(event ->
 				editOperation(event.getValue()));
