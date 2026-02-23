@@ -23,7 +23,7 @@ public class DashboardHeader extends VerticalLayout {
 
 
 	public DashboardHeader() {
-		nameBar.setAlignItems(FlexComponent.Alignment.END);
+		nameBar.setAlignItems(Alignment.CENTER);
 
 		add(nameBar, vehicleData);
 	}
@@ -43,7 +43,7 @@ public class DashboardHeader extends VerticalLayout {
 
 		Component circle = ColorCircleRenderer.getCircle(
 				vehicle.map(Vehicle::getColour).orElse(null),
-				2
+				1.25
 		);
 
 		nameBar.removeAll();
