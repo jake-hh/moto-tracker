@@ -5,6 +5,7 @@ import com.example.application.data.DashboardEventFormat;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
 import com.example.application.services.model.TrackerData;
+import com.example.application.ui.render.TrackerDataComparator;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
@@ -165,10 +166,10 @@ public class TrackerView extends VerticalLayout {
 
 		grid.getColumnByKey("date")
 				.setRenderer(TrackerDataRenderer.renderDate(data, DashboardEventFormat.LAST_SERVICE))
-				.setComparator(t -> data.getLastDate(t).orElse(null));
+				.setComparator(t -> TrackerDataComparator.compareDate(data, DashboardEventFormat.LAST_SERVICE, t));
 
 		grid.getColumnByKey("mileage")
 				.setRenderer(TrackerDataRenderer.renderMileage(data, DashboardEventFormat.LAST_SERVICE))
-				.setComparator(t -> data.getLastMileage(t).orElse(null));
+				.setComparator(t -> TrackerDataComparator.compareMileage(data, DashboardEventFormat.LAST_SERVICE, t));
 	}
 }
