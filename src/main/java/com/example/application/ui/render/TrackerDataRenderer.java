@@ -76,8 +76,9 @@ public class TrackerDataRenderer {
 				color = "mt-warning-color";
 			}
 			case OVERDUE -> {
+				icon = LineAwesomeIcon.TOOLS_SOLID.create();
 				//icon = LineAwesomeIcon.EXCLAMATION_CIRCLE_SOLID.create();
-				icon = LineAwesomeIcon.EXCLAMATION_TRIANGLE_SOLID.create();
+				//icon = LineAwesomeIcon.EXCLAMATION_TRIANGLE_SOLID.create();
 				color = "mt-error-color";
 			}
 			default -> {
