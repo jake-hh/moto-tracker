@@ -144,3 +144,67 @@ a[highlight] {
 		justify-content:	center;
 }
 */
+
+
+/* User Avatar & Popover */
+
+.avatar {
+		display:			block;
+		cursor:				pointer;
+}
+
+.avatar-button {
+		border-radius:		50%;
+		margin:				var(--lumo-space-s);
+		margin-inline-start: auto;
+}
+
+vaadin-popover-overlay::part(content) {
+		box-shadow:			0 8px 24px rgba(0, 0, 0, 0.15);
+		padding:			var(--lumo-space-xs);
+}
+
+.popover-header {
+		padding-top:		var(--lumo-space-s);
+		padding-bottom:		var(--lumo-space-s);
+		padding-left:		var(--lumo-space-m);
+		padding-right:		var(--lumo-space-xl);
+
+		align-items:		center;
+		gap:				var(--lumo-space-m);
+		background-color:	var(--lumo-contrast-5pct);
+		border-radius:		5px;
+		/*border:				1px solid var(--lumo-contrast-10pct);*/
+}
+
+.popover-header-name-layout {
+}
+
+.popover-header-title {
+		font-weight:		bold;
+		padding:			0;
+}
+
+.popover-header-subtitle {
+		padding:			0;
+}
+
+.popover-links {
+		padding:			var(--lumo-space-xs) 0 0;
+		gap:				0;
+}
+
+.popover-link {
+		width:				100%;
+		justify-content:	flex-start;
+		padding:			var(--lumo-space-s) var(--lumo-space-m);
+}
+
+.popover-link::part(label) {
+		width:				100%;
+		text-align:			left;
+}
+
+.popover-link:hover {
+		background-color:	var(--lumo-contrast-5pct);
+}
