@@ -8,7 +8,6 @@ import com.example.application.ui.render.VehicleIconRenderer;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.NativeLabel;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -41,12 +40,11 @@ public class DashboardHeader extends VerticalLayout {
 		);
 		VehicleIconRenderer.addSize(icon, 2);
 
-		Component circle = ColorCircleRenderer.getCircle(
-				vehicle.map(Vehicle::getColour).orElse(null),
-				1.25
-		);
-
 		nameBar.removeAll();
-		nameBar.add(icon, vehicleName, circle);
+		nameBar.add(icon, vehicleName);
+
+		vehicle.map(Vehicle::getColour)
+				.ifPresent(color ->
+						nameBar.add(ColorCircleRenderer.getCircle(color, 1.25)));
 	}
 }
