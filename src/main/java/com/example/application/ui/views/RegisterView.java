@@ -1,10 +1,10 @@
 package com.example.application.ui.views;
 
-import com.example.application.data.entity.AppUser;
 import com.example.application.services.RegistrationService;
 //import com.example.application.ui.components.Button;
 import com.example.application.ui.Notify;
 
+import com.example.application.ui.dto.RegistrationDTO;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -41,7 +41,7 @@ public class RegisterView extends VerticalLayout {
 
 	private final RegistrationService registrationService;
 
-	private final Binder<AppUser> binder = new BeanValidationBinder<>(AppUser.class);
+	private final Binder<RegistrationDTO> binder = new BeanValidationBinder<>(RegistrationDTO.class);
 
 
 	public RegisterView(RegistrationService registrationService) {
@@ -117,20 +117,20 @@ public class RegisterView extends VerticalLayout {
 
 		binder.forField(password)
 				.asRequired("Password is required")
-				.bind("passwordHash");
+				.bind("password");
 
 		binder.forField(pConfirm)
 				.asRequired("Please confirm password")
-				.withValidator(pc -> password.getValue().equals(pc), "Passwords do not match")
-				.bind(u -> "", (u, v) -> {});
+				.withValidator(pc -> pc.equals(password.getValue()), "Passwords do not match")
+				.bind("passwordConfirm");
 	}
 
 	private void validateAndSave(ClickEvent<Button> click) {
 		if (binder.isValid()) { // validates and reads fields
 			try {
-				AppUser user = new AppUser();
-				binder.writeBean(user); // copy fields into fresh entity
-				registrationService.register(user);
+				RegistrationDTO form = new RegistrationDTO();
+				binder.writeBean(form); // copy fields into fresh entity
+				registrationService.register(form);
 				getUI().ifPresent(ui -> ui.navigate("login"));
 			}
 			catch (Exception e) {
