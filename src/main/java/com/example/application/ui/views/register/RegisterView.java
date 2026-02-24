@@ -1,7 +1,6 @@
 package com.example.application.ui.views.register;
 
 import com.example.application.services.RegistrationService;
-//import com.example.application.ui.components.Button;
 import com.example.application.ui.Notify;
 import com.example.application.ui.views.LoginView;
 
@@ -93,12 +92,6 @@ public class RegisterView extends VerticalLayout {
 		registerBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		registerBtn.setWidthFull();
 		registerBtn.getStyle().set("margin-top", "var(--lumo-space-l");
-		registerBtn.setTooltipText("Invalid input");
-
-		binder.addStatusChangeListener(e ->
-				registerBtn.setTooltipText(binder.isValid() ? null : "Invalid input"));
-
-		//binder.addStatusChangeListener(e -> saveBtn.setActive(binder.isValid()));
 
 		return new FormLayout(header, username, firstName, lastName, email, password, pConfirm, registerBtn);
 	}
