@@ -1,8 +1,9 @@
 package com.example.application.ui.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+
+
+/* Registration Data Transfer Object */
 
 public class RegistrationDTO {
 
@@ -27,6 +28,7 @@ public class RegistrationDTO {
 	@Pattern(regexp = "[\\p{L}]*", message = "Last name must contain letters")
 	private String lastName;
 
+	@Email(message = "Invalid e-mail address")
 	@Size(max = 24, message = "E-mail exceeds 24 characters")
 	private String email;
 

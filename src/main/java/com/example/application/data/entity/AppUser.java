@@ -2,9 +2,7 @@ package com.example.application.data.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 
 /* Full Domain User - user with profile data */
@@ -33,7 +31,7 @@ public class AppUser extends AbstractEntity {
 	private String lastName;
 
 	@Size(max = 24, message = "E-mail exceeds 24 characters")
-	//@Email(message = "Invalid e-mail address")
+	@Email(message = "Invalid e-mail address")
 	private String email;
 
 
