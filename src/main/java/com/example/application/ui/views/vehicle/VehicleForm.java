@@ -149,10 +149,8 @@ public class VehicleForm extends FormLayout {
 	}
 
 	private void validateAndSave() {
-		if (binder.isValid())
+		if (binder.validate().isOk()) // validate fields
 			fireEvent(new SaveEvent(this, binder.getBean()));
-		else
-			binder.validate();
 	}
 
 	public void setVehicle(Vehicle vehicle) {

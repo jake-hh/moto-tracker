@@ -115,7 +115,7 @@ public class RegisterView extends VerticalLayout {
 	}
 
 	private void validateAndSave(ClickEvent<Button> click) {
-		if (binder.isValid()) { // validates and reads fields
+		if (binder.validate().isOk()) { // validate fields
 			try {
 				RegistrationDTO form = new RegistrationDTO();
 				binder.writeBean(form); // copy fields into fresh entity
@@ -125,9 +125,6 @@ public class RegisterView extends VerticalLayout {
 			catch (Exception e) {
 				Notify.error(e.getMessage());
 			}
-		}
-		else {
-			binder.validate(); // This triggers the fields to show errors
 		}
 	}
 }

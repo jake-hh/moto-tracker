@@ -99,10 +99,8 @@ public class TrackerForm extends FormLayout {
 	}
 
 	private void validateAndSave() {
-		if (binder.isValid())
+		if (binder.validate().isOk()) // validate fields
 			fireEvent(new SaveEvent(this, binder.getBean()));
-		else
-			binder.validate();
 	}
 
 	public void setTracker(Tracker tracker) {
