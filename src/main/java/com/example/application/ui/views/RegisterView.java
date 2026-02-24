@@ -115,10 +115,6 @@ public class RegisterView extends VerticalLayout {
 				//.withValidator(AppUser::validateEmail, "Invalid e-mail address")
 				//.bind("email");
 
-		binder.forField(password)
-				.asRequired("Password is required")
-				.bind("password");
-
 		binder.forField(pConfirm)
 				.asRequired("Please confirm password")
 				.withValidator(pc -> pc.equals(password.getValue()), "Passwords do not match")
