@@ -2,9 +2,9 @@ package com.example.application.services;
 
 import com.example.application.data.entity.AppUser;
 import com.example.application.data.repo.AppUserRepository;
-
 import com.example.application.ui.Notify;
-import com.example.application.ui.dto.RegistrationDTO;
+import com.example.application.ui.views.register.RegistrationDTO;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

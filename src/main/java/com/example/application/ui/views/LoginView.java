@@ -1,5 +1,7 @@
 package com.example.application.ui.views;
 
+import com.example.application.ui.views.register.RegisterView;
+
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;

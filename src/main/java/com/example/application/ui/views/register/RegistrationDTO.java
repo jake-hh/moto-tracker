@@ -1,4 +1,4 @@
-package com.example.application.ui.dto;
+package com.example.application.ui.views.register;
 
 import jakarta.validation.constraints.*;
 

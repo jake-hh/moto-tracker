@@ -1,10 +1,10 @@
-package com.example.application.ui.views;
+package com.example.application.ui.views.register;
 
 import com.example.application.services.RegistrationService;
 //import com.example.application.ui.components.Button;
 import com.example.application.ui.Notify;
+import com.example.application.ui.views.LoginView;
 
-import com.example.application.ui.dto.RegistrationDTO;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
