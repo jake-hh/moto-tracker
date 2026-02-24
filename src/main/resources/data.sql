@@ -1,7 +1,7 @@
-INSERT INTO "APP_USER" (ID, VERSION, USERNAME, PASSWORD_HASH) VALUES
-(101, 1, 'admin', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW'),
-(102, 1, 'user', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW'),
-(103, 1, 'guest', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW');
+INSERT INTO "APP_USER" (ID, VERSION, USERNAME, FIRST_NAME, LAST_NAME, PASSWORD_HASH) VALUES
+(101, 1, 'admin', 'Mark', 'Robers', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW'),
+(102, 1, 'user',  'John', 'Deere',  '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW'),
+(103, 1, 'guest', 'Alex', 'Jonson', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW');
 
 INSERT INTO "VEHICLE" (ID, VERSION, OWNER_ID, TYPE, MAKE, MODEL, ENGINE, COLOUR, MILEAGE, TRACKING_DATE) VALUES
 (301, 1, 102, 'Car',        'Opel',   'Astra', '1.6 CDTI', 'Brown', 100_000, DATE '2026-01-01'),
