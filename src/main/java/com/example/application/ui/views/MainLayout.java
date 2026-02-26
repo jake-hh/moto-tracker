@@ -5,7 +5,6 @@ import com.example.application.data.entity.Vehicle;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
-import com.example.application.ui.Notify;
 import com.example.application.ui.events.*;
 import com.example.application.ui.render.VehicleIconRenderer;
 import com.example.application.ui.views.dashboard.DashboardView;
@@ -126,7 +125,9 @@ public class MainLayout extends AppLayout {
 		var menu = new VerticalLayout();
 		menu.addClassName("popover-links");
 
-		Button profileBtn = createMenuLink("User profile", click -> Notify.debug("Profile page is under construction"));
+		Button profileBtn = createMenuLink("User profile", click ->
+				getUI().ifPresent(ui -> ui.navigate("profile"))
+		);
 		Button logoutBtn = createMenuLink("Log out",  click -> securityService.logout());
 
 		menu.add(profileBtn, logoutBtn);
