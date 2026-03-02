@@ -123,7 +123,10 @@ public class MainLayout extends AppLayout {
 
 		Button profileBtn = createMenuLink(
 				"User profile",
-				() -> getUI().ifPresent(ui -> ui.navigate("profile"))
+				() -> getUI().ifPresent(ui -> {
+						ui.navigate("profile");
+						popover.close();
+				})
 		);
 
 		Button logoutBtn = createMenuLink(
