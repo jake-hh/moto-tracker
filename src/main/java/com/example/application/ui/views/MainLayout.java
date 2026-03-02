@@ -62,26 +62,26 @@ public class MainLayout extends AppLayout {
 
 		vehicleView.addVehicleChangedListener(e -> updateVehicleBox());
 
-		addToNavbar(createHeader());
-		addToDrawer(createDrawer());
+		addNavbar();
+		addDrawer();
 	}
 
-	private Component createHeader() {
+	private void addNavbar() {
 		H1 logo = new H1("Moto Tracker");
 		logo.addClassNames(
 				LumoUtility.FontSize.LARGE,
 				LumoUtility.Margin.MEDIUM
 		);
 
-		var header = new HorizontalLayout(new DrawerToggle(), logo, createAvatar());
-		header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-		header.expand(logo);
-		header.setWidthFull();
-		header.addClassNames(
+		var navbar = new HorizontalLayout(new DrawerToggle(), logo, createAvatar());
+		navbar.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+		navbar.expand(logo);
+		navbar.setWidthFull();
+		navbar.addClassNames(
 				LumoUtility.Padding.Vertical.NONE,
 				LumoUtility.Padding.Horizontal.MEDIUM
 		);
-		return header;
+		addToNavbar(navbar);
 	}
 
 	private Component createAvatar() {
@@ -183,7 +183,7 @@ public class MainLayout extends AppLayout {
 		return button;
 	}
 
-	private Component createDrawer() {
+	private void addDrawer() {
 		// Init Vehicle Box
 		vehicleBox.setItemLabelGenerator(Vehicle::toStringShort);
 		vehicleBox.setWidthFull();
@@ -208,13 +208,13 @@ public class MainLayout extends AppLayout {
 		vehicleBar.setSpacing(false);
 		vehicleBar.setAlignItems(FlexComponent.Alignment.END);
 
-		return new VerticalLayout(
+		addToDrawer(new VerticalLayout(
 				vehicleBar,
 				new RouterLink("Dashboard", DashboardView.class),
 				new RouterLink("Operations", OplistView.class),
 				new RouterLink("Services", ServiceView.class),
 				new RouterLink("Trackers", TrackerView.class)
-		);
+		));
 	}
 
 	private void saveSelectedVehicle(ValueChangeEvent<Vehicle> change) {
