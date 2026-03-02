@@ -73,39 +73,11 @@ public class ProfileView extends VerticalLayout {
 		// Username header
 		H4 header = new H4(user.getUsername());
 
-		// Vehicle counter
-		Span vehicleCounter = new Span("Vehicles: " + mainService.countVehiclesByUser(user));
-
-		// Create edit vehicles button
-		var editVehiclesBtn = new Button(LineAwesomeIcon.PEN_SOLID.create());
-		editVehiclesBtn.addThemeVariants(
-				ButtonVariant.LUMO_ICON,
-				ButtonVariant.LUMO_TERTIARY
-		);
-		editVehiclesBtn.setTooltipText("Edit vehicles");
-		editVehiclesBtn.addClickListener(click -> UI.getCurrent().navigate(VehicleView.class));
-
-		// Create add vehicle button
-		var addVehicleBtn = new Button(LineAwesomeIcon.PLUS_SOLID.create());
-		addVehicleBtn.addThemeVariants(
-				ButtonVariant.LUMO_ICON,
-				ButtonVariant.LUMO_TERTIARY
-		);
-		addVehicleBtn.setTooltipText("Add vehicle");
-		addVehicleBtn.addClickListener(click -> UI.getCurrent().navigate("vehicles/new"));
-
-		var vehicleButtons = new HorizontalLayout(editVehiclesBtn, addVehicleBtn);
-		vehicleButtons.setSpacing(false);
-
-		// Vehicle bar
-		var vehicleBar = new HorizontalLayout(vehicleCounter, vehicleButtons);
-		vehicleBar.setAlignItems(FlexComponent.Alignment.CENTER);
-
 		// Main column
 		VerticalLayout content = new VerticalLayout(
 				avatar,
 				header,
-				vehicleBar,
+				createVehiclesBar(user),
 				createForm()
 		);
 
@@ -114,6 +86,39 @@ public class ProfileView extends VerticalLayout {
 		content.setSpacing(true);
 
 		return content;
+	}
+
+	private Component createVehiclesBar(AppUser user) {
+		// Vehicle counter
+		Span counter = new Span("Vehicles: " + mainService.countVehiclesByUser(user));
+
+		// Edit vehicles button
+		var editBtn = new Button(LineAwesomeIcon.PEN_SOLID.create());
+		editBtn.addThemeVariants(
+				ButtonVariant.LUMO_ICON,
+				ButtonVariant.LUMO_TERTIARY
+		);
+		editBtn.setTooltipText("Edit vehicles");
+		editBtn.addClickListener(click -> UI.getCurrent().navigate(VehicleView.class));
+
+		// Add vehicle button
+		var addBtn = new Button(LineAwesomeIcon.PLUS_SOLID.create());
+		addBtn.addThemeVariants(
+				ButtonVariant.LUMO_ICON,
+				ButtonVariant.LUMO_TERTIARY
+		);
+		addBtn.setTooltipText("Add vehicle");
+		addBtn.addClickListener(click -> UI.getCurrent().navigate("vehicles/new"));
+
+		// Buttons toolbar
+		var buttons = new HorizontalLayout(editBtn, addBtn);
+		buttons.setSpacing(false);
+
+		// Vehicle bar
+		var vehiclesBar = new HorizontalLayout(counter, buttons);
+		vehiclesBar.setAlignItems(FlexComponent.Alignment.CENTER);
+
+		return vehiclesBar;
 	}
 
 	private Component createForm() {
