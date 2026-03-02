@@ -85,11 +85,20 @@ public class ProfileView extends VerticalLayout {
 		editVehiclesBtn.setTooltipText("Edit vehicles");
 		editVehiclesBtn.addClickListener(click -> UI.getCurrent().navigate(VehicleView.class));
 
-		// Vehicle bar
-		var vehicleBar = new HorizontalLayout(
-				vehicleCounter,
-				editVehiclesBtn
+		// Create add vehicle button
+		var addVehicleBtn = new Button(LineAwesomeIcon.PLUS_SOLID.create());
+		addVehicleBtn.addThemeVariants(
+				ButtonVariant.LUMO_ICON,
+				ButtonVariant.LUMO_TERTIARY
 		);
+		addVehicleBtn.setTooltipText("Add vehicle");
+		addVehicleBtn.addClickListener(click -> UI.getCurrent().navigate("vehicles/new"));
+
+		var vehicleButtons = new HorizontalLayout(editVehiclesBtn, addVehicleBtn);
+		vehicleButtons.setSpacing(false);
+
+		// Vehicle bar
+		var vehicleBar = new HorizontalLayout(vehicleCounter, vehicleButtons);
 		vehicleBar.setAlignItems(FlexComponent.Alignment.CENTER);
 
 		// Main column

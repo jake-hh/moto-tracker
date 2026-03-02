@@ -14,6 +14,8 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -25,9 +27,9 @@ import jakarta.annotation.security.PermitAll;
 @SpringComponent
 @UIScope
 @PermitAll
-@Route(value = "vehicles", layout = MainLayout.class)
+@Route(value = "vehicles/:action?", layout = MainLayout.class)
 @PageTitle("Vehicles | Moto Tracker")
-public class VehicleView extends VerticalLayout {
+public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final Grid<Vehicle> grid = new Grid<>(Vehicle.class, false);
 	private final VehicleForm form = new VehicleForm();
@@ -150,6 +152,14 @@ public class VehicleView extends VerticalLayout {
 
 	private void updateList() {
 		grid.setItems(service.findVehicles());
+	}
+
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+		event.getRouteParameters().get("action").ifPresent(action -> {
+			if ("new".equals(action))
+				addVehicle();
+		});
 	}
 
 	public void addVehicleChangedListener(ComponentEventListener<VehicleChangedEvent> listener) {
