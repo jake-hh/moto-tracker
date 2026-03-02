@@ -65,6 +65,10 @@ public class MainService {
 		return vehicleRepository.findByOwner(securityService.getCurrentUser());
 	}
 
+	public int countVehiclesByUser(AppUser user) {
+		return vehicleRepository.countByOwner(user);
+	}
+
 	public boolean isVehicleUsed(@NotNull Vehicle vehicle) {
 		return eventRepository.existsByVehicle(vehicle);
 	}

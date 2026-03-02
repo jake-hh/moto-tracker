@@ -11,4 +11,6 @@ import java.util.List;
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
 	List<Vehicle> findByOwner(AppUser owner);
+
+	int countByOwner(AppUser owner);
 }
