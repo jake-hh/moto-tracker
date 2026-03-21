@@ -159,7 +159,7 @@ public class TrackerView extends VerticalLayout {
 	}
 
 	private void updateList() {
-		List<Tracker> trackers = service.findTrackers();
+		List<Tracker> trackers = service.findTrackers(filterText.getValue());
 		TrackerData data = service.loadDataForTrackers(trackers);
 
 		grid.setItems(trackers);
