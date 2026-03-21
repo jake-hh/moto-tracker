@@ -38,7 +38,10 @@ public class ServiceView extends VerticalLayout {
 
 		mainLayout.addVehicleSelectedListener(e -> updateEventList());
 		mainLayout.addTrackerChangedListener(e -> updateEventList());
-		mainLayout.addOperationChangedListener(e -> updateEventList());
+		mainLayout.addOperationChangedListener(e -> {
+			if (!e.wasCreatedInEventItem())
+				updateEventList();
+		});
 
 		addClassName("view");
 		//setPadding(true);
@@ -79,7 +82,7 @@ public class ServiceView extends VerticalLayout {
 					service,
 					this::updateEventList,
 					mainLayout::fireEventChangedEvent,
-					mainLayout::fireOperationChangedEvent
+					() -> mainLayout.fireOperationChangedEvent(true)
 			));
 
 		eventList.addClassNames("event-item");

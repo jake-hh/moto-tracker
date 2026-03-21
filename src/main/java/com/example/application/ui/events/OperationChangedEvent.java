@@ -5,9 +5,14 @@ import com.vaadin.flow.component.ComponentEvent;
 
 
 public class OperationChangedEvent extends ComponentEvent<MainLayout> {
-	// marker event – no payload needed
+	boolean createdInEventItem;
 
-	public OperationChangedEvent(MainLayout source) {
+	public OperationChangedEvent(MainLayout source, boolean createdInEventItem) {
 		super(source, false); // false = not from client
+		this.createdInEventItem = createdInEventItem;
+	}
+
+	public boolean wasCreatedInEventItem() {
+		return createdInEventItem;
 	}
 }

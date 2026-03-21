@@ -250,8 +250,8 @@ public class MainLayout extends AppLayout {
 		fireEvent(new EventChangedEvent(this));
 	}
 
-	public void fireOperationChangedEvent() {
-		fireEvent(new OperationChangedEvent(this));
+	public void fireOperationChangedEvent(boolean createdInEventItem) {
+		fireEvent(new OperationChangedEvent(this, createdInEventItem));
 	}
 
 	// --- Subscribe to events ---
