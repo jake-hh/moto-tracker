@@ -51,7 +51,7 @@ public class EventItem extends HorizontalLayout {
 		setAlignItems(FlexComponent.Alignment.START);
 		setPadding(true);
 		setSpacing(true);
-		addClassName("mt-list-item-border");
+		addClassName("mt-border");
 
 		operationList = new VerticalLayout();
 		operationList.setPadding(false);

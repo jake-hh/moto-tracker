@@ -117,7 +117,7 @@ public class ProfileView extends VerticalLayout {
 
 		// Vehicle bar
 		var vehiclesBar = new HorizontalLayout(counter, buttons);
-		vehiclesBar.addClassName("mt-list-item-border");
+		vehiclesBar.addClassName("mt-border");
 		vehiclesBar.setWidthFull();
 		vehiclesBar.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 		vehiclesBar.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -134,7 +134,7 @@ public class ProfileView extends VerticalLayout {
 				email
 		);
 
-		form.addClassName("mt-list-item-border");
+		form.addClassName("mt-border");
 		form.setWidthFull();
 		form.setAlignItems(FlexComponent.Alignment.STRETCH);
 		form.getStyle().set("padding", "0 var(--lumo-space-m) var(--lumo-space-m)");
