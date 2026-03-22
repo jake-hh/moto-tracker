@@ -82,6 +82,7 @@ public class ProfileView extends VerticalLayout {
 		);
 
 		content.setAlignItems(FlexComponent.Alignment.CENTER);
+		content.setWidth("340px");
 		content.setPadding(true);
 		content.setSpacing(true);
 
@@ -116,7 +117,11 @@ public class ProfileView extends VerticalLayout {
 
 		// Vehicle bar
 		var vehiclesBar = new HorizontalLayout(counter, buttons);
+		vehiclesBar.addClassName("mt-list-item-border");
+		vehiclesBar.setWidthFull();
+		vehiclesBar.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 		vehiclesBar.setAlignItems(FlexComponent.Alignment.CENTER);
+		vehiclesBar.getStyle().set("padding", "var(--lumo-space-xs) var(--lumo-space-m)");
 
 		return vehiclesBar;
 	}
@@ -129,9 +134,10 @@ public class ProfileView extends VerticalLayout {
 				email
 		);
 
-		form.setWidth("300px");
+		form.addClassName("mt-list-item-border");
+		form.setWidthFull();
 		form.setAlignItems(FlexComponent.Alignment.STRETCH);
-		form.setPadding(false);
+		form.getStyle().set("padding", "0 var(--lumo-space-m) var(--lumo-space-m)");
 		form.setSpacing(true);
 
 		username.setReadOnly(true);
