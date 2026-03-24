@@ -6,11 +6,14 @@ import com.example.application.data.entity.Tracker;
 import com.example.application.services.model.TrackerData;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
+import com.example.application.ui.events.*;
 import com.example.application.ui.render.TrackerDataComparator;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -41,18 +44,14 @@ public class DashboardView extends VerticalLayout {
 	private final UserSettingsService settingsService;
 
 
-	public DashboardView(
-			MainService mainService,
-			UserSettingsService settingsService,
-			MainLayout mainLayout
-	) {
+	public DashboardView(MainService mainService, UserSettingsService settingsService) {
 		this.mainService = mainService;
 		this.settingsService = settingsService;
 
-		mainLayout.addVehicleSelectedListener(e -> updateView());
-		mainLayout.addTrackerChangedListener(e -> updateView());
-		mainLayout.addEventChangedListener(e -> updateView());
-		mainLayout.addOperationChangedListener(e -> updateView());
+		ComponentUtil.addListener(UI.getCurrent(), VehicleSelectedEvent.class, e -> updateView());
+		ComponentUtil.addListener(UI.getCurrent(), TrackerChangedEvent.class, e -> updateView());
+		ComponentUtil.addListener(UI.getCurrent(), EventChangedEvent.class, e -> updateView());
+		ComponentUtil.addListener(UI.getCurrent(), OperationChangedEvent.class, e -> updateView());
 
 		addClassName("view");
 		setSizeFull();

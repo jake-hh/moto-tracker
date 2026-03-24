@@ -1,13 +1,13 @@
 package com.example.application.ui.events;
 
-import com.example.application.ui.views.MainLayout;
 import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.UI;
 
 
-public class OperationChangedEvent extends ComponentEvent<MainLayout> {
+public class OperationChangedEvent extends ComponentEvent<UI> {
 	boolean createdInEventItem;
 
-	public OperationChangedEvent(MainLayout source, boolean createdInEventItem) {
+	public OperationChangedEvent(UI source, boolean createdInEventItem) {
 		super(source, false); // false = not from client
 		this.createdInEventItem = createdInEventItem;
 	}

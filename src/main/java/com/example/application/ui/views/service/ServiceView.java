@@ -3,9 +3,12 @@ package com.example.application.ui.views.service;
 import com.example.application.data.entity.Event;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
+import com.example.application.ui.events.*;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -29,16 +32,14 @@ public class ServiceView extends VerticalLayout {
 	private final VerticalLayout eventList = new VerticalLayout();
 
 	private final MainService service;
-	private final MainLayout mainLayout;
 
 
-	public ServiceView(MainService service, MainLayout mainLayout) {
+	public ServiceView(MainService service) {
 		this.service = service;
-		this.mainLayout = mainLayout;
 
-		mainLayout.addVehicleSelectedListener(e -> updateEventList());
-		mainLayout.addTrackerChangedListener(e -> updateEventList());
-		mainLayout.addOperationChangedListener(e -> {
+		ComponentUtil.addListener(UI.getCurrent(), VehicleSelectedEvent.class, e -> updateEventList());
+		ComponentUtil.addListener(UI.getCurrent(), TrackerChangedEvent.class, e -> updateEventList());
+		ComponentUtil.addListener(UI.getCurrent(), OperationChangedEvent.class, e -> {
 			if (!e.wasCreatedInEventItem())
 				updateEventList();
 		});
@@ -81,8 +82,8 @@ public class ServiceView extends VerticalLayout {
 					trackers,
 					service,
 					this::updateEventList,
-					mainLayout::fireEventChangedEvent,
-					() -> mainLayout.fireOperationChangedEvent(true)
+					() -> ComponentUtil.fireEvent(UI.getCurrent(), new EventChangedEvent(UI.getCurrent())),
+					() -> ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), true))
 			));
 
 		eventList.addClassNames("event-item");
@@ -92,7 +93,7 @@ public class ServiceView extends VerticalLayout {
 		// TODO: disable add button if no vehicle is present
 		if (service.createAndSaveEvent()) {
 			updateEventList();
-			mainLayout.fireEventChangedEvent();
+			ComponentUtil.fireEvent(UI.getCurrent(), new EventChangedEvent(UI.getCurrent()));
 		}
 	}
 }

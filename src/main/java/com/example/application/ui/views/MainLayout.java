@@ -5,7 +5,8 @@ import com.example.application.data.entity.Vehicle;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
 import com.example.application.services.UserSettingsService;
-import com.example.application.ui.events.*;
+import com.example.application.ui.events.VehicleChangedEvent;
+import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.render.VehicleIconRenderer;
 import com.example.application.ui.views.dashboard.DashboardView;
 import com.example.application.ui.views.oplist.OplistView;
@@ -14,7 +15,7 @@ import com.example.application.ui.views.tracker.TrackerView;
 import com.example.application.ui.views.vehicle.VehicleView;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -53,14 +54,13 @@ public class MainLayout extends AppLayout {
 	public MainLayout(
 			MainService mainService,
 			SecurityService securityService,
-			UserSettingsService settingsService,
-			VehicleView vehicleView
+			UserSettingsService settingsService
 	) {
 		this.securityService = securityService;
 		this.settingsService = settingsService;
 		this.mainService = mainService;
 
-		vehicleView.addVehicleChangedListener(e -> updateVehicleBox());
+		ComponentUtil.addListener(UI.getCurrent(), VehicleChangedEvent.class, e -> updateVehicleBox());
 
 		addNavbar();
 		addDrawer();
@@ -224,7 +224,7 @@ public class MainLayout extends AppLayout {
 
 		settingsService.updateSelectedVehicle(vehicle);
 		updateVehicleBoxPrefixIcon(vehicle);
-		fireEvent(new VehicleSelectedEvent(this, vehicle));
+		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleSelectedEvent(UI.getCurrent(), vehicle));
 	}
 
 	public void updateVehicleBox() {
@@ -240,35 +240,4 @@ public class MainLayout extends AppLayout {
 		vehicleBox.setPrefixComponent(icon);
 	}
 
-	// --- Publish events ---
-
-	public void fireTrackerChangedEvent() {
-		fireEvent(new TrackerChangedEvent(this));
-	}
-
-	public void fireEventChangedEvent() {
-		fireEvent(new EventChangedEvent(this));
-	}
-
-	public void fireOperationChangedEvent(boolean createdInEventItem) {
-		fireEvent(new OperationChangedEvent(this, createdInEventItem));
-	}
-
-	// --- Subscribe to events ---
-
-	public void addVehicleSelectedListener(ComponentEventListener<VehicleSelectedEvent> listener) {
-		addListener(VehicleSelectedEvent.class, listener);
-	}
-
-	public void addTrackerChangedListener(ComponentEventListener<TrackerChangedEvent> listener) {
-		addListener(TrackerChangedEvent.class, listener);
-	}
-
-	public void addEventChangedListener(ComponentEventListener<EventChangedEvent> listener) {
-		addListener(EventChangedEvent.class, listener);
-	}
-
-	public void addOperationChangedListener(ComponentEventListener<OperationChangedEvent> listener) {
-		addListener(OperationChangedEvent.class, listener);
-	}
 }

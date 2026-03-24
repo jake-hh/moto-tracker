@@ -5,11 +5,14 @@ import com.example.application.data.DashboardEventFormat;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
 import com.example.application.services.model.TrackerData;
+import com.example.application.ui.events.*;
 import com.example.application.ui.render.TrackerDataComparator;
 import com.example.application.ui.render.TrackerDataRenderer;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -38,16 +41,14 @@ public class TrackerView extends VerticalLayout {
 	private final TrackerForm form = new TrackerForm();
 
 	private final MainService service;
-	private final MainLayout mainLayout;
 
 
-	public TrackerView(MainService service, MainLayout mainLayout) {
+	public TrackerView(MainService service) {
 		this.service = service;
-		this.mainLayout = mainLayout;
 
-		mainLayout.addVehicleSelectedListener(e -> updateList());
-		mainLayout.addEventChangedListener(e -> updateList());
-		mainLayout.addOperationChangedListener(e -> updateList());
+		ComponentUtil.addListener(UI.getCurrent(), VehicleSelectedEvent.class, e -> updateList());
+		ComponentUtil.addListener(UI.getCurrent(), EventChangedEvent.class, e -> updateList());
+		ComponentUtil.addListener(UI.getCurrent(), OperationChangedEvent.class, e -> updateList());
 
 		addClassName("view");
 		setSizeFull();
@@ -93,14 +94,14 @@ public class TrackerView extends VerticalLayout {
 		service.saveTracker(event.getValue());
 		updateList();
 		closeEditor();
-		mainLayout.fireTrackerChangedEvent();
+		ComponentUtil.fireEvent(UI.getCurrent(), new TrackerChangedEvent(UI.getCurrent()));
 	}
 
 	private void deleteTracker(TrackerForm.DeleteEvent event) {
 		service.deleteTracker(event.getValue());
 		updateList();
 		closeEditor();
-		mainLayout.fireTrackerChangedEvent();
+		ComponentUtil.fireEvent(UI.getCurrent(), new TrackerChangedEvent(UI.getCurrent()));
 	}
 
 	private void configureGrid() {

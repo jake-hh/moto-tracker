@@ -3,9 +3,12 @@ package com.example.application.ui.views.oplist;
 import com.example.application.data.BasicInterval;
 import com.example.application.data.entity.Operation;
 import com.example.application.services.MainService;
+import com.example.application.ui.events.*;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -29,17 +32,15 @@ public class OplistView extends VerticalLayout {
 	private final OperationForm form = new OperationForm();
 
 	private final MainService service;
-	private final MainLayout mainLayout;
 
 
-	public OplistView(MainService service, MainLayout mainLayout) {
+	public OplistView(MainService service) {
 		this.service = service;
-		this.mainLayout = mainLayout;
 
-		mainLayout.addVehicleSelectedListener(e -> updateView());
-		mainLayout.addTrackerChangedListener(e -> updateView());
-		mainLayout.addEventChangedListener(e -> updateView());
-		mainLayout.addOperationChangedListener(e -> updateView());
+		ComponentUtil.addListener(UI.getCurrent(), VehicleSelectedEvent.class, e -> updateView());
+		ComponentUtil.addListener(UI.getCurrent(), TrackerChangedEvent.class, e -> updateView());
+		ComponentUtil.addListener(UI.getCurrent(), EventChangedEvent.class, e -> updateView());
+		ComponentUtil.addListener(UI.getCurrent(), OperationChangedEvent.class, e -> updateView());
 
 		addClassName("view");
 		setSizeFull();
@@ -81,14 +82,14 @@ public class OplistView extends VerticalLayout {
 		service.saveOperation(event.getValue());
 		updateList();
 		closeEditor();
-		mainLayout.fireTrackerChangedEvent();
+		ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), false));
 	}
 
 	private void deleteOperation(OperationForm.DeleteEvent event) {
 		service.deleteOperation(event.getValue());
 		updateList();
 		closeEditor();
-		mainLayout.fireTrackerChangedEvent();
+		ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), false));
 	}
 
 	private void configureGrid() {

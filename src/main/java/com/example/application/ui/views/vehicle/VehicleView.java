@@ -8,7 +8,8 @@ import com.example.application.ui.render.VehicleIconRenderer;
 import com.example.application.ui.views.MainLayout;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -79,14 +80,14 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 		service.saveVehicle(event.getValue());
 		updateList();
 		closeEditor();
-		fireEvent(new VehicleChangedEvent(this));
+		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent()));
 	}
 
 	private void deleteVehicle(VehicleForm.DeleteEvent event) {
 		service.deleteVehicle(event.getValue());
 		updateList();
 		closeEditor();
-		fireEvent(new VehicleChangedEvent(this));
+		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent()));
 	}
 
 	private void configureGrid() {
@@ -160,9 +161,5 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 			if ("new".equals(action))
 				addVehicle();
 		});
-	}
-
-	public void addVehicleChangedListener(ComponentEventListener<VehicleChangedEvent> listener) {
-		addListener(VehicleChangedEvent.class, listener);
 	}
 }

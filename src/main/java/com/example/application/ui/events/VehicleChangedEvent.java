@@ -1,13 +1,13 @@
 package com.example.application.ui.events;
 
-import com.example.application.ui.views.vehicle.VehicleView;
 import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.UI;
 
 
-public class VehicleChangedEvent extends ComponentEvent<VehicleView> {
+public class VehicleChangedEvent extends ComponentEvent<UI> {
 	// marker event – no payload needed
 
-	public VehicleChangedEvent(VehicleView source) {
+	public VehicleChangedEvent(UI source) {
 		super(source, false); // false = not from client
 	}
 }
