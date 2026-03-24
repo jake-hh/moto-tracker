@@ -2,8 +2,8 @@ package com.example.application.ui.views.vehicle;
 
 import com.example.application.data.entity.Vehicle;
 import com.example.application.services.MainService;
+import com.example.application.services.UserSettingsService;
 import com.example.application.ui.events.VehicleChangedEvent;
-import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.render.ColorCircleRenderer;
 import com.example.application.ui.render.VehicleIconRenderer;
 import com.example.application.ui.views.MainLayout;
@@ -36,11 +36,13 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 	private final Grid<Vehicle> grid = new Grid<>(Vehicle.class, false);
 	private final VehicleForm form = new VehicleForm();
 
-	private final MainService service;
+	private final MainService mainService;
+	private final UserSettingsService settingsService;
 
 
-	public VehicleView(MainService service) {
-		this.service = service;
+	public VehicleView(MainService mainService, UserSettingsService settingsService) {
+		this.mainService = mainService;
+		this.settingsService = settingsService;
 
 		ComponentUtil.addListener(UI.getCurrent(), VehicleChangedEvent.class, e -> updateList());
 
@@ -80,13 +82,17 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 	}
 
 	private void saveVehicle(VehicleForm.SaveEvent event) {
-		service.saveVehicle(event.getValue());
+		Vehicle vehicle = event.getValue();
+		mainService.saveVehicle(vehicle);
+		settingsService.getSelectedVehicle()
+				.filter(sel -> sel.equals(vehicle))   // compares IDs
+				.ifPresent(sel -> settingsService.updateSelectedVehicle(vehicle));
 		closeEditor();
 		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent()));
 	}
 
 	private void deleteVehicle(VehicleForm.DeleteEvent event) {
-		service.deleteVehicle(event.getValue());
+		mainService.deleteVehicle(event.getValue());
 		closeEditor();
 		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent()));
 	}
@@ -137,7 +143,7 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 		form.setVisible(true);
 		addClassName("editing");
 
-		boolean used = vehicle.getId() != null && service.isVehicleUsed(vehicle);
+		boolean used = vehicle.getId() != null && mainService.isVehicleUsed(vehicle);
 		form.setDeleteEnabled(!used);
 	}
 
@@ -149,11 +155,11 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 
 	private void addVehicle() {
 		grid.asSingleSelect().clear();
-		editVehicle(service.createVehicle());
+		editVehicle(mainService.createVehicle());
 	}
 
 	private void updateList() {
-		grid.setItems(service.findVehicles());
+		grid.setItems(mainService.findVehicles());
 	}
 
 	@Override
