@@ -48,6 +48,10 @@ public class DashboardView extends VerticalLayout {
 		this.mainService = mainService;
 		this.settingsService = settingsService;
 
+		ComponentUtil.addListener(UI.getCurrent(), VehicleChangedEvent.class, e -> {
+			if (settingsService.getSelectedVehicle().filter(sel -> sel.equals(e.getVehicle())).isPresent())
+				updateHeader();
+		});
 		ComponentUtil.addListener(UI.getCurrent(), VehicleSelectedEvent.class, e -> updateView());
 		ComponentUtil.addListener(UI.getCurrent(), TrackerChangedEvent.class, e -> updateView());
 		ComponentUtil.addListener(UI.getCurrent(), EventChangedEvent.class, e -> updateView());

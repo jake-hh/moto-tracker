@@ -88,13 +88,14 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 				.filter(sel -> sel.equals(vehicle))   // compares IDs
 				.ifPresent(sel -> settingsService.updateSelectedVehicle(vehicle));
 		closeEditor();
-		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent()));
+		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent(), vehicle));
 	}
 
 	private void deleteVehicle(VehicleForm.DeleteEvent event) {
-		mainService.deleteVehicle(event.getValue());
+		Vehicle vehicle = event.getValue();
+		mainService.deleteVehicle(vehicle);
 		closeEditor();
-		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent()));
+		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent(), vehicle));
 	}
 
 	private void configureGrid() {
