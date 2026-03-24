@@ -64,3 +64,6 @@ The security architecture is documented in `doc/security.md`. The key rule: busi
 - Methods that operate on the selected vehicle call `getSelectedVehicle()` internally — callers don't pass the vehicle.
 - CRUD methods call `Notify.ok()`/`Notify.error()` as a side effect and re-throw as `RuntimeException` on failure.
 - `isEmpty()` static helpers on entities guard against saving/deleting unsaved shells.
+
+## More
+- After showing a summary of what was changed, show a short commit-message with a very brief description
