@@ -47,6 +47,7 @@ public class TrackerView extends VerticalLayout {
 		this.service = service;
 
 		ComponentUtil.addListener(UI.getCurrent(), VehicleSelectedEvent.class, e -> updateList());
+		ComponentUtil.addListener(UI.getCurrent(), TrackerChangedEvent.class, e -> updateList());
 		ComponentUtil.addListener(UI.getCurrent(), EventChangedEvent.class, e -> updateList());
 		ComponentUtil.addListener(UI.getCurrent(), OperationChangedEvent.class, e -> updateList());
 
@@ -92,14 +93,12 @@ public class TrackerView extends VerticalLayout {
 
 	private void saveTracker(TrackerForm.SaveEvent event) {
 		service.saveTracker(event.getValue());
-		updateList();
 		closeEditor();
 		ComponentUtil.fireEvent(UI.getCurrent(), new TrackerChangedEvent(UI.getCurrent()));
 	}
 
 	private void deleteTracker(TrackerForm.DeleteEvent event) {
 		service.deleteTracker(event.getValue());
-		updateList();
 		closeEditor();
 		ComponentUtil.fireEvent(UI.getCurrent(), new TrackerChangedEvent(UI.getCurrent()));
 	}

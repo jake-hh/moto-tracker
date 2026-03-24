@@ -3,6 +3,7 @@ package com.example.application.ui.views.vehicle;
 import com.example.application.data.entity.Vehicle;
 import com.example.application.services.MainService;
 import com.example.application.ui.events.VehicleChangedEvent;
+import com.example.application.ui.events.VehicleSelectedEvent;
 import com.example.application.ui.render.ColorCircleRenderer;
 import com.example.application.ui.render.VehicleIconRenderer;
 import com.example.application.ui.views.MainLayout;
@@ -41,6 +42,8 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 	public VehicleView(MainService service) {
 		this.service = service;
 
+		ComponentUtil.addListener(UI.getCurrent(), VehicleChangedEvent.class, e -> updateList());
+
 		addClassName("view");
 		setSizeFull();
 		configureGrid();
@@ -78,14 +81,12 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 
 	private void saveVehicle(VehicleForm.SaveEvent event) {
 		service.saveVehicle(event.getValue());
-		updateList();
 		closeEditor();
 		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent()));
 	}
 
 	private void deleteVehicle(VehicleForm.DeleteEvent event) {
 		service.deleteVehicle(event.getValue());
-		updateList();
 		closeEditor();
 		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent()));
 	}

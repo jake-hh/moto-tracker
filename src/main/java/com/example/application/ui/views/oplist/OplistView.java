@@ -80,14 +80,12 @@ public class OplistView extends VerticalLayout {
 
 	private void saveOperation(OperationForm.SaveEvent event) {
 		service.saveOperation(event.getValue());
-		updateList();
 		closeEditor();
 		ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), false));
 	}
 
 	private void deleteOperation(OperationForm.DeleteEvent event) {
 		service.deleteOperation(event.getValue());
-		updateList();
 		closeEditor();
 		ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), false));
 	}
