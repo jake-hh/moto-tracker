@@ -2,9 +2,13 @@ package com.example.application.ui.views.service;
 
 import com.example.application.data.entity.*;
 import com.example.application.services.MainService;
+import com.example.application.ui.events.EventChangedEvent;
+import com.example.application.ui.events.OperationChangedEvent;
 import com.example.application.ui.views.service.OperationRowsBuilder.*;
 
 import com.example.application.util.Time;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
@@ -30,22 +34,16 @@ public class EventItem extends HorizontalLayout {
 
 	private final EventItemController controller;
 	private final Runnable updateEventList;
-	private final Runnable fireEventChangedEvent;
-	private final Runnable fireOperationChangedEvent;
 
 
 	public EventItem(
 			Event event,
 			List<Tracker> allTrackers,
 			MainService service,
-			Runnable updateEventList,
-			Runnable fireEventChangedEvent,
-			Runnable fireOperationChangedEvent
+			Runnable updateEventList
 	) {
 		this.controller = new EventItemController(service, event);
 		this.updateEventList = updateEventList;
-		this.fireEventChangedEvent = fireEventChangedEvent;
-		this.fireOperationChangedEvent = fireOperationChangedEvent;
 		this.allTrackers = allTrackers;
 
 		setAlignItems(FlexComponent.Alignment.START);
@@ -83,7 +81,7 @@ public class EventItem extends HorizontalLayout {
 			if (operationsCount == 0) {
 				controller.deleteEvent();
 				updateEventList.run();
-				fireEventChangedEvent.run();
+				ComponentUtil.fireEvent(UI.getCurrent(), new EventChangedEvent(UI.getCurrent()));
 			}
 			else {
 				openDeleteDialog(operationsCount);
@@ -109,7 +107,7 @@ public class EventItem extends HorizontalLayout {
 		dialog.addConfirmListener(ce -> {
 			controller.deleteEventWithOperations();
 			updateEventList.run();
-			fireEventChangedEvent.run();
+			ComponentUtil.fireEvent(UI.getCurrent(), new EventChangedEvent(UI.getCurrent()));
 		});
 
 		dialog.open();
@@ -134,7 +132,7 @@ public class EventItem extends HorizontalLayout {
 
 			if (mileage == null || mileage % 100 == 0) {
 				controller.updateMileage(mileage);
-				fireEventChangedEvent.run();
+				ComponentUtil.fireEvent(UI.getCurrent(), new EventChangedEvent(UI.getCurrent()));
 			}
 		});
 
@@ -165,7 +163,7 @@ public class EventItem extends HorizontalLayout {
 
 			if (date != null && !date.isAfter(Time.today())) {
 				controller.updateDate(date);
-				fireEventChangedEvent.run();
+				ComponentUtil.fireEvent(UI.getCurrent(), new EventChangedEvent(UI.getCurrent()));
 			}
 		});
 
@@ -209,14 +207,14 @@ public class EventItem extends HorizontalLayout {
 			item.onTrackerBoxChanged(tracker -> {
 				controller.updateOperation(op, tracker);
 				updateOperationList();
-				fireOperationChangedEvent.run();
+				ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), true));
 			});
 
 			if (row.canRemove())
 				item.onRemoveButtonPressed(() -> {
 					controller.deleteOperation(op);
 					updateOperationList();
-					fireOperationChangedEvent.run();
+					ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), true));
 				});
 			else
 				item.disableRemoveButton(true);
@@ -227,13 +225,13 @@ public class EventItem extends HorizontalLayout {
 			item.onTrackerBoxChanged(tracker -> {
 				controller.createOperation(tracker);
 				updateOperationList();
-				fireOperationChangedEvent.run();
+				ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), true));
 			});
 
 			if (row.canRemove())
 				item.onRemoveButtonPressed(() -> {
 					updateOperationList();
-					fireOperationChangedEvent.run();
+					ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), true));
 				});
 			else
 				item.disableRemoveButton(true);
@@ -245,7 +243,7 @@ public class EventItem extends HorizontalLayout {
 		if (row.canAdd())
 			item.onAddButtonPressed(() -> {
 				updateOperationListAndAdd(row.nextPos());
-				fireOperationChangedEvent.run();
+				ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), true));
 			});
 		else
 			item.disableAddButton(true);

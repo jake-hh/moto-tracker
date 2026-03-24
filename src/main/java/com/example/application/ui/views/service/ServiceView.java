@@ -77,14 +77,9 @@ public class ServiceView extends VerticalLayout {
 		eventList.removeAll();
 
 		for (Event event : events)
-			eventList.add(new EventItem(
-					event,
-					trackers,
-					service,
-					this::updateEventList,
-					() -> ComponentUtil.fireEvent(UI.getCurrent(), new EventChangedEvent(UI.getCurrent())),
-					() -> ComponentUtil.fireEvent(UI.getCurrent(), new OperationChangedEvent(UI.getCurrent(), true))
-			));
+			eventList.add(
+					new EventItem(event, trackers, service, this::updateEventList)
+			);
 
 		eventList.addClassNames("event-item");
 	}
