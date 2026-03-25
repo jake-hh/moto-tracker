@@ -45,6 +45,7 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 public class MainLayout extends AppLayout {
 
 	private final ComboBox<Vehicle> vehicleBox = new ComboBox<>("Vehicle");
+	private final Span noVehicleHint = new Span("No vehicle – add one to get started");
 
 	private final MainService mainService;
 	private final SecurityService securityService;
@@ -189,6 +190,9 @@ public class MainLayout extends AppLayout {
 		vehicleBox.setWidthFull();
 		vehicleBox.addValueChangeListener(this::saveSelectedVehicle);
 		vehicleBox.setRenderer(new ComponentRenderer<>(VehicleIconRenderer::getDropdownItemsByVehicle));
+
+		// Configure hint before updateVehicleBox() so setVisible() is not overridden
+		noVehicleHint.addClassNames("mt-helper-text", "warning");
 		updateVehicleBox();
 
 		// Create Edit Vehicles Button
@@ -198,18 +202,22 @@ public class MainLayout extends AppLayout {
 				ButtonVariant.LUMO_TERTIARY
 		);
 		editVehiclesBtn.setTooltipText("Edit vehicles");
-
 		editVehiclesBtn.addClickListener(click -> UI.getCurrent().navigate(VehicleView.class));
 
-		// Combine in Vehicle Layout
+		// Combine vehicleBox + hint in vehicleSection
 		var vehicleBar = new HorizontalLayout(vehicleBox, editVehiclesBtn);
 		vehicleBar.setWidthFull();
 		vehicleBar.setPadding(false);
 		vehicleBar.setSpacing(false);
 		vehicleBar.setAlignItems(FlexComponent.Alignment.END);
 
+		var vehicleSection = new VerticalLayout(vehicleBar, noVehicleHint);
+		vehicleSection.setPadding(false);
+		vehicleSection.setSpacing(false);
+		vehicleSection.getStyle().set("gap", "var(--lumo-space-xs)");
+
 		addToDrawer(new VerticalLayout(
-				vehicleBar,
+				vehicleSection,
 				new RouterLink("Dashboard", DashboardView.class),
 				new RouterLink("Operations", OplistView.class),
 				new RouterLink("Services", ServiceView.class),
@@ -228,10 +236,13 @@ public class MainLayout extends AppLayout {
 	}
 
 	public void updateVehicleBox() {
-		vehicleBox.setItems(mainService.findVehicles());
-		settingsService.getSelectedVehicle().ifPresent(vehicle -> {
-			vehicleBox.setValue(vehicle);
-			updateVehicleBoxPrefixIcon(vehicle);
+		var vehicles = mainService.findVehicles();
+		vehicleBox.setItems(vehicles);
+		noVehicleHint.setVisible(vehicles.isEmpty());
+
+		settingsService.getSelectedVehicle().ifPresent(sel -> {
+			vehicleBox.setValue(sel);
+			updateVehicleBoxPrefixIcon(sel);
 		});
 	}
 

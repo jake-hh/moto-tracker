@@ -3,9 +3,11 @@ package com.example.application.ui.views;
 import com.example.application.data.entity.AppUser;
 import com.example.application.security.SecurityService;
 import com.example.application.services.MainService;
+import com.example.application.ui.events.VehicleChangedEvent;
 import com.example.application.ui.views.vehicle.VehicleView;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
@@ -52,6 +54,8 @@ public class ProfileView extends VerticalLayout {
 		setAlignItems(FlexComponent.Alignment.CENTER);
 		setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
+		ComponentUtil.addListener(UI.getCurrent(), VehicleChangedEvent.class, e -> updateView());
+
 		binder.bindInstanceFields(this);
 		updateView();
 	}
@@ -77,9 +81,17 @@ public class ProfileView extends VerticalLayout {
 		VerticalLayout content = new VerticalLayout(
 				avatar,
 				header,
-				createVehiclesBar(user),
-				createForm()
+				createVehiclesBar(user)
 		);
+
+		if (mainService.countVehiclesByUser(user) == 0) {
+			Span hint = new Span("Add your first vehicle to start tracking maintenance.");
+			hint.addClassNames("mt-helper-text", "warning");
+			hint.getStyle().set("margin", "0 var(--lumo-space-m) var(--lumo-space-m)");
+			content.add(hint);
+		}
+
+		content.add(createForm());
 
 		content.setAlignItems(FlexComponent.Alignment.CENTER);
 		content.setWidth("340px");
