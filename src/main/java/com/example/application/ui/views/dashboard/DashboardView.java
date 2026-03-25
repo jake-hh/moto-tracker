@@ -19,6 +19,8 @@ import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -34,7 +36,7 @@ import java.util.List;
 @PermitAll
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Dashboard | Moto Tracker")
-public class DashboardView extends VerticalLayout {
+public class DashboardView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final DashboardHeader header = new DashboardHeader();
 	private final Grid<Tracker> grid = new Grid<>(Tracker.class, false);
@@ -43,6 +45,12 @@ public class DashboardView extends VerticalLayout {
 	private final MainService mainService;
 	private final UserSettingsService settingsService;
 
+
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+		if (mainService.findVehicles().isEmpty())
+			event.forwardTo("profile");
+	}
 
 	public DashboardView(MainService mainService, UserSettingsService settingsService) {
 		this.mainService = mainService;

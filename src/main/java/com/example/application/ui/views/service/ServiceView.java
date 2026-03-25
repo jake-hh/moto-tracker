@@ -12,6 +12,8 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -27,12 +29,18 @@ import java.util.List;
 @PermitAll
 @Route(value = "services", layout = MainLayout.class)
 @PageTitle("Services | Moto Tracker")
-public class ServiceView extends VerticalLayout {
+public class ServiceView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final VerticalLayout eventList = new VerticalLayout();
 
 	private final MainService service;
 
+
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+		if (service.findVehicles().isEmpty())
+			event.forwardTo("profile");
+	}
 
 	public ServiceView(MainService service) {
 		this.service = service;

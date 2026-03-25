@@ -19,6 +19,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -34,7 +36,7 @@ import java.util.List;
 @PermitAll
 @Route(value = "trackers", layout = MainLayout.class)
 @PageTitle("Trackers | Moto Tracker")
-public class TrackerView extends VerticalLayout {
+public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final Grid<Tracker> grid = new Grid<>(Tracker.class, false);
 	private final TextField filterText = new TextField();
@@ -42,6 +44,12 @@ public class TrackerView extends VerticalLayout {
 
 	private final MainService service;
 
+
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+		if (service.findVehicles().isEmpty())
+			event.forwardTo("profile");
+	}
 
 	public TrackerView(MainService service) {
 		this.service = service;

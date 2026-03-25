@@ -13,6 +13,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -26,13 +28,19 @@ import jakarta.annotation.security.PermitAll;
 @PermitAll
 @Route(value = "operations", layout = MainLayout.class)
 @PageTitle("Operations | Moto Tracker")
-public class OplistView extends VerticalLayout {
+public class OplistView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final Grid<Operation> grid = new Grid<>(Operation.class, false);
 	private final OperationForm form = new OperationForm();
 
 	private final MainService service;
 
+
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+		if (service.findVehicles().isEmpty())
+			event.forwardTo("profile");
+	}
 
 	public OplistView(MainService service) {
 		this.service = service;
