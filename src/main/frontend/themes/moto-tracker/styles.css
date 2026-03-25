@@ -23,6 +23,11 @@ a[highlight] {
 		font-size:		var(--lumo-font-size-s);
 }
 
+.mt-inactive-link {
+		color:			var(--lumo-disabled-text-color);
+		pointer-events:	none;
+}
+
 .mt-border {
 		border:			1px solid var(--lumo-contrast-20pct);
 		border-radius:	8px;

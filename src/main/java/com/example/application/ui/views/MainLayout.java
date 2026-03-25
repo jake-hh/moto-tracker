@@ -39,6 +39,8 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
+import java.util.List;
+
 
 @SpringComponent
 @UIScope
@@ -46,6 +48,11 @@ public class MainLayout extends AppLayout {
 
 	private final ComboBox<Vehicle> vehicleBox = new ComboBox<>("Vehicle");
 	private final Span noVehicleHint = new Span("No vehicle – add one to get started");
+
+	private final RouterLink dashboardLink = new RouterLink("Dashboard", DashboardView.class);
+	private final RouterLink operationsLink = new RouterLink("Operations", OplistView.class);
+	private final RouterLink servicesLink = new RouterLink("Services", ServiceView.class);
+	private final RouterLink trackersLink = new RouterLink("Trackers", TrackerView.class);
 
 	private final MainService mainService;
 	private final SecurityService securityService;
@@ -218,10 +225,10 @@ public class MainLayout extends AppLayout {
 
 		addToDrawer(new VerticalLayout(
 				vehicleSection,
-				new RouterLink("Dashboard", DashboardView.class),
-				new RouterLink("Operations", OplistView.class),
-				new RouterLink("Services", ServiceView.class),
-				new RouterLink("Trackers", TrackerView.class)
+				dashboardLink,
+				operationsLink,
+				servicesLink,
+				trackersLink
 		));
 	}
 
@@ -238,7 +245,10 @@ public class MainLayout extends AppLayout {
 	public void updateVehicleBox() {
 		var vehicles = mainService.findVehicles();
 		vehicleBox.setItems(vehicles);
-		noVehicleHint.setVisible(vehicles.isEmpty());
+		boolean empty = vehicles.isEmpty();
+		noVehicleHint.setVisible(empty);
+		List.of(dashboardLink, operationsLink, servicesLink, trackersLink)
+				.forEach(link -> link.setClassName("mt-inactive-link", empty));
 
 		settingsService.getSelectedVehicle().ifPresent(sel -> {
 			vehicleBox.setValue(sel);
