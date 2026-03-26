@@ -26,5 +26,7 @@ public interface TrackerRepository extends JpaRepository<Tracker, Long> {
 
 	List<Tracker> findByVehicle(Vehicle vehicle);
 
+	int countByVehicle(Vehicle vehicle);
+
 	void deleteByVehicle(Vehicle vehicle);
 }

@@ -73,6 +73,10 @@ public class MainService {
 		return eventRepository.existsByVehicle(vehicle);
 	}
 
+	public int countTrackersByVehicle(@NotNull Vehicle vehicle) {
+		return trackerRepository.countByVehicle(vehicle);
+	}
+
 	public Vehicle createVehicle() {
 		return new Vehicle(securityService.getCurrentUser(), Time.today());
 	}

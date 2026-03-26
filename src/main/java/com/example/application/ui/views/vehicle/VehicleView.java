@@ -12,6 +12,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -93,6 +94,33 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 
 	private void deleteVehicle(VehicleForm.DeleteEvent event) {
 		Vehicle vehicle = event.getValue();
+		int trackerCount = mainService.countTrackersByVehicle(vehicle);
+
+		if (trackerCount == 0) {
+			doDeleteVehicle(vehicle);
+		} else {
+			openDeleteDialog(vehicle, trackerCount);
+		}
+	}
+
+	private void openDeleteDialog(Vehicle vehicle, int trackerCount) {
+		var dialog = new ConfirmDialog();
+		if (trackerCount == 1) {
+			dialog.setHeader("Vehicle has one tracker");
+			dialog.setText("Do you want to delete it?");
+		} else {
+			dialog.setHeader("Vehicle has " + trackerCount + " trackers");
+			dialog.setText("Do you want to delete them all?");
+		}
+		dialog.setCancelable(true);
+		dialog.setConfirmText("Delete");
+		dialog.setConfirmButtonTheme("error primary");
+
+		dialog.addConfirmListener(ce -> doDeleteVehicle(vehicle));
+		dialog.open();
+	}
+
+	private void doDeleteVehicle(Vehicle vehicle) {
 		mainService.deleteVehicle(vehicle);
 		closeEditor();
 		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent(), vehicle));
