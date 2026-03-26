@@ -99,6 +99,7 @@ public class MainService {
 		}
 		else try {
 			getSettingsService().unselectDeletedVehicle(vehicle, this);
+			trackerRepository.deleteByVehicle(vehicle);
 			vehicleRepository.delete(vehicle);
 			Notify.ok("Deleted vehicle");
 		} catch (Exception e) {
