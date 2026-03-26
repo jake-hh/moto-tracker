@@ -103,12 +103,26 @@ public class MainService {
 		}
 		else try {
 			getSettingsService().unselectDeletedVehicle(vehicle, this);
-			trackerRepository.deleteByVehicle(vehicle);
 			vehicleRepository.delete(vehicle);
 			Notify.ok("Deleted vehicle");
 		} catch (Exception e) {
 			Notify.error("Failed to delete vehicle: " + e.getMessage());
 			throw new RuntimeException("Could not delete vehicle", e);
+		}
+	}
+
+	public void deleteVehicleCascade(@NotNull Vehicle vehicle) {
+		if (Vehicle.isEmpty(vehicle)) {
+			Notify.error("Failed to delete empty vehicle");
+		}
+		else try {
+			getSettingsService().unselectDeletedVehicle(vehicle, this);
+			trackerRepository.deleteByVehicle(vehicle);
+			vehicleRepository.delete(vehicle);
+			Notify.ok("Deleted vehicle with trackers");
+		} catch (Exception e) {
+			Notify.error("Failed to delete vehicle with trackers: " + e.getMessage());
+			throw new RuntimeException("Could not delete vehicle with trackers", e);
 		}
 	}
 

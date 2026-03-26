@@ -116,12 +116,18 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 		dialog.setConfirmText("Delete");
 		dialog.setConfirmButtonTheme("error primary");
 
-		dialog.addConfirmListener(ce -> doDeleteVehicle(vehicle));
+		dialog.addConfirmListener(ce -> doDeleteVehicleCascade(vehicle));
 		dialog.open();
 	}
 
 	private void doDeleteVehicle(Vehicle vehicle) {
 		mainService.deleteVehicle(vehicle);
+		closeEditor();
+		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent(), vehicle));
+	}
+
+	private void doDeleteVehicleCascade(Vehicle vehicle) {
+		mainService.deleteVehicleCascade(vehicle);
 		closeEditor();
 		ComponentUtil.fireEvent(UI.getCurrent(), new VehicleChangedEvent(UI.getCurrent(), vehicle));
 	}
