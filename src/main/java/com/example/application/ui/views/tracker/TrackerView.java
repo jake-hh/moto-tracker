@@ -209,6 +209,9 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 		form.setTracker(null);
 		form.setVisible(false);
 		removeClassName("editing");
+
+		grid.asSingleSelect().clear();
+		defaultGrid.asSingleSelect().clear();
 	}
 
 	private void addTracker() {

@@ -142,6 +142,7 @@ public class OplistView extends VerticalLayout implements BeforeEnterObserver {
 		form.setOperation(null);
 		form.setVisible(false);
 		removeClassName("editing");
+		grid.asSingleSelect().clear();
 	}
 
 	private void addOperation() {

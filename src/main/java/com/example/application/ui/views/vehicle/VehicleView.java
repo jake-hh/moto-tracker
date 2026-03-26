@@ -195,6 +195,7 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 		form.setVehicle(null);
 		form.setVisible(false);
 		removeClassName("editing");
+		grid.asSingleSelect().clear();
 	}
 
 	private void addVehicle() {
