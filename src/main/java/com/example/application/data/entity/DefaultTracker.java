@@ -10,4 +10,10 @@ public class DefaultTracker extends TrackerBase {
 	public String toString() {
 		return "Default Tracker " + getName();
 	}
+
+	public void passValues(Tracker tracker) {
+		tracker.setName(getName());
+		tracker.setInterval(getInterval());
+		tracker.setRange(getRange());
+	}
 }

@@ -158,8 +158,13 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-		grid.asSingleSelect().addValueChangeListener(event ->
-				editTracker(event.getValue()));
+		grid.asSingleSelect().addValueChangeListener(event -> {
+			Tracker selected = event.getValue();
+			if (selected == null) return;
+
+			defaultGrid.asSingleSelect().clear();
+			editTracker(selected);
+		});
 	}
 
 	private void configureDefaultGrid() {
@@ -173,6 +178,17 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 		defaultGrid.addColumn("range");
 
 		defaultGrid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+		defaultGrid.asSingleSelect().addValueChangeListener(event -> {
+			DefaultTracker selected = event.getValue();
+			if (selected == null) return;
+
+			grid.asSingleSelect().clear();
+			service.createTracker().ifPresent(t -> {
+				selected.passValues(t);
+				editTracker(t);
+			});
+		});
 	}
 
 	public void editTracker(Tracker tracker) {
@@ -197,6 +213,7 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 
 	private void addTracker() {
 		grid.asSingleSelect().clear();
+		defaultGrid.asSingleSelect().clear();
 
 		// TODO: disable add button if no vehicle is present
 		service.createTracker().ifPresent(this::editTracker);
