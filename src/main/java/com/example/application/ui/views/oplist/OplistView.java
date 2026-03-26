@@ -11,6 +11,7 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -31,6 +32,7 @@ import jakarta.annotation.security.PermitAll;
 public class OplistView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final Grid<Operation> grid = new Grid<>(Operation.class, false);
+	private final Span emptyLabel = new Span("No operations");
 	private final OperationForm form = new OperationForm();
 
 	private final MainService service;
@@ -70,8 +72,15 @@ public class OplistView extends VerticalLayout implements BeforeEnterObserver {
 	}
 
 	private Component createContent() {
-		var content = new HorizontalLayout(grid, form);
-		content.setFlexGrow(2, grid);
+		emptyLabel.addClassNames("mt-helper-text", "warning");
+
+		var gridCol = new VerticalLayout(grid, emptyLabel);
+		gridCol.setSizeFull();
+		gridCol.setPadding(false);
+		gridCol.setSpacing(false);
+
+		var content = new HorizontalLayout(gridCol, form);
+		content.setFlexGrow(2, gridCol);
 		content.setFlexGrow(1, form);
 		content.addClassNames("content");
 		content.setSizeFull();
@@ -148,7 +157,11 @@ public class OplistView extends VerticalLayout implements BeforeEnterObserver {
 	}
 
 	private void updateList() {
-		grid.setItems(service.findOperations());
+		var items = service.findOperations();
+		boolean empty = items.isEmpty();
+		grid.setVisible(!empty);
+		emptyLabel.setVisible(empty);
+		grid.setItems(items);
 	}
 
 	private void updateForm() {

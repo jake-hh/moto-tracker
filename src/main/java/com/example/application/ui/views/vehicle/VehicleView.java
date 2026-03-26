@@ -14,6 +14,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -35,6 +36,7 @@ import jakarta.annotation.security.PermitAll;
 public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final Grid<Vehicle> grid = new Grid<>(Vehicle.class, false);
+	private final Span emptyLabel = new Span("No vehicles");
 	private final VehicleForm form = new VehicleForm();
 
 	private final MainService mainService;
@@ -67,8 +69,15 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 	}
 
 	private Component createContent() {
-		var content = new HorizontalLayout(grid, form);
-		content.setFlexGrow(2, grid);
+		emptyLabel.addClassNames("mt-helper-text", "warning");
+
+		var gridCol = new VerticalLayout(grid, emptyLabel);
+		gridCol.setSizeFull();
+		gridCol.setPadding(false);
+		gridCol.setSpacing(false);
+
+		var content = new HorizontalLayout(gridCol, form);
+		content.setFlexGrow(2, gridCol);
 		content.setFlexGrow(1, form);
 		content.addClassNames("content");
 		content.setSizeFull();
@@ -194,7 +203,11 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 	}
 
 	private void updateList() {
-		grid.setItems(mainService.findVehicles());
+		var items = mainService.findVehicles();
+		boolean empty = items.isEmpty();
+		grid.setVisible(!empty);
+		emptyLabel.setVisible(empty);
+		grid.setItems(items);
 	}
 
 	@Override

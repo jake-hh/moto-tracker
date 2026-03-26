@@ -43,6 +43,7 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final Grid<Tracker> grid = new Grid<>(Tracker.class, false);
 	private final Grid<DefaultTracker> defaultGrid = new Grid<>(DefaultTracker.class, false);
+	private final Span emptyLabel = new Span("No trackers");
 	private final TextField filterText = new TextField();
 	private final TrackerForm form = new TrackerForm();
 
@@ -100,7 +101,9 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 				.set("margin-top", "var(--lumo-space-xl)")
 				.set("color", "white");
 
-		var grids = new VerticalLayout(grid, heading, defaultGrid, spacer);
+		emptyLabel.addClassNames("mt-helper-text", "warning");
+
+		var grids = new VerticalLayout(grid, emptyLabel, heading, defaultGrid, spacer);
 		grids.setPadding(false);
 		grids.setSpacing(false);
 
@@ -203,6 +206,9 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 		List<Tracker> trackers = service.findTrackers(filterText.getValue());
 		TrackerData data = service.loadDataForTrackers(trackers);
 
+		boolean empty = trackers.isEmpty();
+		grid.setVisible(!empty);
+		emptyLabel.setVisible(empty);
 		grid.setItems(trackers);
 
 		grid.getColumnByKey("date")
