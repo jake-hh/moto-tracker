@@ -264,7 +264,7 @@ public class MainService {
 		if (vehicle.isEmpty()) return all;
 
 		Set<String> usedNames = trackerRepository.findByVehicle(vehicle.get())
-				.stream().map(DefaultTracker::getName).collect(Collectors.toSet());
+				.stream().map(Tracker::getName).collect(Collectors.toSet());
 
 		return all.stream().filter(dt -> !usedNames.contains(dt.getName())).toList();
 	}

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 
 @Entity
-public class Tracker extends DefaultTracker {
+public class Tracker extends TrackerBase {
 
 	@NotNull
 	@ManyToOne(optional = false)
