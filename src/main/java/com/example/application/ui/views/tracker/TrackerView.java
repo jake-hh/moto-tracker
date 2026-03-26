@@ -2,6 +2,7 @@ package com.example.application.ui.views.tracker;
 
 import com.example.application.data.BasicInterval;
 import com.example.application.data.DashboardEventFormat;
+import com.example.application.data.entity.DefaultTracker;
 import com.example.application.data.entity.Tracker;
 import com.example.application.services.MainService;
 import com.example.application.services.model.TrackerData;
@@ -15,6 +16,8 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -39,6 +42,7 @@ import java.util.List;
 public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final Grid<Tracker> grid = new Grid<>(Tracker.class, false);
+	private final Grid<DefaultTracker> defaultGrid = new Grid<>(DefaultTracker.class, false);
 	private final TextField filterText = new TextField();
 	private final TrackerForm form = new TrackerForm();
 
@@ -54,18 +58,20 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 	public TrackerView(MainService service) {
 		this.service = service;
 
-		ComponentUtil.addListener(UI.getCurrent(), VehicleSelectedEvent.class, e -> updateList());
-		ComponentUtil.addListener(UI.getCurrent(), TrackerChangedEvent.class, e -> updateList());
+		ComponentUtil.addListener(UI.getCurrent(), VehicleSelectedEvent.class, e -> { updateList(); updateDefaultList(); });
+		ComponentUtil.addListener(UI.getCurrent(), TrackerChangedEvent.class, e -> { updateList(); updateDefaultList(); });
 		ComponentUtil.addListener(UI.getCurrent(), EventChangedEvent.class, e -> updateList());
 		ComponentUtil.addListener(UI.getCurrent(), OperationChangedEvent.class, e -> updateList());
 
 		addClassName("view");
 		setSizeFull();
 		configureGrid();
+		configureDefaultGrid();
 		configureForm();
 
 		add(createToolbar(), createContent());
 		updateList();
+		updateDefaultList();
 		closeEditor();
 	}
 
@@ -84,8 +90,22 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 	}
 
 	private Component createContent() {
-		var content = new HorizontalLayout(grid, form);
-		content.setFlexGrow(2, grid);
+		var heading = new H3("Suggested trackers");
+		heading.getStyle()
+				.set("margin-top", "var(--lumo-space-xl)")
+				.set("margin-bottom", "var(--lumo-space-m)");
+
+		var spacer = new Span(".");
+		spacer.getStyle()
+				.set("margin-top", "var(--lumo-space-xl)")
+				.set("color", "white");
+
+		var grids = new VerticalLayout(grid, heading, defaultGrid, spacer);
+		grids.setPadding(false);
+		grids.setSpacing(false);
+
+		var content = new HorizontalLayout(grids, form);
+		content.setFlexGrow(2, grids);
 		content.setFlexGrow(1, form);
 		content.addClassNames("content");
 		content.setSizeFull();
@@ -113,7 +133,7 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 
 	private void configureGrid() {
 		grid.addClassNames("grid");
-		grid.setSizeFull();
+		grid.setAllRowsVisible(true);
 
 		grid.addColumn("name");
 
@@ -137,6 +157,19 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 
 		grid.asSingleSelect().addValueChangeListener(event ->
 				editTracker(event.getValue()));
+	}
+
+	private void configureDefaultGrid() {
+		defaultGrid.addClassNames("grid");
+		defaultGrid.setAllRowsVisible(true);
+
+		defaultGrid.addColumn("name");
+		defaultGrid.addColumn("interval")
+				.setSortable(true)
+				.setComparator(t -> BasicInterval.toDays(t.getInterval()));
+		defaultGrid.addColumn("range");
+
+		defaultGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 	}
 
 	public void editTracker(Tracker tracker) {
@@ -179,5 +212,9 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 		grid.getColumnByKey("mileage")
 				.setRenderer(TrackerDataRenderer.renderMileage(data, DashboardEventFormat.LAST_SERVICE))
 				.setComparator(t -> TrackerDataComparator.compareMileage(data, DashboardEventFormat.LAST_SERVICE, t));
+	}
+
+	private void updateDefaultList() {
+		defaultGrid.setItems(service.findDefaultTrackers());
 	}
 }

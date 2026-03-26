@@ -25,6 +25,7 @@ public class MainService {
 	private final VehicleRepository vehicleRepository;
 	private final OperationRepository operationRepository;
 	private final TrackerRepository trackerRepository;
+	private final DefaultTrackerRepository defaultTrackerRepository;
 	private final EventRepository eventRepository;
 
 	private final SecurityService securityService;
@@ -35,6 +36,7 @@ public class MainService {
 			VehicleRepository vehicleRepository,
 			OperationRepository operationRepository,
 			TrackerRepository trackerRepository,
+			DefaultTrackerRepository defaultTrackerRepository,
 			EventRepository eventRepository,
 
 			SecurityService securityService,
@@ -43,6 +45,7 @@ public class MainService {
 		this.vehicleRepository = vehicleRepository;
 		this.operationRepository = operationRepository;
 		this.trackerRepository = trackerRepository;
+		this.defaultTrackerRepository = defaultTrackerRepository;
 		this.eventRepository = eventRepository;
 
 		this.securityService = securityService;
@@ -253,6 +256,17 @@ public class MainService {
 		return getSelectedVehicle()
 				.map(trackerRepository::findByVehicle)
 				.orElse(List.of());
+	}
+
+	public List<DefaultTracker> findDefaultTrackers() {
+		List<DefaultTracker> all = defaultTrackerRepository.findAll();
+		Optional<Vehicle> vehicle = getSelectedVehicle();
+		if (vehicle.isEmpty()) return all;
+
+		Set<String> usedNames = trackerRepository.findByVehicle(vehicle.get())
+				.stream().map(DefaultTracker::getName).collect(Collectors.toSet());
+
+		return all.stream().filter(dt -> !usedNames.contains(dt.getName())).toList();
 	}
 
 	public boolean isTrackerUsed(@NotNull Tracker tracker) {

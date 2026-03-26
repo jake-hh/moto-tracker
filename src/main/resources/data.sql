@@ -33,6 +33,36 @@ INSERT INTO "TRACKER" (ID, VERSION, VEHICLE_ID, NAME) VALUES
 (511, 1, 303, 'Clutch'),
 (512, 1, 303, 'Clutch cable');
 
+INSERT INTO "DEFAULT_TRACKER" (ID, VERSION, NAME, INTERV_AMOUNT, INTERV_UNIT, RANGE) VALUES
+(701, 1, 'Oil change',         1, 3, 10000),
+(702, 1, 'Brake fluid change', 2, 3, 20000),
+(703, 1, 'Coolant',            3, 3, 30000),
+(704, 1, 'Chain cleaning',     1, 2,   700);
+INSERT INTO "DEFAULT_TRACKER" (ID, VERSION, NAME) VALUES
+(705, 1, 'Brake pads'),
+(706, 1, 'Chain & sprockets'),
+(707, 1, 'Spark plugs'),
+(708, 1, 'Air filter'),
+(709, 1, 'Tires'),
+(710, 1, 'Timing belt'),
+(711, 1, 'Clutch'),
+(712, 1, 'Wiper blades'),
+(713, 1, 'Transmission fluid'),
+(714, 1, 'Power steering fluid'),
+(715, 1, 'Clutch cable'),
+(716, 1, 'Clutch fluid'),
+(717, 1, 'Gearbox oil'),
+(718, 1, 'Differential oil'),
+(719, 1, 'Wheel bearings'),
+(720, 1, 'CV joints'),
+(721, 1, 'Shock absorbers'),
+(722, 1, 'Serpentine belt'),
+(723, 1, 'Thermostat'),
+(724, 1, 'Fuel filter'),
+(725, 1, 'Battery'),
+(726, 1, 'Headlight bulbs'),
+(727, 1, 'Cabin air filter');
+
 INSERT INTO "OPERATION" (ID, VERSION, EVENT_ID, TRACKER_ID) VALUES
 (601, 1, 401, 503),
 (602, 1, 402, 502),
