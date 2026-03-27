@@ -101,7 +101,7 @@ public class MainService {
 	}
 
 	public void deleteVehicle(@NotNull Vehicle vehicle) {
-		if (Vehicle.isEmpty(vehicle)) {
+		if (!Vehicle.isSaved(vehicle)) {
 			Notify.error("Failed to delete empty vehicle");
 		}
 		else try {
@@ -115,7 +115,7 @@ public class MainService {
 	}
 
 	public void deleteVehicleCascade(@NotNull Vehicle vehicle) {
-		if (Vehicle.isEmpty(vehicle)) {
+		if (!Vehicle.isSaved(vehicle)) {
 			Notify.error("Failed to delete empty vehicle");
 		}
 		else try {
@@ -192,7 +192,7 @@ public class MainService {
 	}
 
 	public void deleteOperation(@NotNull Operation operation) {
-		if (Operation.isEmpty(operation)) {
+		if (!Operation.isSaved(operation)) {
 			Notify.error("Failed to delete empty operation");
 		}
 		else try {
@@ -309,7 +309,7 @@ public class MainService {
 	}
 
 	public void deleteTracker(@NotNull Tracker tracker) {
-		if (Tracker.isEmpty(tracker)) {
+		if (!Tracker.isSaved(tracker)) {
 			Notify.error("Failed to delete empty tracker");
 		}
 		else try {
@@ -362,7 +362,7 @@ public class MainService {
 	}
 
 	/*public void deleteEvent(Event event) {
-		if (Event.isEmpty(event)) {
+		if (!Event.isSaved(event)) {
 			Notify.error("Failed to delete empty event");
 		}
 		else try {
