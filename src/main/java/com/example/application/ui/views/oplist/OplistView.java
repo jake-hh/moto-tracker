@@ -11,6 +11,7 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridSingleSelectionModel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -123,6 +124,8 @@ public class OplistView extends VerticalLayout implements BeforeEnterObserver {
 			col.setAutoWidth(true);
 			col.setSortable(true);
 		});
+
+		((GridSingleSelectionModel<Operation>) grid.getSelectionModel()).setDeselectAllowed(false);
 
 		grid.asSingleSelect().addValueChangeListener(event ->
 				editOperation(event.getValue()));

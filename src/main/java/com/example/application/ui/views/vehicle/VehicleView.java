@@ -14,6 +14,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridSingleSelectionModel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -172,6 +173,8 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 		grid.addColumn("trackingDate").setHeader("Tracking since");
 
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+		((GridSingleSelectionModel<Vehicle>) grid.getSelectionModel()).setDeselectAllowed(false);
 
 		grid.asSingleSelect().addValueChangeListener(event ->
 				editVehicle(event.getValue()));
