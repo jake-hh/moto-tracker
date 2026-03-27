@@ -155,7 +155,7 @@ public class VehicleForm extends FormLayout {
 
 	public void setVehicle(Vehicle vehicle) {
 		binder.setBean(vehicle);
-		deleteBtn.setVisible(!Vehicle.isEmpty(vehicle));
+		deleteBtn.setVisible(Vehicle.isSaved(vehicle));
 		btnFooter.showText(false);
 	}
 

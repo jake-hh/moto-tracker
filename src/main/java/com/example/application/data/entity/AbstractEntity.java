@@ -15,6 +15,7 @@ public abstract class AbstractEntity {
 	@Version
 	private int version;
 
+
 	public Long getId() {
 		return id;
 	}
@@ -25,6 +26,10 @@ public abstract class AbstractEntity {
 
 	public int getVersion() {
 		return version;
+	}
+
+	public static boolean isSaved(AbstractEntity entity) {
+		return entity != null && entity.getId() != null;
 	}
 
 	@Override
