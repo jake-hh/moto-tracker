@@ -80,7 +80,7 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 		filterText.setPlaceholder("Filter by name...");
 		filterText.setClearButtonVisible(true);
 		filterText.setValueChangeMode(ValueChangeMode.LAZY);
-		filterText.addValueChangeListener(e -> updateList());
+		filterText.addValueChangeListener(e -> updateView());
 
 		Button addTrackerButton = new Button("Add tracker");
 		addTrackerButton.addClickListener(click -> addTracker());
@@ -227,9 +227,11 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 	}
 
 	private void updateView() {
-		List<Tracker> trackers = service.findTrackers(filterText.getValue());
+		String filterStr = filterText.getValue();
+		List<Tracker> trackers = service.findTrackers(filterStr);
+
 		updateList(trackers);
-		updateDefaultList(trackers);
+		updateDefaultList(trackers, filterStr);
 	}
 
 	private void updateList() {
@@ -253,7 +255,7 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 				.setComparator(t -> TrackerDataComparator.compareMileage(data, DashboardEventFormat.LAST_SERVICE, t));
 	}
 
-	private void updateDefaultList(List<Tracker> trackers) {
-		defaultGrid.setItems(service.findDefaultTrackers(trackers));
+	private void updateDefaultList(List<Tracker> trackers, String filterStr) {
+		defaultGrid.setItems(service.findDefaultTrackers(trackers, filterStr));
 	}
 }
