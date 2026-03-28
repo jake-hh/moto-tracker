@@ -235,7 +235,7 @@ public class MainService {
 		if (filter == null || filter.isEmpty()) {
 			return findAllTrackers();
 		} else {
-			return trackerRepository.searchAll(filter);
+			return trackerRepository.findByNameContainingIgnoreCase(filter);
 		}
 	}
 
@@ -248,7 +248,7 @@ public class MainService {
 			return findTrackers();
 		else
 			return getSelectedVehicle()
-					.map(v -> trackerRepository.searchByVehicle(v, filter))
+					.map(v -> trackerRepository.findByVehicleAndNameContainingIgnoreCase(v, filter))
 					.orElse(List.of());
 	}
 
@@ -259,7 +259,7 @@ public class MainService {
 	}
 
 	public List<DefaultTracker> findDefaultTrackers(List<Tracker> vehicleTrackers, String filter) {
-		List<DefaultTracker> candidates = defaultTrackerRepository.search(filter);
+		List<DefaultTracker> candidates = defaultTrackerRepository.findByNameContainingIgnoreCase(filter);
 
 		if (vehicleTrackers.isEmpty()) return candidates;
 
