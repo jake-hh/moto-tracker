@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 
 
 @Entity
-public class DefaultTracker extends TrackerBase {
+public class DefaultTracker extends AbstractTracker {
 
 	@Override
 	public String toString() {

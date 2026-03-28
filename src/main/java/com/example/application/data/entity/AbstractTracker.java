@@ -6,7 +6,7 @@ import jakarta.validation.constraints.*;
 
 
 @MappedSuperclass
-public abstract class TrackerBase extends AbstractEntity {
+public abstract class AbstractTracker extends AbstractEntity {
 
 	public static final int RANGE_STEP = 100;
 	public static final int RANGE_MIN = 100;
@@ -33,7 +33,7 @@ public abstract class TrackerBase extends AbstractEntity {
 	private BasicInterval interv;
 
 
-	public static boolean isEmpty(TrackerBase t) {
+	public static boolean isEmpty(AbstractTracker t) {
 		return t == null || t.getName() == null || t.getName().isBlank();
 	}
 
