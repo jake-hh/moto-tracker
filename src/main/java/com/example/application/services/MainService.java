@@ -258,13 +258,13 @@ public class MainService {
 				.orElse(List.of());
 	}
 
-	public List<DefaultTracker> findDefaultTrackers() {
+	public List<DefaultTracker> findDefaultTrackers(List<Tracker> vehicleTrackers) {
 		List<DefaultTracker> all = defaultTrackerRepository.findAll();
-		Optional<Vehicle> vehicle = getSelectedVehicle();
-		if (vehicle.isEmpty()) return all;
+		if (vehicleTrackers.isEmpty()) return all;
 
-		Set<String> usedNames = trackerRepository.findByVehicle(vehicle.get())
-				.stream().map(Tracker::getName).collect(Collectors.toSet());
+		Set<String> usedNames = vehicleTrackers.stream()
+				.map(Tracker::getName)
+				.collect(Collectors.toSet());
 
 		return all.stream().filter(dt -> !usedNames.contains(dt.getName())).toList();
 	}

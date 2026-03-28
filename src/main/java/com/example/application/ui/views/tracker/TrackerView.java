@@ -60,8 +60,8 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 	public TrackerView(MainService service) {
 		this.service = service;
 
-		ComponentUtil.addListener(UI.getCurrent(), VehicleSelectedEvent.class, e -> { updateList(); updateDefaultList(); });
-		ComponentUtil.addListener(UI.getCurrent(), TrackerChangedEvent.class, e -> { updateList(); updateDefaultList(); });
+		ComponentUtil.addListener(UI.getCurrent(), VehicleSelectedEvent.class, e -> updateView());
+		ComponentUtil.addListener(UI.getCurrent(), TrackerChangedEvent.class, e -> updateView());
 		ComponentUtil.addListener(UI.getCurrent(), EventChangedEvent.class, e -> updateList());
 		ComponentUtil.addListener(UI.getCurrent(), OperationChangedEvent.class, e -> updateList());
 
@@ -72,8 +72,7 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 		configureForm();
 
 		add(createToolbar(), createContent());
-		updateList();
-		updateDefaultList();
+		updateView();
 		closeEditor();
 	}
 
@@ -227,8 +226,17 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 		service.createTracker().ifPresent(this::editTracker);
 	}
 
-	private void updateList() {
+	private void updateView() {
 		List<Tracker> trackers = service.findTrackers(filterText.getValue());
+		updateList(trackers);
+		updateDefaultList(trackers);
+	}
+
+	private void updateList() {
+		updateList(service.findTrackers(filterText.getValue()));
+	}
+
+	private void updateList(List<Tracker> trackers) {
 		TrackerData data = service.loadDataForTrackers(trackers);
 
 		boolean empty = trackers.isEmpty();
@@ -245,7 +253,7 @@ public class TrackerView extends VerticalLayout implements BeforeEnterObserver {
 				.setComparator(t -> TrackerDataComparator.compareMileage(data, DashboardEventFormat.LAST_SERVICE, t));
 	}
 
-	private void updateDefaultList() {
-		defaultGrid.setItems(service.findDefaultTrackers());
+	private void updateDefaultList(List<Tracker> trackers) {
+		defaultGrid.setItems(service.findDefaultTrackers(trackers));
 	}
 }
